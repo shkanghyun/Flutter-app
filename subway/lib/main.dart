@@ -44,14 +44,16 @@ class _MetroMapPageState extends State<MetroMapPage> {
   @override
   void initState() {
     super.initState();
+    /*
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _resetMap();
     });
+    */
   }
 
   void _resetMap() {
-    final viewport = MediaQuery.sizeOf(context);
-    final scale = (viewport.width / _mapSize).clamp(0.20, 1.0);
+    Size viewport = MediaQuery.sizeOf(context);
+    double scale = (viewport.width / _mapSize).clamp(0.20, 1.0);
     print('viewport is: $viewport');
     print('scale: $scale');
     print('translate to: ${viewport.height - _mapSize * scale}');
@@ -86,6 +88,14 @@ class _MetroMapPageState extends State<MetroMapPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size viewport = MediaQuery.sizeOf(context);
+    double scale = (viewport.width / _mapSize).clamp(0.20, 1.0);
+    print('viewport is: $viewport');
+    print('scale: $scale');
+    print('translate to: ${viewport.height - _mapSize * scale}');
+    _mapController.value = Matrix4.identity()
+      ..translateByDouble(0.0, (viewport.height - _mapSize * scale) / 2, 0.0, 1.0)
+      ..scaleByDouble(scale, scale, 1.0, 1.0);
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 20,
