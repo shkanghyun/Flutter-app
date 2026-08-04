@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
+import 'package:subway/api_service.dart';
 
 void main() {
   runApp(const SeoulMetroApp());
@@ -266,17 +265,26 @@ class StationMarker extends StatelessWidget {
   }
 }
 
-class StationDetailsSheet extends StatelessWidget {
+class StationDetailsSheet extends StatefulWidget {
+  final Station station;
   const StationDetailsSheet({super.key, required this.station});
 
-  final Station station;
+  @override
+  State<StationDetailsSheet> createState() => StationDetailsSheetState();
+}
+
+class StationDetailsSheetState extends State<StationDetailsSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
+    List<String> _dataList = [];
+    bool _isLoading = false; // 로딩 상태 기억용 변수
+
+    return DraggableScrollableSheet( 
       initialChildSize: 0.52,
       minChildSize: 0.36,
       maxChildSize: 0.88,
+      expand: false,
       builder: (context, scrollController) => Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -304,7 +312,7 @@ class StationDetailsSheet extends StatelessWidget {
                   width: 54,
                   height: 54,
                   decoration: BoxDecoration(
-                    color: station.color,
+                    color: widget.station.color,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: const Icon(
@@ -319,7 +327,7 @@ class StationDetailsSheet extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        station.name,
+                        widget.station.name,
                         style: const TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.w800,
@@ -328,7 +336,7 @@ class StationDetailsSheet extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        station.englishName,
+                        widget.station.englishName,
                         style: const TextStyle(
                           color: Color(0xFF68748E),
                           fontSize: 14,
@@ -351,40 +359,42 @@ class StationDetailsSheet extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children:
-                  station.lines.map((line) => LineBadge(line: line)).toList(),
+                  widget.station.lines.map((line) => LineBadge(line: line)).toList(),
             ),
             const SizedBox(height: 24),
             _InfoCard(
               icon: Icons.swap_horiz_rounded,
               label: '환승 안내',
-              value: station.transferNote,
-              iconColor: station.color,
+              value: widget.station.transferNote,
+              iconColor: widget.station.color,
             ),
             const SizedBox(height: 10),
             _InfoCard(
               icon: Icons.location_on_outlined,
               label: '주변 주요 장소',
-              value: station.nearby,
+              value: widget.station.nearby,
               iconColor: const Color(0xFF5F6D89),
             ),
             const SizedBox(height: 10),
             _InfoCard(
               icon: Icons.info_outline_rounded,
               label: '역 안내',
-              value: station.note,
+              value: widget.station.note,
               iconColor: const Color(0xFF5F6D89),
             ),
             const SizedBox(height: 10),
+
             _InfoCard(
+              
               icon: Icons.info_outline_rounded,
               label: '도착 정보',
-              value: station.note,
+              value: widget.station.note,
               iconColor: const Color(0xFF5F6D89),
             ),
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${station.name}역을 즐겨찾기에 저장했습니다.')),
+                SnackBar(content: Text('${widget.station.name}역을 즐겨찾기에 저장했습니다.')),
               ),
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(52),
@@ -521,6 +531,7 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
       initialChildSize: 0.68,
       minChildSize: 0.42,
       maxChildSize: 0.92,
+      expand: false,
       builder: (context, scrollController) => Container(
         decoration: const BoxDecoration(
           color: Colors.white,
