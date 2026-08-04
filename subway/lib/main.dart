@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const SeoulMetroApp());
@@ -42,14 +44,7 @@ class MetroMapPage extends StatefulWidget {
 class _MetroMapPageState extends State<MetroMapPage> {
   final TransformationController _mapController = TransformationController();
   @override
-  void initState() {
-    super.initState();
-    /*
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _resetMap();
-    });
-    */
-  }
+
 
   void _resetMap() {
     Size viewport = MediaQuery.sizeOf(context);
@@ -88,14 +83,13 @@ class _MetroMapPageState extends State<MetroMapPage> {
 
   @override
   Widget build(BuildContext context) {
+
     Size viewport = MediaQuery.sizeOf(context);
     double scale = (viewport.width / _mapSize).clamp(0.20, 1.0);
-    print('viewport is: $viewport');
-    print('scale: $scale');
-    print('translate to: ${viewport.height - _mapSize * scale}');
     _mapController.value = Matrix4.identity()
       ..translateByDouble(0.0, (viewport.height - _mapSize * scale) / 2, 0.0, 1.0)
       ..scaleByDouble(scale, scale, 1.0, 1.0);
+
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 20,
@@ -377,6 +371,13 @@ class StationDetailsSheet extends StatelessWidget {
             _InfoCard(
               icon: Icons.info_outline_rounded,
               label: '역 안내',
+              value: station.note,
+              iconColor: const Color(0xFF5F6D89),
+            ),
+            const SizedBox(height: 10),
+            _InfoCard(
+              icon: Icons.info_outline_rounded,
+              label: '도착 정보',
               value: station.note,
               iconColor: const Color(0xFF5F6D89),
             ),
