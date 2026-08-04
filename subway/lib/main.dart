@@ -42,8 +42,6 @@ class MetroMapPage extends StatefulWidget {
 
 class _MetroMapPageState extends State<MetroMapPage> {
   final TransformationController _mapController = TransformationController();
-  @override
-
 
   void _resetMap() {
     Size viewport = MediaQuery.sizeOf(context);
@@ -52,7 +50,12 @@ class _MetroMapPageState extends State<MetroMapPage> {
     print('scale: $scale');
     print('translate to: ${viewport.height - _mapSize * scale}');
     _mapController.value = Matrix4.identity()
-      ..translateByDouble(0.0, (viewport.height - _mapSize * scale) / 2, 0.0, 1.0)
+      ..translateByDouble(
+        0.0,
+        (viewport.height - _mapSize * scale) / 2,
+        0.0,
+        1.0,
+      )
       ..scaleByDouble(scale, scale, 1.0, 1.0);
   }
 
@@ -82,11 +85,15 @@ class _MetroMapPageState extends State<MetroMapPage> {
 
   @override
   Widget build(BuildContext context) {
-
     Size viewport = MediaQuery.sizeOf(context);
     double scale = (viewport.width / _mapSize).clamp(0.20, 1.0);
     _mapController.value = Matrix4.identity()
-      ..translateByDouble(0.0, (viewport.height - _mapSize * scale) / 2, 0.0, 1.0)
+      ..translateByDouble(
+        0.0,
+        (viewport.height - _mapSize * scale) / 2,
+        0.0,
+        1.0,
+      )
       ..scaleByDouble(scale, scale, 1.0, 1.0);
 
     return Scaffold(
@@ -115,32 +122,33 @@ class _MetroMapPageState extends State<MetroMapPage> {
         children: [
           Positioned.fill(
             child: InteractiveViewer(
-                transformationController: _mapController,
-                constrained: false,
-                minScale: 0.20,
-                maxScale: 4.0,
-                boundaryMargin: const EdgeInsets.all(100),
-                child: SizedBox(
-                  width: _mapSize,
-                  height: _mapSize,
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Image.asset(
-                          'assets/images/seoul_subway_map-2.png',
-                          fit: BoxFit.fill,
-                          filterQuality: FilterQuality.high,
-                        ),
+              transformationController: _mapController,
+              constrained: false,
+              minScale: 0.20,
+              maxScale: 4.0,
+              boundaryMargin: const EdgeInsets.all(100),
+              child: SizedBox(
+                width: _mapSize,
+                height: _mapSize,
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Image.asset(
+                        'assets/images/seoul_subway_map-2.png',
+                        fit: BoxFit.fill,
+                        filterQuality: FilterQuality.high,
                       ),
-                      ...stations.map(
-                        (station) => StationMarker(
-                          station: station,
-                          onTap: () => _openStation(station),
-                        ),
+                    ),
+                    ...stations.map(
+                      (station) => StationMarker(
+                        station: station,
+                        onTap: () => _openStation(station),
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
           Positioned(
             left: 16,
@@ -274,13 +282,46 @@ class StationDetailsSheet extends StatefulWidget {
 }
 
 class StationDetailsSheetState extends State<StationDetailsSheet> {
+  List<String> _dataList = [];
+  bool _isLoading = false; // 로딩 상태 기억용 변수
+
+  @override
+  void initState() {
+    super.initState();
+    loadData(); // 화면이 열리자마자 데이터를 가져옵니다.
+    print('initState 실행');
+  }
+
+  Future<void> loadData() async {
+    setState(() {
+      _isLoading = true; // 로딩 시작
+      print('setState 실행');
+    });
+
+    try {
+      // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
+      List<String> result = await ApiService.fetchPublicXmlData();
+
+      setState(() {
+        _dataList = result; // 받아온 진짜 데이터를 변수에 저장
+        _isLoading = false; // 로딩 완료
+        print('로딩 완료: $result');
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      // 에러 처리 (예: 스낵바 띄우기)
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('데이터를 가져오지 못했습니다: $e')));
+      print('로딩 실패');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<String> _dataList = [];
-    bool _isLoading = false; // 로딩 상태 기억용 변수
-
-    return DraggableScrollableSheet( 
+    return DraggableScrollableSheet(
       initialChildSize: 0.52,
       minChildSize: 0.36,
       maxChildSize: 0.88,
@@ -358,8 +399,9 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children:
-                  widget.station.lines.map((line) => LineBadge(line: line)).toList(),
+              children: widget.station.lines
+                  .map((line) => LineBadge(line: line))
+                  .toList(),
             ),
             const SizedBox(height: 24),
             _InfoCard(
@@ -385,16 +427,31 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
             const SizedBox(height: 10),
 
             _InfoCard(
-              
               icon: Icons.info_outline_rounded,
               label: '도착 정보',
               value: widget.station.note,
               iconColor: const Color(0xFF5F6D89),
             ),
-            const SizedBox(height: 24),
+            SizedBox(
+              height: 200,
+              child: _dataList.isEmpty
+                  ? Center(child: Text('데이터가 없습니다.')) // 데이터가 없을 때
+                  : ListView.builder(
+                      // 데이터가 있을 때 일반 변수(_dataList) 사용!
+                      itemCount: _dataList.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: CircleAvatar(child: Text('${index + 1}')),
+                          title: Text(_dataList[index]), // 일반 변수의 값 출력
+                        );
+                      },
+                    ),
+            ),
             FilledButton.icon(
               onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('${widget.station.name}역을 즐겨찾기에 저장했습니다.')),
+                SnackBar(
+                  content: Text('${widget.station.name}역을 즐겨찾기에 저장했습니다.'),
+                ),
               ),
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(52),
@@ -525,8 +582,9 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final results =
-        stations.where((station) => station.matches(_query)).toList();
+    final results = stations
+        .where((station) => station.matches(_query))
+        .toList();
     return DraggableScrollableSheet(
       initialChildSize: 0.68,
       minChildSize: 0.42,
