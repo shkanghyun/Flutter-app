@@ -230,6 +230,7 @@ class StationMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('BuildContext');
     const markerSize = 38.0;
     return Positioned(
       left: station.x * _mapSize - markerSize / 2,
@@ -305,7 +306,6 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
       setState(() {
         _dataList = result; // 받아온 진짜 데이터를 변수에 저장
         _isLoading = false; // 로딩 완료
-        print('로딩 완료: $result');
       });
     } catch (e) {
       setState(() {
@@ -315,7 +315,6 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('데이터를 가져오지 못했습니다: $e')));
-      print('로딩 실패');
     }
   }
 
@@ -629,36 +628,39 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
                 separatorBuilder: (_, _) => const Divider(height: 1),
                 itemBuilder: (context, index) {
                   final station = results[index];
-                  return ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 4,
-                      vertical: 5,
-                    ),
-                    leading: Container(
-                      width: 34,
-                      height: 34,
-                      decoration: BoxDecoration(
-                        color: station.color,
-                        shape: BoxShape.circle,
+                  return Material(
+                    color: Colors.transparent,
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 4,
+                        vertical: 5,
                       ),
-                      child: const Icon(
-                        Icons.subway_rounded,
-                        color: Colors.white,
-                        size: 19,
+                      leading: Container(
+                        width: 34,
+                        height: 34,
+                        decoration: BoxDecoration(
+                          color: station.color,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.subway_rounded,
+                          color: Colors.white,
+                          size: 19,
+                        ),
                       ),
+                      title: Text(
+                        station.name,
+                        style: const TextStyle(fontWeight: FontWeight.w800),
+                      ),
+                      subtitle: Text(
+                        station.lines.map((line) => line.name).join(' · '),
+                      ),
+                      trailing: const Icon(Icons.chevron_right_rounded),
+                      onTap: () {
+                        Navigator.pop(context);
+                        widget.onSelect(station);
+                      },
                     ),
-                    title: Text(
-                      station.name,
-                      style: const TextStyle(fontWeight: FontWeight.w800),
-                    ),
-                    subtitle: Text(
-                      station.lines.map((line) => line.name).join(' · '),
-                    ),
-                    trailing: const Icon(Icons.chevron_right_rounded),
-                    onTap: () {
-                      Navigator.pop(context);
-                      widget.onSelect(station);
-                    },
                   );
                 },
               ),
