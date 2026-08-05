@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'package:subway/api_service.dart';
 
 void main() {
@@ -40,8 +41,67 @@ class MetroMapPage extends StatefulWidget {
   State<MetroMapPage> createState() => _MetroMapPageState();
 }
 
-class _MetroMapPageState extends State<MetroMapPage> {
+class _MetroMapPageState extends State<MetroMapPage>
+    with SingleTickerProviderStateMixin {
   final TransformationController _mapController = TransformationController();
+  late AnimationController _animationController;
+  Animation<Matrix4>? _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 400), // 제자리 복귀 시간
+        )..addListener(() {
+          _mapController.value = _animation!.value;
+          print('mapController: $_mapController');
+        });
+  }
+
+  /*void _onInteractionUpdate(ScaleUpdateDetails details) {
+    // 현재 손가락이 가려는 위치 (누적된 이동 거리)
+    final translation = _mapController.value.getTranslation();
+
+    double dx = details.focalPointDelta.dx;
+    double dy = details.focalPointDelta.dy;
+
+    double resistedDx = dx * 0.2;
+    double resistedBy = dy * 0.2;
+
+    // 실시간으로 저항값이 계산된 행렬을 강제로 주입합니다.
+    _mapController.value = _mapController.value
+      ..translate(resistedDx, resistedBy);
+  }*/
+
+  void _onInteractionEnd(ScaleEndDetails details) {
+    Size viewport = MediaQuery.sizeOf(context);
+    double scale = _mapController.value.storage[0]; // 확대 정도
+    double dx = _mapController.value.storage[12]; // X축 이동량
+    double dy = _mapController.value.storage[13]; // Y축 이동량
+
+    Matrix4 finalMatrix = _mapController.value.clone();
+    print("33");
+    if (dx >= 10) {
+      finalMatrix.setEntry(0, 3, 10);
+    } else if (dx <= viewport.width - _mapSize * scale) {
+      finalMatrix.setEntry(0, 3, viewport.width - _mapSize * scale);
+    }
+    if (dy >= 10) {
+      finalMatrix.setEntry(1, 3, 10);
+    } else if (dy <= viewport.height - _mapSize * scale-70){
+      finalMatrix.setEntry(1, 3, viewport.height - _mapSize * scale-70);
+    }
+    _animation = Matrix4Tween(begin: _mapController.value, end: finalMatrix)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.elasticOut, // 💡 탁! 하고 통통 튕기는 고무줄 효과
+          ),
+        );
+    _animationController.forward(from: 0.0);
+  }
 
   void _resetMap() {
     Size viewport = MediaQuery.sizeOf(context);
@@ -92,7 +152,7 @@ class _MetroMapPageState extends State<MetroMapPage> {
     print('viewport:$viewport statusbar:$statusBarHeight scale:$scale');
     _mapController.value = Matrix4.identity()
       ..translateByDouble(
-        (viewport.width-_mapSize*scale) / 2,
+        (viewport.width - _mapSize * scale) / 2,
         (viewport.height - _mapSize * scale) / 2,
         0.0,
         1.0,
@@ -127,11 +187,13 @@ class _MetroMapPageState extends State<MetroMapPage> {
           Positioned.fill(
             child: InteractiveViewer(
               transformationController: _mapController,
-              clipBehavior: Clip.none,
+              //clipBehavior: Clip.none,
               constrained: false,
               minScale: 0.20,
               maxScale: 4.0,
               boundaryMargin: const EdgeInsets.all(100),
+              //onInteractionUpdate: _onInteractionUpdate, // 👈 드래그 중 제어
+              onInteractionEnd: _onInteractionEnd, // 👈 드래그 종료 시 제어
               child: SizedBox(
                 width: _mapSize,
                 height: _mapSize,
