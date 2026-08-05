@@ -86,10 +86,13 @@ class _MetroMapPageState extends State<MetroMapPage> {
   @override
   Widget build(BuildContext context) {
     Size viewport = MediaQuery.sizeOf(context);
-    double scale = (viewport.width / _mapSize).clamp(0.20, 1.0);
+    double statusBarHeight = MediaQuery.of(context).padding.top; //상태바 높이
+    double scale = (viewport.height / _mapSize).clamp(0.20, 1.0);
+
+    print('viewport:$viewport statusbar:$statusBarHeight scale:$scale');
     _mapController.value = Matrix4.identity()
       ..translateByDouble(
-        0.0,
+        (viewport.width-_mapSize*scale) / 2,
         (viewport.height - _mapSize * scale) / 2,
         0.0,
         1.0,
@@ -97,6 +100,7 @@ class _MetroMapPageState extends State<MetroMapPage> {
       ..scaleByDouble(scale, scale, 1.0, 1.0);
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 244, 244, 244),
       appBar: AppBar(
         titleSpacing: 20,
         title: const Column(
@@ -123,6 +127,7 @@ class _MetroMapPageState extends State<MetroMapPage> {
           Positioned.fill(
             child: InteractiveViewer(
               transformationController: _mapController,
+              clipBehavior: Clip.none,
               constrained: false,
               minScale: 0.20,
               maxScale: 4.0,
@@ -146,52 +151,6 @@ class _MetroMapPageState extends State<MetroMapPage> {
                       ),
                     ),
                   ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 16,
-            right: 16,
-            bottom: 20,
-            child: IgnorePointer(
-              ignoring: true,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: const Color(0xEE101B36),
-                  borderRadius: BorderRadius.circular(18),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x33000000),
-                      blurRadius: 16,
-                      offset: Offset(0, 8),
-                    ),
-                  ],
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 13),
-                  child: Row(
-                    children: [
-                      Icon(Icons.touch_app_rounded, color: Color(0xFF8FADFF)),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          '지도에서 표시된 역을 탭하세요',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        '확대 가능',
-                        style: TextStyle(
-                          color: Color(0xFFB8C8FF),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),
@@ -301,7 +260,9 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
-      List<String> result = await ApiService.fetchPublicXmlData(widget.station.name);
+      List<String> result = await ApiService.fetchPublicXmlData(
+        widget.station.name,
+      );
 
       setState(() {
         _dataList = result; // 받아온 진짜 데이터를 변수에 저장
