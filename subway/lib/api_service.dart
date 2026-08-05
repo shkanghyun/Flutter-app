@@ -3,12 +3,12 @@ import 'package:xml/xml.dart' as xml; // XML 패키지 임포트
 import 'dart:convert';
 
 class ApiService {
-  // XML 데이터를 파싱하여 결과 문자열 리스트로 반환하는 함수
-  static Future<List<String>> fetchPublicXmlData() async {
+  
+  static Future<List<String>> fetchPublicXmlData(String stationName) async {
     final String serviceKey = '6b4f495a6773686b3639514c624a65';
     //  XML 전용 API 주소를 입력하세요.
     final String url =
-        'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/5/서울';
+        'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/5/$stationName';
 
     try {
       final response = await http.get(Uri.parse(url));

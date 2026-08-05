@@ -301,7 +301,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
-      List<String> result = await ApiService.fetchPublicXmlData();
+      List<String> result = await ApiService.fetchPublicXmlData(widget.station.name);
 
       setState(() {
         _dataList = result; // 받아온 진짜 데이터를 변수에 저장
