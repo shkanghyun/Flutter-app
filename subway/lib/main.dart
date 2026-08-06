@@ -106,10 +106,7 @@ class _MetroMapPageState extends State<MetroMapPage>
     }*/
     _animation = Matrix4Tween(begin: _mapController.value, end: finalMatrix)
         .animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeOut, 
-          ),
+          CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
         );
     _animationController.forward(from: 0.0);
   }
@@ -172,27 +169,7 @@ class _MetroMapPageState extends State<MetroMapPage>
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 244, 244, 244),
-      appBar: AppBar(
-        titleSpacing: 20,
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('서울 지하철', style: TextStyle(fontWeight: FontWeight.w800)),
-            Text(
-              '역을 탭하여 정보 보기',
-              style: TextStyle(fontSize: 12, color: Color(0xFFB8C8FF)),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            tooltip: '역 검색',
-            onPressed: _openSearch,
-            icon: const Icon(Icons.search_rounded),
-          ),
-          const SizedBox(width: 6),
-        ],
-      ),
+      
       body: Stack(
         children: [
           Positioned.fill(
@@ -226,6 +203,23 @@ class _MetroMapPageState extends State<MetroMapPage>
                     ),
                   ],
                 ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 16,
+            bottom: 60,
+            width: 60,
+            height: 60,
+            child: Material(
+              color: Colors.white,
+              elevation: 3,
+              shadowColor: const Color(0x25000000),
+              borderRadius: BorderRadius.circular(14),
+              child: IconButton(
+                tooltip: '역 검색',
+                onPressed: _openSearch,
+                icon: const Icon(Icons.search_rounded),
               ),
             ),
           ),
@@ -706,4 +700,3 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
     );
   }
 }
-
