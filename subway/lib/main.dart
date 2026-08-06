@@ -201,7 +201,7 @@ class _MetroMapPageState extends State<MetroMapPage>
               transformationController: _mapController,
               //clipBehavior: Clip.none,
               constrained: false,
-              minScale: 1,
+              minScale: 1.0,
               maxScale: 4.0,
               boundaryMargin: const EdgeInsets.all(100),
               //onInteractionUpdate: _onInteractionUpdate, // 👈 드래그 중 제어
@@ -264,7 +264,7 @@ class StationMarker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('BuildContext');
-    const markerSize = 38.0;
+    const markerSize = 380.0;
     return Positioned(
       left: station.x * _mapSize - markerSize / 2,
       top: station.y * _mapSize - markerSize / 2,
