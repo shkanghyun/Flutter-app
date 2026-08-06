@@ -137,11 +137,11 @@ class _MetroMapPageState extends State<MetroMapPage>
 
   @override
   Widget build(BuildContext context) {
-    Size viewport = MediaQuery.sizeOf(context);
+    /*Size viewport = MediaQuery.sizeOf(context);
     double statusBarHeight = MediaQuery.of(context).padding.top; //상태바 높이
     double scale = (viewport.height / _mapSize).clamp(0.20, 1.0);
 
-    print('viewport:$viewport statusbar:$statusBarHeight scale:$scale');
+    print('빌드중 viewport:$viewport statusbar:$statusBarHeight scale:$scale');
     _mapController.value = Matrix4.identity()
       ..translateByDouble(
         (viewport.width - _mapSize * scale) / 2,
@@ -149,11 +149,11 @@ class _MetroMapPageState extends State<MetroMapPage>
         0.0,
         1.0,
       )
-      ..scaleByDouble(scale, scale, 1.0, 1.0);
+      ..scaleByDouble(scale, scale, 1.0, 1.0);*/
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 244, 244, 244),
-
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Positioned.fill(
@@ -602,7 +602,7 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
             ),
             const SizedBox(height: 18),
             TextField(
-              autofocus: true,
+              autofocus: false,
               onChanged: (value) => setState(() => _query = value.trim()),
               decoration: InputDecoration(
                 hintText: '역 이름 검색',
