@@ -126,7 +126,7 @@ const _stationRows = <String>[
   '건대입구|Konkuk University|0.747|0.475|line2,line7',
   '걸포북변|geolpobukbyeon|0.040|0.290|gimpoGold',
   '검단사거리|Geomdan Sageori|0.030|0.320|incheon2',
-  '검단호수공원|Geomdan Lake Park|0.030|0.340|incheon2'
+  '검단호수공원|Geomdan Lake Park|0.030|0.340|incheon2',
   '검단오류|Geomdan Oryu|0.028|0.328|incheon2',
   '검바위|Geombawi|0.040|0.370|incheon2',
   '검암|Geomam|0.038|0.360|airport,incheon2',
@@ -255,7 +255,7 @@ const _stationRows = <String>[
   '독산|Doksan|0.317|0.649|line1',
   '독정|Dokjeong|0.037|0.341|incheon2',
   '돌곶이|Dolgoji|0.719|0.225|line6',
-  '동구릉|Donggureung|0.030|0.340|line8'
+  '동구릉|Donggureung|0.030|0.340|line8',
   '동대문|Dongdaemun|0.589|0.341|line1,line4',
   '동대문역사문화공원|Dongdaemun History & Culture Park|0.589|0.360|line2,line4,line5',
   '동대입구|Dongguk University|0.587|0.383|line3',
