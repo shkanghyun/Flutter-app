@@ -264,7 +264,7 @@ class StationMarker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('BuildContext');
-    const markerSize = 380.0;
+    const markerSize = 38.0;
     return Positioned(
       left: station.x * _mapSize - markerSize / 2,
       top: station.y * _mapSize - markerSize / 2,
