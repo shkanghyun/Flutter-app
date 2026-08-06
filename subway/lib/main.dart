@@ -57,7 +57,6 @@ class _MetroMapPageState extends State<MetroMapPage>
           duration: const Duration(milliseconds: 200), // 제자리 복귀 시간
         )..addListener(() {
           _mapController.value = _animation!.value;
-          print('mapController: $_mapController');
         });
   }
 
@@ -111,25 +110,10 @@ class _MetroMapPageState extends State<MetroMapPage>
     _animationController.forward(from: 0.0);
   }
 
-  void _resetMap() {
-    Size viewport = MediaQuery.sizeOf(context);
-    double scale = (viewport.height / _mapSize).clamp(0.20, 1.0);
-    print('viewport is: $viewport');
-    print('scale: $scale');
-    print('translate to: ${viewport.height - _mapSize * scale}');
-    _mapController.value = Matrix4.identity()
-      ..translateByDouble(
-        0.0,
-        (viewport.height - _mapSize * scale) / 2,
-        0.0,
-        1.0,
-      )
-      ..scaleByDouble(scale, scale, 1.0, 1.0);
-  }
-
   @override
   void dispose() {
     _mapController.dispose();
+    _animationController.dispose(); 
     super.dispose();
   }
 
@@ -169,7 +153,7 @@ class _MetroMapPageState extends State<MetroMapPage>
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 244, 244, 244),
-      
+
       body: Stack(
         children: [
           Positioned.fill(
@@ -220,24 +204,6 @@ class _MetroMapPageState extends State<MetroMapPage>
                 tooltip: '역 검색',
                 onPressed: _openSearch,
                 icon: const Icon(Icons.search_rounded),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 16,
-            top: 16,
-            child: Material(
-              color: Colors.white,
-              elevation: 3,
-              shadowColor: const Color(0x25000000),
-              borderRadius: BorderRadius.circular(14),
-              child: IconButton(
-                tooltip: '지도 위치 초기화',
-                onPressed: _resetMap,
-                icon: const Icon(
-                  Icons.my_location_rounded,
-                  color: Color(0xFF101B36),
-                ),
               ),
             ),
           ),

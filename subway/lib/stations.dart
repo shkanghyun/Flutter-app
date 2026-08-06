@@ -31,7 +31,7 @@ class Station {
   Color get color => lines.first.color;
 
   bool matches(String query) {
-    if (query.isEmpty) return true;
+    if (query.isEmpty) return false;
     final normalized = query.toLowerCase();
     return name.toLowerCase().contains(normalized) ||
         englishName.toLowerCase().contains(normalized);
