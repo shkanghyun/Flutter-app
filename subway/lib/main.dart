@@ -321,13 +321,12 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
         _isLoading = false; // 로딩 완료
       });
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
+      _isLoading = false;
+
       // 에러 처리 (예: 스낵바 띄우기)
-      ScaffoldMessenger.of(
+      /*ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('데이터를 가져오지 못했습니다: $e')));
+      ).showSnackBar(SnackBar(content: Text('데이터를 가져오지 못했습니다: $e')));*/
     }
   }
 
@@ -357,7 +356,15 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                 ),
               ),
             ),
-            const SizedBox(height: 22),
+            Container(
+              height: 22,
+              alignment: Alignment.centerRight,
+              child: IconButton(
+                tooltip: '닫기',
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.close_rounded),
+              ),
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -397,6 +404,63 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                       ),
                     ],
                   ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      children: [
+                        OutlinedButton(
+                          //tooltip: '닫기',
+                          style: OutlinedButton.styleFrom(
+                            fixedSize: const Size(50, 20),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 0.0,
+                              vertical: 0.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('출발'),
+                          //icon: const Icon(Icons.close_rounded),
+                        ),
+                        OutlinedButton(
+                          //tooltip: '닫기',
+                          style: OutlinedButton.styleFrom(
+                            fixedSize: const Size(50, 20),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 0.0,
+                              vertical: 0.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          onPressed: () => Navigator.pop(context),
+                          child: Text('도착'),
+                          //icon: const Icon(Icons.close_rounded),
+                        ),
+                      ],
+                    ),
+                    ElevatedButton(
+                      //tooltip: '닫기',
+                      style: ElevatedButton.styleFrom(
+                        //fixedSize: const Size(50, 20),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 0.0,
+                          vertical: 0.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('경유'),
+                      //icon: const Icon(Icons.close_rounded),
+                    ),
+                  ],
                 ),
                 IconButton(
                   tooltip: '닫기',
