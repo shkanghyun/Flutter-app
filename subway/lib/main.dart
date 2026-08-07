@@ -58,6 +58,19 @@ class _MetroMapPageState extends State<MetroMapPage>
         )..addListener(() {
           _mapController.value = _animation!.value;
         });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Size viewport = MediaQuery.sizeOf(context);
+      final scale = 0.65;
+      _mapController.value = Matrix4.identity()
+        ..translateByDouble(
+          (viewport.width - _mapSize * scale) / 2,
+          10, //(viewport.height - _mapSize * scale) / 2,
+          0.0,
+          1.0,
+        )
+        ..scaleByDouble(scale, scale, 1.0, 1.0);
+    });
   }
 
   void _onInteractionUpdate(ScaleUpdateDetails details) {
@@ -76,7 +89,7 @@ class _MetroMapPageState extends State<MetroMapPage>
       ..translateByDouble(resistedDx, resistedBy, 0.0, 1.0);
   }
 
-  void _onInteractionEnd(ScaleEndDetails details) {
+  void _onInteractionEnd(ScaleEndDetails details) async {
     Size viewport = MediaQuery.sizeOf(context);
     double scale = _mapController.value.storage[0]; // 확대 정도
     double dx = _mapController.value.storage[12]; // X축 이동량
@@ -87,33 +100,38 @@ class _MetroMapPageState extends State<MetroMapPage>
     double targetX = dx + (velocityX * 0.01);
     double targetY = dy + (velocityY * 0.01);
 
-    Matrix4 onEdgeMatrix = _mapController.value.clone();
     Matrix4 finalMatrix = _mapController.value.clone();
 
     finalMatrix.setEntry(0, 3, targetX);
     finalMatrix.setEntry(1, 3, targetY);
 
-    /*if (dx >= 10) {
-      onEdgeMatrix.setEntry(0, 3, 10);
-    } else if (dx <= viewport.width - _mapSize * scale) {
-      onEdgeMatrix.setEntry(0, 3, viewport.width - _mapSize * scale);
-    }
-    if (dy >= 10) {
-      onEdgeMatrix.setEntry(1, 3, 10);
-    } else if (dy <= viewport.height - _mapSize * scale - 70) {
-      onEdgeMatrix.setEntry(1, 3, viewport.height - _mapSize * scale - 70);
-    }*/
     _animation = Matrix4Tween(begin: _mapController.value, end: finalMatrix)
         .animate(
           CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
         );
-    _animationController.forward(from: 0.0);
+    await _animationController.forward(from: 0.0);
+
+    Matrix4 onEdgeMatrix = _mapController.value.clone();
+
+    if (targetX >= 50) {
+      onEdgeMatrix.setEntry(0, 3, 50);
+      print('OnEdge!!!!!!!!!!!!');
+    } else if (dx <= viewport.width - _mapSize * scale - 50) {
+      onEdgeMatrix.setEntry(0, 3, viewport.width - _mapSize * scale - 50);
+    }
+    if (targetY >= 50) {
+      onEdgeMatrix.setEntry(1, 3, 50);
+    } else if (dy <= viewport.height - _mapSize * scale - 70) {
+      onEdgeMatrix.setEntry(1, 3, viewport.height - _mapSize * scale - 70);
+    }
+
+    _mapController.value = onEdgeMatrix;
   }
 
   @override
   void dispose() {
     _mapController.dispose();
-    _animationController.dispose(); 
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -144,16 +162,16 @@ class _MetroMapPageState extends State<MetroMapPage>
     print('빌드중 viewport:$viewport statusbar:$statusBarHeight scale:$scale');
     _mapController.value = Matrix4.identity()
       ..translateByDouble(
-        (viewport.width - _mapSize * scale) / 2,
-        (viewport.height - _mapSize * scale) / 2,
+        10, //(viewport.width - _mapSize * scale) / 2,
+        10, //(viewport.height - _mapSize * scale) / 2,
         0.0,
         1.0,
       )
-      ..scaleByDouble(scale, scale, 1.0, 1.0);*/
+      ..scaleByDouble(0.6, 0.6, 1.0, 1.0);*/
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 244, 244, 244),
-      resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Positioned.fill(
@@ -164,7 +182,7 @@ class _MetroMapPageState extends State<MetroMapPage>
               constrained: false,
               minScale: 1.0,
               maxScale: 4.0,
-              boundaryMargin: const EdgeInsets.all(100),
+              boundaryMargin: const EdgeInsets.all(200),
               //onInteractionUpdate: _onInteractionUpdate, // 👈 드래그 중 제어
               onInteractionEnd: _onInteractionEnd, // 👈 드래그 종료 시 제어
               child: SizedBox(
@@ -602,7 +620,7 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
             ),
             const SizedBox(height: 18),
             TextField(
-              autofocus: false,
+              autofocus: true,
               onChanged: (value) => setState(() => _query = value.trim()),
               decoration: InputDecoration(
                 hintText: '역 이름 검색',
