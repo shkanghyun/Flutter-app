@@ -128,14 +128,54 @@ class _MetroMapPageState extends State<MetroMapPage>
     _mapController.value = onEdgeMatrix;
   }
 
-  @override
-  void dispose() {
-    _mapController.dispose();
-    _animationController.dispose();
-    super.dispose();
+  final LayerLink _layerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
+
+  void _openStationOption(Station station) {
+    print('역 옵션 실행');
+    //if (_overlayEntry != null) {print('안됨'); return;} // 이미 켜져있으면 중복 생성 방지
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        width: 150, // 띄울 위젯의 너비
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: const Offset(0, 50), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+          child: Material(
+            elevation: 4.0,
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              color: Colors.amber,
+              child: const Text('특정 위치 위젯!'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // 화면 오버레이에 추가
+    Overlay.of(context).insert(_overlayEntry!);
+    print(_overlayEntry);
   }
 
-  void _openStation(Station station) {
+  // 오버레이 닫기 함수
+  void _hideOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  void _openSearch() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => StationSearchSheet(onSelect: _openStationDetailsSheet),
+    );
+  }
+
+  void _openStationDetailsSheet(Station station) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -144,13 +184,12 @@ class _MetroMapPageState extends State<MetroMapPage>
     );
   }
 
-  void _openSearch() {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => StationSearchSheet(onSelect: _openStation),
-    );
+  @override
+  void dispose() {
+    _mapController.dispose();
+    _animationController.dispose();
+    _hideOverlay();
+    super.dispose();
   }
 
   @override
@@ -200,7 +239,7 @@ class _MetroMapPageState extends State<MetroMapPage>
                     ...stations.map(
                       (station) => StationMarker(
                         station: station,
-                        onTap: () => _openStation(station),
+                        onTap: () => _openStationOption(station),
                       ),
                     ),
                   ],
@@ -233,48 +272,108 @@ class _MetroMapPageState extends State<MetroMapPage>
 
 const double _mapSize = 1400;
 
-class StationMarker extends StatelessWidget {
+class StationMarker extends StatefulWidget {
   const StationMarker({super.key, required this.station, required this.onTap});
 
   final Station station;
   final VoidCallback onTap;
 
   @override
+  State<StationMarker> createState() => _StationMarkerState();
+}
+
+class _StationMarkerState extends State<StationMarker> {
+  final LayerLink _layerLink = LayerLink();
+  OverlayEntry? _overlayEntry;
+
+  void _openStationOption() {
+    print('역 옵션 실행');
+    if (_overlayEntry != null) {
+      print('안됨');
+      return;
+    } // 이미 켜져있으면 중복 생성 방지
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        width: 150, // 띄울 위젯의 너비
+        child: CompositedTransformFollower(
+          link: _layerLink,
+          showWhenUnlinked: false,
+          offset: const Offset(0, 50), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+          child: Material(
+            elevation: 4.0,
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              color: Colors.amber,
+              child: const Text('특정 위치 위젯!'),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // 화면 오버레이에 추가
+    Overlay.of(context).insert(_overlayEntry!);
+    print(_overlayEntry);
+  }
+
+  void _hideOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+  }
+
+  @override
+  void dispose() {
+    _hideOverlay();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     print('BuildContext');
     const markerSize = 38.0;
-    return Positioned(
-      left:  station.x * _mapSize - markerSize / 2,
-      top: station.y * _mapSize - markerSize / 2,
+    return /*CompositedTransformTarget(
+      link: _layerLink,
+      child: */ Positioned(
+      left: widget.station.x * _mapSize - markerSize / 2,
+      top: widget.station.y * _mapSize - markerSize / 2,
       width: markerSize,
       height: markerSize,
       child: Tooltip(
-        message: station.name,
+        message: widget.station.name,
         child: Semantics(
-          label: '${station.name} 역 정보 보기',
+          label: '${widget.station.name} 역 정보 보기',
           button: true,
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: onTap,
+              onTap: _openStationOption,
               borderRadius: BorderRadius.circular(20),
               child: Center(
-                child: Container(
-                  width: 25,
-                  height: 25,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: station.color, width: 4),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x59000000),
-                        blurRadius: 6,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
+                child: CompositedTransformTarget(
+                  link: _layerLink,
+                  child: Container(
+                    width: 25,
+                    height: 25,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: widget.station.color, width: 4),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x59000000),
+                          blurRadius: 6,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.add,
+                      size: 12,
+                      color: widget.station.color,
+                    ),
                   ),
-                  child: Icon(Icons.add, size: 12, color: station.color),
                 ),
               ),
             ),
@@ -385,6 +484,25 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class selectStationOption extends StatelessWidget {
+  const selectStationOption({super.key, required this.station});
+  final Station station;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: station.x * _mapSize,
+      top: station.y * _mapSize,
+      child: Column(
+        children: [
+          SizedBox(width: 10, height: 10),
+          SizedBox(width: 10, height: 10),
+        ],
       ),
     );
   }
