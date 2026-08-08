@@ -298,17 +298,17 @@ class _StationMarkerState extends State<StationMarker> {
       print('안됨');
       return;
     } // 이미 켜져있으면 중복 생성 방지
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) {
-        // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
         final double currentScale =
             widget._transformationController.value.row0.x;
 
         const double originalWidth = 150.0;
         const double originalHeight = 80.0;
+    _overlayEntry = SingleOverlayManager.show(context,
+      
+        // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
 
-        return Positioned(
+
+        Positioned(
           width: originalWidth / currentScale,
           height: originalHeight / currentScale,
 
@@ -332,8 +332,8 @@ class _StationMarkerState extends State<StationMarker> {
               ),
             ),
           ),
-        );
-      },
+      ),
+      
     );
 
     // 화면 오버레이에 추가
@@ -356,9 +356,7 @@ class _StationMarkerState extends State<StationMarker> {
   Widget build(BuildContext context) {
     print('BuildContext');
     const markerSize = 38.0;
-    return /*CompositedTransformTarget(
-      link: _layerLink,
-      child: */ Positioned(
+    return Positioned(
       left: widget.station.x * _mapSize - markerSize / 2,
       top: widget.station.y * _mapSize - markerSize / 2,
       width: markerSize,
@@ -528,5 +526,31 @@ class selectStationOption extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class SingleOverlayManager {
+  // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
+  static OverlayEntry? _currentEntry;
+
+  /// 새로운 오버레이를 화면에 하나만 표시합니다.
+  static OverlayEntry? show(BuildContext context, Widget child) {
+    dismiss();
+
+    // 2. 새로운 OverlayEntry를 생성합니다.
+    _currentEntry = OverlayEntry(
+      builder: (context) => child,
+    );
+
+    // 3. 현재 화면의 Overlay에 삽입합니다.
+    return _currentEntry;
+  }
+
+  /// 현재 표시 중인 오버레이를 제거합니다.
+  static void dismiss() {
+    if (_currentEntry != null) {
+      _currentEntry!.remove();
+      _currentEntry = null;
+    }
   }
 }
