@@ -313,6 +313,7 @@ class _StationMarkerState extends State<StationMarker> {
           height: originalHeight / currentScale,
 
           child: CompositedTransformFollower(
+            followerAnchor: Alignment.topCenter,
             link: _layerLink,
             showWhenUnlinked: false,
             offset: const Offset(0, 50), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
