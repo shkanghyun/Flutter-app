@@ -194,20 +194,6 @@ class _MetroMapPageState extends State<MetroMapPage>
 
   @override
   Widget build(BuildContext context) {
-    /*Size viewport = MediaQuery.sizeOf(context);
-    double statusBarHeight = MediaQuery.of(context).padding.top; //상태바 높이
-    double scale = (viewport.height / _mapSize).clamp(0.20, 1.0);
-
-    print('빌드중 viewport:$viewport statusbar:$statusBarHeight scale:$scale');
-    _mapController.value = Matrix4.identity()
-      ..translateByDouble(
-        10, //(viewport.width - _mapSize * scale) / 2,
-        10, //(viewport.height - _mapSize * scale) / 2,
-        0.0,
-        1.0,
-      )
-      ..scaleByDouble(0.6, 0.6, 1.0, 1.0);*/
-
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 244, 244, 244),
       //resizeToAvoidBottomInset: false,
@@ -240,6 +226,7 @@ class _MetroMapPageState extends State<MetroMapPage>
                       (station) => StationMarker(
                         station: station,
                         onTap: () => _openStationOption(station),
+                        transformationController: _mapController,
                       ),
                     ),
                   ],
@@ -273,10 +260,16 @@ class _MetroMapPageState extends State<MetroMapPage>
 const double _mapSize = 1400;
 
 class StationMarker extends StatefulWidget {
-  const StationMarker({super.key, required this.station, required this.onTap});
+  const StationMarker({
+    super.key,
+    required this.station,
+    required this.onTap,
+    required this._transformationController,
+  });
 
   final Station station;
   final VoidCallback onTap;
+  final TransformationController _transformationController;
 
   @override
   State<StationMarker> createState() => _StationMarkerState();
@@ -286,31 +279,61 @@ class _StationMarkerState extends State<StationMarker> {
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
 
+  @override
+  void initState() {
+    super.initState();
+    // 2. 줌인/줌아웃(화면 조작)이 일어날 때마다 오버레이를 다시 그리도록 리스너 등록
+    widget._transformationController.addListener(_updateOverlay);
+  }
+
+  void _updateOverlay() {
+    if (_overlayEntry != null) {
+      // 리스너가 동작할 때 상태를 Rebuild 하여 새로운 Scale 값을 적용합니다.
+      _overlayEntry!.markNeedsBuild();
+    }
+  }
+
   void _openStationOption() {
-    print('역 옵션 실행');
     if (_overlayEntry != null) {
       print('안됨');
       return;
     } // 이미 켜져있으면 중복 생성 방지
 
     _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        width: 150, // 띄울 위젯의 너비
-        child: CompositedTransformFollower(
-          link: _layerLink,
-          showWhenUnlinked: false,
-          offset: const Offset(0, 50), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-          child: Material(
-            elevation: 4.0,
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              color: Colors.amber,
-              child: const Text('특정 위치 위젯!'),
+      builder: (context) {
+        // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+        final double currentScale =
+            widget._transformationController.value.row0.x;
+
+        const double originalWidth = 150.0;
+        const double originalHeight = 80.0;
+
+        return Positioned(
+          width: originalWidth / currentScale,
+          height: originalHeight / currentScale,
+
+          child: CompositedTransformFollower(
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(0, 50), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+            child: Material(
+              elevation: 4.0,
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: EdgeInsets.zero,
+                color: Colors.amber,
+                child: Padding(
+                  padding: EdgeInsets.zero,
+                  child: Text(
+                    '특정 위치 위젯!',
+                    style: TextStyle(fontSize: 14.0 / currentScale),
+                  ),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
 
     // 화면 오버레이에 추가
