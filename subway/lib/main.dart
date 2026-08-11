@@ -129,44 +129,6 @@ class _MetroMapPageState extends State<MetroMapPage>
     _mapController.value = onEdgeMatrix;
   }
 
-  final LayerLink _layerLink = LayerLink();
-  OverlayEntry? _overlayEntry;
-
-  void _openStationOption(Station station) {
-    print('역 옵션 실행');
-    //if (_overlayEntry != null) {print('안됨'); return;} // 이미 켜져있으면 중복 생성 방지
-
-    _overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        width: 150, // 띄울 위젯의 너비
-        child: CompositedTransformFollower(
-          link: _layerLink,
-          showWhenUnlinked: false,
-          offset: const Offset(0, 50), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-          child: Material(
-            elevation: 4.0,
-            borderRadius: BorderRadius.circular(8),
-            child: Container(
-              padding: const EdgeInsets.all(12),
-              color: Colors.amber,
-              child: const Text('특정 위치 위젯!'),
-            ),
-          ),
-        ),
-      ),
-    );
-
-    // 화면 오버레이에 추가
-    Overlay.of(context).insert(_overlayEntry!);
-    print(_overlayEntry);
-  }
-
-  // 오버레이 닫기 함수
-  void _hideOverlay() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-  }
-
   void _openSearch() {
     showModalBottomSheet<void>(
       context: context,
@@ -189,7 +151,6 @@ class _MetroMapPageState extends State<MetroMapPage>
   void dispose() {
     _mapController.dispose();
     _animationController.dispose();
-    _hideOverlay();
     super.dispose();
   }
 
@@ -226,7 +187,7 @@ class _MetroMapPageState extends State<MetroMapPage>
                     ...stations.map(
                       (station) => StationMarker(
                         station: station,
-                        onTap: () => _openStationOption(station),
+                        //onTap: () => _openStationOption(station),
                         transformationController: _mapController,
                       ),
                     ),
@@ -264,12 +225,10 @@ class StationMarker extends StatefulWidget {
   const StationMarker({
     super.key,
     required this.station,
-    required this.onTap,
     required this._transformationController,
   });
 
   final Station station;
-  final VoidCallback onTap;
   final TransformationController _transformationController;
 
   @override
@@ -397,25 +356,6 @@ class _StationMarkerState extends State<StationMarker> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class selectStationOption extends StatelessWidget {
-  const selectStationOption({super.key, required this.station});
-  final Station station;
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: station.x * _mapSize,
-      top: station.y * _mapSize,
-      child: Column(
-        children: [
-          SizedBox(width: 10, height: 10),
-          SizedBox(width: 10, height: 10),
-        ],
       ),
     );
   }
