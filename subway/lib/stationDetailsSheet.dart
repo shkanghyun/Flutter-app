@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:subway/api_service.dart';
 import 'package:subway/stations.dart';
 
-
 class StationDetailsSheet extends StatefulWidget {
   final Station station;
   const StationDetailsSheet({super.key, required this.station});
@@ -74,15 +73,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                 ),
               ),
             ),
-            Container(
-              height: 22,
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                tooltip: '닫기',
-                onPressed: () => Navigator.pop(context),
-                icon: const Icon(Icons.close_rounded),
-              ),
-            ),
+            const SizedBox(height: 22),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -261,7 +252,6 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
     );
   }
 }
-
 
 class _InfoCard extends StatelessWidget {
   const _InfoCard({
