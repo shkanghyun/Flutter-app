@@ -251,45 +251,23 @@ class _StationMarkerState extends State<StationMarker> {
       // 리스너가 동작할 때 상태를 Rebuild 하여 새로운 Scale 값을 적용합니다.
       _overlayEntry!.markNeedsBuild();
     }
+    //print('overlay 업데이트');
   }
 
   void _openStationOption() {
-    if (_overlayEntry != null) {
-      print('안됨');
-      return;
-    } // 이미 켜져있으면 중복 생성 방지
-        final double currentScale =
-            widget._transformationController.value.row0.x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
-        const double originalWidth = 150.0;
-        const double originalHeight = 80.0;
-    _overlayEntry = SingleOverlayManager.show(context,
-        Positioned(
-          width: originalWidth / currentScale,
-          height: originalHeight / currentScale,
+    final double currentScale = widget
+        ._transformationController
+        .value
+        .row0
+        .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+    const double originalWidth = 150.0;
+    const double originalHeight = 80.0;
+    print(currentScale);
 
-          child: CompositedTransformFollower(
-            followerAnchor: Alignment.topCenter,
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: const Offset(0, 50), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-            child: Material(
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                padding: EdgeInsets.zero,
-                color: Colors.amber,
-                child: Padding(
-                  padding: EdgeInsets.zero,
-                  child: Text(
-                    '특정 위치 위젯!',
-                    style: TextStyle(fontSize: 14.0 / currentScale),
-                  ),
-                ),
-              ),
-            ),
-          ),
-      ),
-      
+    _overlayEntry = SingleOverlayManager.show(
+      context,
+      widget._transformationController,
+      _layerLink,
     );
 
     // 화면 오버레이에 추가
@@ -331,8 +309,8 @@ class _StationMarkerState extends State<StationMarker> {
                 child: CompositedTransformTarget(
                   link: _layerLink,
                   child: Container(
-                    width: 25,
-                    height: 25,
+                    //width: 25,
+                    //height: 25,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
@@ -365,13 +343,52 @@ class SingleOverlayManager {
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
   static OverlayEntry? _currentEntry;
 
-  /// 새로운 오버레이를 화면에 하나만 표시합니다.
-  static OverlayEntry? show(BuildContext context, Widget child) {
+
+  static OverlayEntry? show(
+    BuildContext context,
+    TransformationController _transformationController,
+    LayerLink _layerLink,
+    //Widget child,
+  ) {
     dismiss();
 
     // 2. 새로운 OverlayEntry를 생성합니다.
     _currentEntry = OverlayEntry(
-      builder: (context) => child,
+      builder: (context) {
+        final double currentScale = _transformationController
+            .value
+            .row0
+            .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+        const double originalWidth = 150.0;
+        const double originalHeight = 80.0;
+        return Positioned(
+          width: originalWidth / currentScale,
+          height: originalHeight / currentScale,
+
+          child: CompositedTransformFollower(
+            targetAnchor: Alignment.center,
+            followerAnchor: Alignment.center,
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(0, 10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+            child: Material(
+              elevation: 4.0,
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                padding: EdgeInsets.zero,
+                color: Colors.amber,
+                child: Padding(
+                  padding: EdgeInsets.zero,
+                  child: Text(
+                    '특정 위치 위젯!',
+                    style: TextStyle(fontSize: 14.0 / currentScale),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
 
     // 3. 현재 화면의 Overlay에 삽입합니다.
@@ -383,6 +400,7 @@ class SingleOverlayManager {
     if (_currentEntry != null) {
       _currentEntry!.remove();
       _currentEntry = null;
+      print('OverlayEntry Remove함');
     }
   }
 }
