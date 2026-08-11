@@ -364,55 +364,62 @@ class SingleOverlayManager {
           width: originalWidth / currentScale,
           height: originalHeight / currentScale,
 
-          child: CompositedTransformFollower(
-            targetAnchor: Alignment.bottomCenter,
-            followerAnchor: Alignment.topCenter,
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: const Offset(0, 0), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-            child: Row(
-              children: [
-                Flexible(
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      fixedSize: Size(
-                        originalWidth / currentScale,
-                        originalHeight / currentScale,
+          child: TapRegion(
+            onTapOutside: (event) {
+              _currentEntry?.remove();
+              _currentEntry = null;
+            },
+            behavior: HitTestBehavior.opaque,
+            child: CompositedTransformFollower(
+              targetAnchor: Alignment.bottomCenter,
+              followerAnchor: Alignment.topCenter,
+              link: _layerLink,
+              showWhenUnlinked: false,
+              offset: const Offset(0, 0), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+              child: Row(
+                children: [
+                  Flexible(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        fixedSize: Size(
+                          originalWidth / currentScale,
+                          originalHeight / currentScale,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 0.0,
+                          vertical: 0.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 0.0,
-                        vertical: 0.0,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('출발'),
+                      //icon: const Icon(Icons.close_rounded),
                     ),
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('출발'),
-                    //icon: const Icon(Icons.close_rounded),
                   ),
-                ),
-                Flexible(
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      fixedSize: Size(
-                        originalWidth / currentScale,
-                        originalHeight / currentScale,
+                  Flexible(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        fixedSize: Size(
+                          originalWidth / currentScale,
+                          originalHeight / currentScale,
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 0.0,
+                          vertical: 0.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 0.0,
-                        vertical: 0.0,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('도착'),
+                      //icon: const Icon(Icons.close_rounded),
                     ),
-                    onPressed: () => Navigator.pop(context),
-                    child: Text('도착'),
-                    //icon: const Icon(Icons.close_rounded),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
