@@ -343,7 +343,6 @@ class SingleOverlayManager {
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
   static OverlayEntry? _currentEntry;
 
-
   static OverlayEntry? show(
     BuildContext context,
     TransformationController _transformationController,
@@ -360,31 +359,60 @@ class SingleOverlayManager {
             .row0
             .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
         const double originalWidth = 150.0;
-        const double originalHeight = 80.0;
+        const double originalHeight = 150.0;
         return Positioned(
           width: originalWidth / currentScale,
           height: originalHeight / currentScale,
 
           child: CompositedTransformFollower(
-            targetAnchor: Alignment.center,
-            followerAnchor: Alignment.center,
+            targetAnchor: Alignment.bottomCenter,
+            followerAnchor: Alignment.topCenter,
             link: _layerLink,
             showWhenUnlinked: false,
-            offset: const Offset(0, 10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-            child: Material(
-              elevation: 4.0,
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                padding: EdgeInsets.zero,
-                color: Colors.amber,
-                child: Padding(
-                  padding: EdgeInsets.zero,
-                  child: Text(
-                    '특정 위치 위젯!',
-                    style: TextStyle(fontSize: 14.0 / currentScale),
+            offset: const Offset(0, 0), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+            child: Row(
+              children: [
+                Flexible(
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      fixedSize: Size(
+                        originalWidth / currentScale,
+                        originalHeight / currentScale,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 0.0,
+                        vertical: 0.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('출발'),
+                    //icon: const Icon(Icons.close_rounded),
                   ),
                 ),
-              ),
+                Flexible(
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      fixedSize: Size(
+                        originalWidth / currentScale,
+                        originalHeight / currentScale,
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 0.0,
+                        vertical: 0.0,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    child: Text('도착'),
+                    //icon: const Icon(Icons.close_rounded),
+                  ),
+                ),
+              ],
             ),
           ),
         );

@@ -120,7 +120,6 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                     Row(
                       children: [
                         OutlinedButton(
-                          //tooltip: '닫기',
                           style: OutlinedButton.styleFrom(
                             fixedSize: const Size(50, 20),
                             padding: const EdgeInsets.symmetric(
@@ -136,7 +135,6 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                           //icon: const Icon(Icons.close_rounded),
                         ),
                         OutlinedButton(
-                          //tooltip: '닫기',
                           style: OutlinedButton.styleFrom(
                             fixedSize: const Size(50, 20),
                             padding: const EdgeInsets.symmetric(
