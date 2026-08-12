@@ -359,10 +359,10 @@ class SingleOverlayManager {
             .row0
             .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
         const double originalWidth = 150.0;
-        const double originalHeight = 150.0;
+        const double originalHeight = 40.0;
         return Positioned(
           width: originalWidth / currentScale,
-          height: originalHeight / currentScale,
+          height: originalHeight / currentScale * 2,
 
           child: TapRegion(
             onTapOutside: (event) {
@@ -376,46 +376,118 @@ class SingleOverlayManager {
               link: _layerLink,
               showWhenUnlinked: false,
               offset: const Offset(0, 0), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-              child: Row(
+              child: Column(
                 children: [
                   Flexible(
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        fixedSize: Size(
-                          originalWidth / currentScale,
-                          originalHeight / currentScale,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              fixedSize: Size(
+                                originalWidth / currentScale,
+                                originalHeight / currentScale,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 0.0,
+                                vertical: 0.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  15 / currentScale,
+                                ),
+                              ),
+                              side: BorderSide(width: 1.0 / currentScale),
+                              backgroundColor: Colors.white,
+                              textStyle: TextStyle(fontSize: 20 / currentScale),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('출발'),
+                            //icon: const Icon(Icons.close_rounded),
+                          ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 0.0,
-                          vertical: 0.0,
+                        Flexible(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              fixedSize: Size(
+                                originalWidth / currentScale,
+                                originalHeight / currentScale,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 0.0,
+                                vertical: 0.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  15 / currentScale,
+                                ),
+                              ),
+                              side: BorderSide(width: 1.0 / currentScale),
+                              backgroundColor: Colors.white,
+                              textStyle: TextStyle(fontSize: 20 / currentScale),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('도착'),
+                            //icon: const Icon(Icons.close_rounded),
+                          ),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('출발'),
-                      //icon: const Icon(Icons.close_rounded),
+                      ],
                     ),
                   ),
                   Flexible(
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        fixedSize: Size(
-                          originalWidth / currentScale,
-                          originalHeight / currentScale,
+                    child: Row(
+                      children: [
+                        Flexible(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              fixedSize: Size(
+                                originalWidth / currentScale,
+                                originalHeight / currentScale,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 0.0,
+                                vertical: 0.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  15 / currentScale,
+                                ),
+                              ),
+                              side: BorderSide(width: 1.0 / currentScale),
+                              backgroundColor: Colors.white,
+                              textStyle: TextStyle(fontSize: 20 / currentScale),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('경유'),
+                            //icon: const Icon(Icons.close_rounded),
+                          ),
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 0.0,
-                          vertical: 0.0,
+                        Flexible(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              fixedSize: Size(
+                                originalWidth / currentScale,
+                                originalHeight / currentScale,
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 0.0,
+                                vertical: 0.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  15 / currentScale,
+                                ),
+                              ),
+                              side: BorderSide(width: 1.0 / currentScale),
+                              backgroundColor: Colors.white,
+                              textStyle: TextStyle(fontSize: 20 / currentScale),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('정보'),
+                            //icon: const Icon(Icons.close_rounded),
+                          ),
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('도착'),
-                      //icon: const Icon(Icons.close_rounded),
+                      ],
                     ),
                   ),
                 ],
