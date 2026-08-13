@@ -187,7 +187,9 @@ class _MetroMapPageState extends State<MetroMapPage>
                     ...stations.map(
                       (station) => StationMarker(
                         station: station,
-                        //onTap: () => _openStationOption(station),
+                        onStationInformationSelected: (station) {
+                          _openStationDetailsSheet(station);
+                        },
                         transformationController: _mapController,
                       ),
                     ),
@@ -225,10 +227,12 @@ class StationMarker extends StatefulWidget {
   const StationMarker({
     super.key,
     required this.station,
+    required this.onStationInformationSelected,
     required this._transformationController,
   });
 
   final Station station;
+  final Function(Station) onStationInformationSelected;
   final TransformationController _transformationController;
 
   @override
@@ -266,6 +270,7 @@ class _StationMarkerState extends State<StationMarker> {
 
     _overlayEntry = SingleOverlayManager(
       station: station,
+      onStationSelected: widget.onStationInformationSelected,
     ).show(context, widget._transformationController, _layerLink);
 
     // 화면 오버레이에 추가
@@ -340,17 +345,17 @@ class _StationMarkerState extends State<StationMarker> {
 
 class SingleOverlayManager {
   Station station;
-
-  SingleOverlayManager({required this.station});
+  final Function(Station) onStationSelected;
+  SingleOverlayManager({required this.station, required this.onStationSelected});
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
   static OverlayEntry? _currentEntry;
 
   OverlayEntry? show(
     BuildContext context,
+
     TransformationController _transformationController,
     LayerLink _layerLink,
-    //Widget child,
   ) {
     dismiss();
 
@@ -487,9 +492,8 @@ class SingleOverlayManager {
                               backgroundColor: Colors.white,
                               textStyle: TextStyle(fontSize: 20 / currentScale),
                             ),
-                            onPressed: () => _MetroMapPageState()
-                                ._openStationDetailsSheet(station),
-                            child: Text('역 정보'),
+                            onPressed: () => onStationSelected(station),
+                            child: Text('정보'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
                         ),
