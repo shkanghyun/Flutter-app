@@ -346,7 +346,10 @@ class _StationMarkerState extends State<StationMarker> {
 class SingleOverlayManager {
   Station station;
   final Function(Station) onStationSelected;
-  SingleOverlayManager({required this.station, required this.onStationSelected});
+  SingleOverlayManager({
+    required this.station,
+    required this.onStationSelected,
+  });
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
   static OverlayEntry? _currentEntry;
@@ -410,7 +413,10 @@ class SingleOverlayManager {
                               backgroundColor: Colors.white,
                               textStyle: TextStyle(fontSize: 20 / currentScale),
                             ),
-                            onPressed: () => print('출발 누름'),
+                            onPressed: () {
+                              print('출발 누름');
+                              dismiss();
+                            },
                             child: Text('출발'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
@@ -435,7 +441,10 @@ class SingleOverlayManager {
                               backgroundColor: Colors.white,
                               textStyle: TextStyle(fontSize: 20 / currentScale),
                             ),
-                            onPressed: () => print('도착 누름'),
+                            onPressed: () {
+                              print('도착 누름');
+                              dismiss();
+                            },
                             child: Text('도착'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
@@ -467,7 +476,10 @@ class SingleOverlayManager {
                               textStyle: TextStyle(fontSize: 20 / currentScale),
                             ),
                             clipBehavior: Clip.antiAlias,
-                            onPressed: () => print('클릭'),
+                            onPressed: () {
+                              print('경유 누름');
+                              dismiss();
+                            },
                             child: Text('경유'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
@@ -492,7 +504,10 @@ class SingleOverlayManager {
                               backgroundColor: Colors.white,
                               textStyle: TextStyle(fontSize: 20 / currentScale),
                             ),
-                            onPressed: () => onStationSelected(station),
+                            onPressed: () {
+                              dismiss();
+                              onStationSelected(station);
+                            },
                             child: Text('정보'),
                             //icon: const Icon(Icons.close_rounded),
                           ),

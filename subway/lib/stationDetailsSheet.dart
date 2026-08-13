@@ -50,9 +50,9 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.52,
-      minChildSize: 0.36,
-      maxChildSize: 0.88,
+      initialChildSize: 0.80,
+      minChildSize: 0.50,
+      maxChildSize: 0.98,
       expand: false,
       builder: (context, scrollController) => Container(
         decoration: const BoxDecoration(
