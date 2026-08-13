@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:subway/api_service.dart';
 import 'package:subway/stations.dart';
 
+
 class StationDetailsSheet extends StatefulWidget {
   final Station station;
   const StationDetailsSheet({super.key, required this.station});
@@ -29,7 +30,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
-      List<String> result = await ApiService.fetchPublicXmlData(
+      List<String> result = await SeoulApiService.fetchPublicXmlData(
         widget.station.name,
       );
 
@@ -63,7 +64,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
       child: DraggableScrollableSheet(
         snap: true,
         initialChildSize: 1.0,
-        minChildSize: 0.7,
+        minChildSize: 0.65,
         //maxChildSize: 1.0,
         //expand: false,
         builder: (context, scrollController) => Container(
