@@ -49,202 +49,215 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.80,
-      minChildSize: 0.50,
-      maxChildSize: 0.98,
-      expand: false,
-      builder: (context, scrollController) => Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-        ),
-        child: ListView(
-          controller: scrollController,
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 32),
-          children: [
-            Center(
-              child: Container(
-                width: 38,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFD9DFED),
-                  borderRadius: BorderRadius.circular(8),
+    // 기기의 물리적 상단 패딩 값 (픽셀 단위)
+    final double physicalTopPadding = View.of(context).viewPadding.top;
+
+    // 기기의 픽셀 밀도 (배율)
+    final double devicePixelRatio = View.of(context).devicePixelRatio;
+
+    return SizedBox(
+      height:
+          MediaQuery.sizeOf(context).height -
+          physicalTopPadding / devicePixelRatio,
+
+      child: DraggableScrollableSheet(
+        snap: true,
+        initialChildSize: 1.0,
+        minChildSize: 0.7,
+        //maxChildSize: 1.0,
+        //expand: false,
+        builder: (context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+          ),
+          child: ListView(
+            controller: scrollController,
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 32),
+            children: [
+              Center(
+                child: Container(
+                  width: 38,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFD9DFED),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 22),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 54,
-                  height: 54,
-                  decoration: BoxDecoration(
-                    color: widget.station.color,
-                    borderRadius: BorderRadius.circular(16),
+              const SizedBox(height: 22),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 54,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      color: widget.station.color,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Icon(
+                      Icons.subway_rounded,
+                      color: Colors.white,
+                      size: 30,
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.subway_rounded,
-                    color: Colors.white,
-                    size: 30,
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.station.name,
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w800,
-                          color: Color(0xFF101B36),
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        widget.station.englishName,
-                        style: const TextStyle(
-                          color: Color(0xFF68748E),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Row(
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            fixedSize: const Size(50, 20),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 0.0,
-                              vertical: 0.0,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
+                        Text(
+                          widget.station.name,
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF101B36),
                           ),
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('출발'),
-                          //icon: const Icon(Icons.close_rounded),
                         ),
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            fixedSize: const Size(50, 20),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 0.0,
-                              vertical: 0.0,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
+                        const SizedBox(height: 2),
+                        Text(
+                          widget.station.englishName,
+                          style: const TextStyle(
+                            color: Color(0xFF68748E),
+                            fontSize: 14,
                           ),
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('도착'),
-                          //icon: const Icon(Icons.close_rounded),
                         ),
                       ],
                     ),
-                    ElevatedButton(
-                      //tooltip: '닫기',
-                      style: ElevatedButton.styleFrom(
-                        //fixedSize: const Size(50, 20),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 0.0,
-                          vertical: 0.0,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              fixedSize: const Size(50, 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 0.0,
+                                vertical: 0.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('출발'),
+                            //icon: const Icon(Icons.close_rounded),
+                          ),
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              fixedSize: const Size(50, 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 0.0,
+                                vertical: 0.0,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                            child: Text('도착'),
+                            //icon: const Icon(Icons.close_rounded),
+                          ),
+                        ],
                       ),
-                      onPressed: () => Navigator.pop(context),
-                      child: Text('경유'),
-                      //icon: const Icon(Icons.close_rounded),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  tooltip: '닫기',
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close_rounded),
-                ),
-              ],
-            ),
-            const SizedBox(height: 22),
-            const Text('운행 노선', style: _sectionTitle),
-            const SizedBox(height: 10),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: widget.station.lines
-                  .map((line) => LineBadge(line: line))
-                  .toList(),
-            ),
-            const SizedBox(height: 24),
-            _InfoCard(
-              icon: Icons.swap_horiz_rounded,
-              label: '환승 안내',
-              value: widget.station.transferNote,
-              iconColor: widget.station.color,
-            ),
-            const SizedBox(height: 10),
-            _InfoCard(
-              icon: Icons.location_on_outlined,
-              label: '주변 주요 장소',
-              value: widget.station.nearby,
-              iconColor: const Color(0xFF5F6D89),
-            ),
-            const SizedBox(height: 10),
-            _InfoCard(
-              icon: Icons.info_outline_rounded,
-              label: '역 안내',
-              value: widget.station.note,
-              iconColor: const Color(0xFF5F6D89),
-            ),
-            const SizedBox(height: 10),
+                      ElevatedButton(
+                        //tooltip: '닫기',
+                        style: ElevatedButton.styleFrom(
+                          //fixedSize: const Size(50, 20),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 0.0,
+                            vertical: 0.0,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('경유'),
+                        //icon: const Icon(Icons.close_rounded),
+                      ),
+                    ],
+                  ),
+                  IconButton(
+                    tooltip: '닫기',
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 22),
+              const Text('운행 노선', style: _sectionTitle),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: widget.station.lines
+                    .map((line) => LineBadge(line: line))
+                    .toList(),
+              ),
+              const SizedBox(height: 24),
+              _InfoCard(
+                icon: Icons.swap_horiz_rounded,
+                label: '환승 안내',
+                value: widget.station.transferNote,
+                iconColor: widget.station.color,
+              ),
+              const SizedBox(height: 10),
+              _InfoCard(
+                icon: Icons.location_on_outlined,
+                label: '주변 주요 장소',
+                value: widget.station.nearby,
+                iconColor: const Color(0xFF5F6D89),
+              ),
+              const SizedBox(height: 10),
+              _InfoCard(
+                icon: Icons.info_outline_rounded,
+                label: '역 안내',
+                value: widget.station.note,
+                iconColor: const Color(0xFF5F6D89),
+              ),
+              const SizedBox(height: 10),
 
-            _InfoCard(
-              icon: Icons.info_outline_rounded,
-              label: '도착 정보',
-              value: widget.station.note,
-              iconColor: const Color(0xFF5F6D89),
-            ),
-            SizedBox(
-              height: 200,
-              child: _dataList.isEmpty
-                  ? Center(child: Text('데이터가 없습니다.')) // 데이터가 없을 때
-                  : ListView.builder(
-                      // 데이터가 있을 때 일반 변수(_dataList) 사용!
-                      itemCount: _dataList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: CircleAvatar(child: Text('${index + 1}')),
-                          title: Text(_dataList[index]), // 일반 변수의 값 출력
-                        );
-                      },
-                    ),
-            ),
-            FilledButton.icon(
-              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('${widget.station.name}역을 즐겨찾기에 저장했습니다.'),
+              _InfoCard(
+                icon: Icons.info_outline_rounded,
+                label: '도착 정보',
+                value: widget.station.note,
+                iconColor: const Color(0xFF5F6D89),
+              ),
+              SizedBox(
+                height: 200,
+                child: _dataList.isEmpty
+                    ? Center(child: Text('데이터가 없습니다.')) // 데이터가 없을 때
+                    : ListView.builder(
+                        // 데이터가 있을 때 일반 변수(_dataList) 사용!
+                        itemCount: _dataList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: CircleAvatar(child: Text('${index + 1}')),
+                            title: Text(_dataList[index]), // 일반 변수의 값 출력
+                          );
+                        },
+                      ),
+              ),
+              FilledButton.icon(
+                onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${widget.station.name}역을 즐겨찾기에 저장했습니다.'),
+                  ),
                 ),
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size.fromHeight(52),
+                  backgroundColor: const Color(0xFF101B36),
+                  foregroundColor: Colors.white,
+                ),
+                icon: const Icon(Icons.bookmark_border_rounded),
+                label: const Text('즐겨찾기에 저장'),
               ),
-              style: FilledButton.styleFrom(
-                minimumSize: const Size.fromHeight(52),
-                backgroundColor: const Color(0xFF101B36),
-                foregroundColor: Colors.white,
-              ),
-              icon: const Icon(Icons.bookmark_border_rounded),
-              label: const Text('즐겨찾기에 저장'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
