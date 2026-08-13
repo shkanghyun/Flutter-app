@@ -254,7 +254,7 @@ class _StationMarkerState extends State<StationMarker> {
     //print('overlay 업데이트');
   }
 
-  void _openStationOption() {
+  void _openStationOption(Station station) {
     final double currentScale = widget
         ._transformationController
         .value
@@ -264,11 +264,9 @@ class _StationMarkerState extends State<StationMarker> {
     const double originalHeight = 80.0;
     print(currentScale);
 
-    _overlayEntry = SingleOverlayManager.show(
-      context,
-      widget._transformationController,
-      _layerLink,
-    );
+    _overlayEntry = SingleOverlayManager(
+      station: station,
+    ).show(context, widget._transformationController, _layerLink);
 
     // 화면 오버레이에 추가
     Overlay.of(context).insert(_overlayEntry!);
@@ -302,31 +300,37 @@ class _StationMarkerState extends State<StationMarker> {
           button: true,
           child: Material(
             color: Colors.transparent,
-            child: InkWell(
-              onTap: _openStationOption,
-              borderRadius: BorderRadius.circular(20),
-              child: Center(
-                child: CompositedTransformTarget(
-                  link: _layerLink,
-                  child: Container(
-                    //width: 25,
-                    //height: 25,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: widget.station.color, width: 4),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x59000000),
-                          blurRadius: 6,
-                          offset: Offset(0, 2),
+            
+
+              child: InkWell(
+                onTap: () => _openStationOption(widget.station),
+                borderRadius: BorderRadius.circular(20),
+                child: Center(
+                  child: CompositedTransformTarget(
+                    link: _layerLink,
+                    child: Container(
+                      //width: 25,
+                      //height: 25,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: widget.station.color,
+                          width: 4,
                         ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.add,
-                      size: 12,
-                      color: widget.station.color,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x59000000),
+                            blurRadius: 6,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Icon(
+                        Icons.add,
+                        size: 12,
+                        color: widget.station.color,
+                      ),
                     ),
                   ),
                 ),
@@ -334,16 +338,20 @@ class _StationMarkerState extends State<StationMarker> {
             ),
           ),
         ),
-      ),
+      
     );
   }
 }
 
 class SingleOverlayManager {
+  Station station;
+
+  SingleOverlayManager({required this.station});
+
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
   static OverlayEntry? _currentEntry;
 
-  static OverlayEntry? show(
+  OverlayEntry? show(
     BuildContext context,
     TransformationController _transformationController,
     LayerLink _layerLink,
@@ -363,134 +371,146 @@ class SingleOverlayManager {
         return Positioned(
           width: originalWidth / currentScale,
           height: originalHeight / currentScale * 2,
-
-          child: TapRegion(
-            onTapOutside: (event) {
-              _currentEntry?.remove();
-              _currentEntry = null;
-            },
-            behavior: HitTestBehavior.opaque,
-            child: CompositedTransformFollower(
-              targetAnchor: Alignment.bottomCenter,
-              followerAnchor: Alignment.topCenter,
-              link: _layerLink,
-              showWhenUnlinked: false,
-              offset: const Offset(0, 0), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-              child: Column(
-                children: [
-                  Flexible(
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: Size(
-                                originalWidth / currentScale,
-                                originalHeight / currentScale,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  15 / currentScale,
+          child: CompositedTransformFollower(
+            targetAnchor: Alignment.bottomCenter,
+            followerAnchor: Alignment.topCenter,
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(0, 0), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+            child: TapRegion(
+              onTapOutside: (event) {
+                _currentEntry?.remove();
+                _currentEntry = null;
+                print('바깥을 누름');
+                //behavior: HitTestBehavior.opaque,
+              },
+              child: Material(
+                type: MaterialType.transparency,
+                child: Column(
+                  children: [
+                    Flexible(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                fixedSize: Size(
+                                  originalWidth / currentScale,
+                                  originalHeight / currentScale,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 0.0,
+                                  vertical: 0.0,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    15 / currentScale,
+                                  ),
+                                ),
+                                side: BorderSide(width: 1.0 / currentScale),
+                                backgroundColor: Colors.white,
+                                textStyle: TextStyle(
+                                  fontSize: 20 / currentScale,
                                 ),
                               ),
-                              side: BorderSide(width: 1.0 / currentScale),
-                              backgroundColor: Colors.white,
-                              textStyle: TextStyle(fontSize: 20 / currentScale),
+                              onPressed: () => print('출발 누름'),
+                              child: Text('출발'),
+                              //icon: const Icon(Icons.close_rounded),
                             ),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text('출발'),
-                            //icon: const Icon(Icons.close_rounded),
                           ),
-                        ),
-                        Flexible(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: Size(
-                                originalWidth / currentScale,
-                                originalHeight / currentScale,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  15 / currentScale,
+                          Flexible(
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                fixedSize: Size(
+                                  originalWidth / currentScale,
+                                  originalHeight / currentScale,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 0.0,
+                                  vertical: 0.0,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    15 / currentScale,
+                                  ),
+                                ),
+                                side: BorderSide(width: 1.0 / currentScale),
+                                backgroundColor: Colors.white,
+                                textStyle: TextStyle(
+                                  fontSize: 20 / currentScale,
                                 ),
                               ),
-                              side: BorderSide(width: 1.0 / currentScale),
-                              backgroundColor: Colors.white,
-                              textStyle: TextStyle(fontSize: 20 / currentScale),
+                              onPressed: () => print('도착 누름'),
+                              child: Text('도착'),
+                              //icon: const Icon(Icons.close_rounded),
                             ),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text('도착'),
-                            //icon: const Icon(Icons.close_rounded),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: Size(
-                                originalWidth / currentScale,
-                                originalHeight / currentScale,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  15 / currentScale,
+                    Flexible(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                fixedSize: Size(
+                                  originalWidth / currentScale,
+                                  originalHeight / currentScale,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 0.0,
+                                  vertical: 0.0,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    15 / currentScale,
+                                  ),
+                                ),
+                                side: BorderSide(width: 1.0 / currentScale),
+                                backgroundColor: Colors.white,
+                                textStyle: TextStyle(
+                                  fontSize: 20 / currentScale,
                                 ),
                               ),
-                              side: BorderSide(width: 1.0 / currentScale),
-                              backgroundColor: Colors.white,
-                              textStyle: TextStyle(fontSize: 20 / currentScale),
+                              onPressed: () => print('클릭'),
+                              child: Text('경유'),
+                              //icon: const Icon(Icons.close_rounded),
                             ),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text('경유'),
-                            //icon: const Icon(Icons.close_rounded),
                           ),
-                        ),
-                        Flexible(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: Size(
-                                originalWidth / currentScale,
-                                originalHeight / currentScale,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  15 / currentScale,
+                          Flexible(
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                fixedSize: Size(
+                                  originalWidth / currentScale,
+                                  originalHeight / currentScale,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 0.0,
+                                  vertical: 0.0,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    15 / currentScale,
+                                  ),
+                                ),
+                                side: BorderSide(width: 1.0 / currentScale),
+                                backgroundColor: Colors.white,
+                                textStyle: TextStyle(
+                                  fontSize: 20 / currentScale,
                                 ),
                               ),
-                              side: BorderSide(width: 1.0 / currentScale),
-                              backgroundColor: Colors.white,
-                              textStyle: TextStyle(fontSize: 20 / currentScale),
+                              onPressed: () => _MetroMapPageState()
+                                  ._openStationDetailsSheet(station),
+                              child: Text('정보'),
+                              //icon: const Icon(Icons.close_rounded),
                             ),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text('정보'),
-                            //icon: const Icon(Icons.close_rounded),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
