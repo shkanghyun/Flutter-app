@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:subway/api_service.dart';
 import 'package:subway/stations.dart';
 
-
 class StationDetailsSheet extends StatefulWidget {
   final Station station;
   const StationDetailsSheet({super.key, required this.station});
@@ -63,8 +62,11 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
       child: DraggableScrollableSheet(
         snap: true,
+
+        //shouldCloseOnMinExtent: false,
         initialChildSize: 1.0,
-        minChildSize: 0.65,
+        minChildSize: 0.2,
+        //snapSizes: const [0.2, 0.3],
         //maxChildSize: 1.0,
         //expand: false,
         builder: (context, scrollController) => Container(
