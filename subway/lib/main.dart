@@ -241,7 +241,8 @@ class StationMarker extends StatefulWidget {
 
 class _StationMarkerState extends State<StationMarker> {
   final LayerLink _layerLink = LayerLink();
-  OverlayEntry? _overlayEntry;
+  OverlayEntry? _optionOverlayEntry;
+  OverlayEntry? _flagOverlayEntry;
 
   @override
   void initState() {
@@ -251,10 +252,17 @@ class _StationMarkerState extends State<StationMarker> {
   }
 
   void _updateOverlay() {
-    if (_overlayEntry != null) {
+    if (_optionOverlayEntry != null) {
       // 리스너가 동작할 때 상태를 Rebuild 하여 새로운 Scale 값을 적용합니다.
-      _overlayEntry!.markNeedsBuild();
+      _optionOverlayEntry!.markNeedsBuild();
+      _optionOverlayEntry = null;
+      print('Optionoverlay 업데이트');
+      print(_optionOverlayEntry);
+    } else if (_flagOverlayEntry != null) {
+      _flagOverlayEntry!.markNeedsBuild();
+      print('overlay 업데이트');
     }
+
     //print('overlay 업데이트');
   }
 
@@ -264,23 +272,41 @@ class _StationMarkerState extends State<StationMarker> {
         .value
         .row0
         .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
-    const double originalWidth = 150.0;
-    const double originalHeight = 80.0;
     print(currentScale);
 
-    _overlayEntry = SingleOverlayManager(
+    _optionOverlayEntry = StationOptionOverlay(
       station: station,
-      onStationSelected: widget.onStationInformationSelected,
+      onStationInformationSelected: widget.onStationInformationSelected,
+      onDepartureSelected: _setFlag,
     ).show(context, widget._transformationController, _layerLink);
 
     // 화면 오버레이에 추가
-    Overlay.of(context).insert(_overlayEntry!);
-    print(_overlayEntry);
+    Overlay.of(context).insert(_optionOverlayEntry!);
+    print(_optionOverlayEntry);
+  }
+
+  void _setFlag(Station station) {
+    final double currentScale = widget
+        ._transformationController
+        .value
+        .row0
+        .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+    print(currentScale);
+
+    _flagOverlayEntry = FlagOverlay(
+      station: station,
+      onStationInformationSelected: widget.onStationInformationSelected,
+    ).show(context, widget._transformationController, _layerLink);
+
+    // 화면 오버레이에 추가
+    Overlay.of(context).insert(_flagOverlayEntry!);
+    print(_optionOverlayEntry);
   }
 
   void _hideOverlay() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
+    _optionOverlayEntry?.remove();
+    _flagOverlayEntry?.remove();
+    _optionOverlayEntry = null;
   }
 
   @override
@@ -343,12 +369,14 @@ class _StationMarkerState extends State<StationMarker> {
   }
 }
 
-class SingleOverlayManager {
+class StationOptionOverlay {
   Station station;
-  final Function(Station) onStationSelected;
-  SingleOverlayManager({
+  final Function(Station) onStationInformationSelected;
+  final Function(Station) onDepartureSelected;
+  StationOptionOverlay({
     required this.station,
-    required this.onStationSelected,
+    required this.onStationInformationSelected,
+    required this.onDepartureSelected,
   });
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
@@ -356,7 +384,6 @@ class SingleOverlayManager {
 
   OverlayEntry? show(
     BuildContext context,
-
     TransformationController _transformationController,
     LayerLink _layerLink,
   ) {
@@ -415,6 +442,7 @@ class SingleOverlayManager {
                             ),
                             onPressed: () {
                               print('출발 누름');
+                              onDepartureSelected(station);
                               dismiss();
                             },
                             child: Text('출발'),
@@ -506,7 +534,7 @@ class SingleOverlayManager {
                             ),
                             onPressed: () {
                               dismiss();
-                              onStationSelected(station);
+                              onStationInformationSelected(station);
                             },
                             child: Text('정보'),
                             //icon: const Icon(Icons.close_rounded),
@@ -522,6 +550,66 @@ class SingleOverlayManager {
         );
       },
     );
+
+    // 3. 현재 화면의 Overlay에 삽입합니다.
+    return _currentEntry;
+  }
+
+  /// 현재 표시 중인 오버레이를 제거합니다.
+  static void dismiss() {
+    if (_currentEntry != null) {
+      _currentEntry!.remove();
+      _currentEntry = null;
+      print('OverlayEntry Remove함');
+    }
+  }
+}
+
+class FlagOverlay {
+  FlagOverlay({
+    required this.station,
+    required this.onStationInformationSelected,
+  });
+
+  Station station;
+  final Function(Station) onStationInformationSelected;
+
+  // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
+  static OverlayEntry? _currentEntry;
+
+  OverlayEntry? show(
+    BuildContext context,
+
+    TransformationController _transformationController,
+    LayerLink _layerLink,
+  ) {
+    dismiss();
+
+    // 2. 새로운 OverlayEntry를 생성합니다.
+    _currentEntry = OverlayEntry(
+      builder: (context) {
+        final double currentScale = _transformationController
+            .value
+            .row0
+            .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+        const double originalWidth = 40.0;
+        const double originalHeight = 40.0;
+        return Positioned(
+          width: originalWidth / currentScale,
+          height: originalHeight / currentScale,
+          child: CompositedTransformFollower(
+            targetAnchor: Alignment.bottomCenter,
+            followerAnchor: Alignment.bottomCenter,
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+            child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+          ),
+        );
+      },
+    );
+
+    //Overlay.of(context).insert(_currentEntry!);
 
     // 3. 현재 화면의 Overlay에 삽입합니다.
     return _currentEntry;

@@ -65,7 +65,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
         //shouldCloseOnMinExtent: false,
         initialChildSize: 1.0,
-        minChildSize: 0.2,
+        minChildSize: 0.0,
         //snapSizes: const [0.2, 0.3],
         //maxChildSize: 1.0,
         //expand: false,
