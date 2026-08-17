@@ -242,7 +242,9 @@ class StationMarker extends StatefulWidget {
 class _StationMarkerState extends State<StationMarker> {
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _optionOverlayEntry;
-  OverlayEntry? _flagOverlayEntry;
+  OverlayEntry? _departFlagOverlayEntry;
+OverlayEntry? _arriveFlagOverlayEntry;
+OverlayEntry? _transferFlagOverlayEntry;
 
   @override
   void initState() {
@@ -256,12 +258,19 @@ class _StationMarkerState extends State<StationMarker> {
       // 리스너가 동작할 때 상태를 Rebuild 하여 새로운 Scale 값을 적용합니다.
       _optionOverlayEntry!.markNeedsBuild();
       _optionOverlayEntry = null;
-      print('Optionoverlay 업데이트');
+      //print('Optionoverlay 업데이트');
       print(_optionOverlayEntry);
-    } else if (_flagOverlayEntry != null) {
-      _flagOverlayEntry!.markNeedsBuild();
-      print('overlay 업데이트');
+    } else if (_departFlagOverlayEntry != null) {
+      _departFlagOverlayEntry!.markNeedsBuild();
+      //print('overlay 업데이트');
+    }else if (_arriveFlagOverlayEntry != null) {
+      _arriveFlagOverlayEntry!.markNeedsBuild();
+//print('overlay 업데이트');
+    }else if (_transferFlagOverlayEntry != null) {
+      _transferFlagOverlayEntry!.markNeedsBuild();
+      //print('overlay 업데이트');
     }
+
 
     //print('overlay 업데이트');
   }
@@ -277,7 +286,9 @@ class _StationMarkerState extends State<StationMarker> {
     _optionOverlayEntry = StationOptionOverlay(
       station: station,
       onStationInformationSelected: widget.onStationInformationSelected,
-      onDepartureSelected: _setFlag,
+      onDepartureSelected: _setDepartFlag,
+      onArrivalSelected: _setArrivalFlag,
+      onTransfetSelected: _setTransferFlag,
     ).show(context, widget._transformationController, _layerLink);
 
     // 화면 오버레이에 추가
@@ -285,7 +296,7 @@ class _StationMarkerState extends State<StationMarker> {
     print(_optionOverlayEntry);
   }
 
-  void _setFlag(Station station) {
+  void _setDepartFlag(Station station) {
     final double currentScale = widget
         ._transformationController
         .value
@@ -293,20 +304,58 @@ class _StationMarkerState extends State<StationMarker> {
         .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
     print(currentScale);
 
-    _flagOverlayEntry = FlagOverlay(
+    _departFlagOverlayEntry = DepartFlagOverlay(
       station: station,
       onStationInformationSelected: widget.onStationInformationSelected,
     ).show(context, widget._transformationController, _layerLink);
 
     // 화면 오버레이에 추가
-    Overlay.of(context).insert(_flagOverlayEntry!);
+    Overlay.of(context).insert(_departFlagOverlayEntry!);
+    print(_optionOverlayEntry);
+  }
+
+  void _setArrivalFlag(Station station) {
+    final double currentScale = widget
+        ._transformationController
+        .value
+        .row0
+        .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+    print(currentScale);
+
+    _arriveFlagOverlayEntry = ArriveFlagOverlay(
+      station: station,
+      onStationInformationSelected: widget.onStationInformationSelected,
+    ).show(context, widget._transformationController, _layerLink);
+
+    // 화면 오버레이에 추가
+    Overlay.of(context).insert(_arriveFlagOverlayEntry!);
+    print(_optionOverlayEntry);
+  }
+
+    void _setTransferFlag(Station station) {
+    final double currentScale = widget
+        ._transformationController
+        .value
+        .row0
+        .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+    print(currentScale);
+
+    _transferFlagOverlayEntry = TransferFlagOverlay(
+      station: station,
+      onStationInformationSelected: widget.onStationInformationSelected,
+    ).show(context, widget._transformationController, _layerLink);
+
+    // 화면 오버레이에 추가
+    Overlay.of(context).insert(_transferFlagOverlayEntry!);
     print(_optionOverlayEntry);
   }
 
   void _hideOverlay() {
     _optionOverlayEntry?.remove();
-    _flagOverlayEntry?.remove();
+    _departFlagOverlayEntry?.remove();
     _optionOverlayEntry = null;
+    _departFlagOverlayEntry = null;
+    
   }
 
   @override
@@ -373,10 +422,14 @@ class StationOptionOverlay {
   Station station;
   final Function(Station) onStationInformationSelected;
   final Function(Station) onDepartureSelected;
+  final Function(Station) onArrivalSelected;
+  final Function(Station) onTransfetSelected;
   StationOptionOverlay({
     required this.station,
     required this.onStationInformationSelected,
     required this.onDepartureSelected,
+    required this.onArrivalSelected,
+    required this.onTransfetSelected,
   });
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
@@ -471,6 +524,7 @@ class StationOptionOverlay {
                             ),
                             onPressed: () {
                               print('도착 누름');
+                              onArrivalSelected(station);
                               dismiss();
                             },
                             child: Text('도착'),
@@ -506,6 +560,7 @@ class StationOptionOverlay {
                             clipBehavior: Clip.antiAlias,
                             onPressed: () {
                               print('경유 누름');
+                              onTransfetSelected(station);
                               dismiss();
                             },
                             child: Text('경유'),
@@ -565,8 +620,8 @@ class StationOptionOverlay {
   }
 }
 
-class FlagOverlay {
-  FlagOverlay({
+class DepartFlagOverlay {
+  DepartFlagOverlay({
     required this.station,
     required this.onStationInformationSelected,
   });
@@ -609,7 +664,121 @@ class FlagOverlay {
       },
     );
 
-    //Overlay.of(context).insert(_currentEntry!);
+    // 3. 현재 화면의 Overlay에 삽입합니다.
+    return _currentEntry;
+  }
+
+  /// 현재 표시 중인 오버레이를 제거합니다.
+  static void dismiss() {
+    if (_currentEntry != null) {
+      _currentEntry!.remove();
+      _currentEntry = null;
+      print('OverlayEntry Remove함');
+    }
+  }
+}
+
+class ArriveFlagOverlay {
+  ArriveFlagOverlay({
+    required this.station,
+    required this.onStationInformationSelected,
+  });
+
+  Station station;
+  final Function(Station) onStationInformationSelected;
+
+  // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
+  static OverlayEntry? _currentEntry;
+
+  OverlayEntry? show(
+    BuildContext context,
+
+    TransformationController _transformationController,
+    LayerLink _layerLink,
+  ) {
+    dismiss();
+
+    // 2. 새로운 OverlayEntry를 생성합니다.
+    _currentEntry = OverlayEntry(
+      builder: (context) {
+        final double currentScale = _transformationController
+            .value
+            .row0
+            .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+        const double originalWidth = 40.0;
+        const double originalHeight = 40.0;
+        return Positioned(
+          width: originalWidth / currentScale,
+          height: originalHeight / currentScale,
+          child: CompositedTransformFollower(
+            targetAnchor: Alignment.bottomCenter,
+            followerAnchor: Alignment.bottomCenter,
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+            child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+          ),
+        );
+      },
+    );
+
+    // 3. 현재 화면의 Overlay에 삽입합니다.
+    return _currentEntry;
+  }
+
+  /// 현재 표시 중인 오버레이를 제거합니다.
+  static void dismiss() {
+    if (_currentEntry != null) {
+      _currentEntry!.remove();
+      _currentEntry = null;
+      print('OverlayEntry Remove함');
+    }
+  }
+}
+
+class TransferFlagOverlay {
+  TransferFlagOverlay({
+    required this.station,
+    required this.onStationInformationSelected,
+  });
+
+  Station station;
+  final Function(Station) onStationInformationSelected;
+
+  // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
+  static OverlayEntry? _currentEntry;
+
+  OverlayEntry? show(
+    BuildContext context,
+
+    TransformationController _transformationController,
+    LayerLink _layerLink,
+  ) {
+    dismiss();
+
+    // 2. 새로운 OverlayEntry를 생성합니다.
+    _currentEntry = OverlayEntry(
+      builder: (context) {
+        final double currentScale = _transformationController
+            .value
+            .row0
+            .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+        const double originalWidth = 40.0;
+        const double originalHeight = 40.0;
+        return Positioned(
+          width: originalWidth / currentScale,
+          height: originalHeight / currentScale,
+          child: CompositedTransformFollower(
+            targetAnchor: Alignment.bottomCenter,
+            followerAnchor: Alignment.bottomCenter,
+            link: _layerLink,
+            showWhenUnlinked: false,
+            offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+            child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+          ),
+        );
+      },
+    );
 
     // 3. 현재 화면의 Overlay에 삽입합니다.
     return _currentEntry;
