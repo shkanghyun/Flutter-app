@@ -646,13 +646,19 @@ class _DepartFlagState extends State<DepartFlag> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: widget.station!.x * _mapSize,
-      top: widget.station!.y * _mapSize,
+      left: widget.station!.x * _mapSize - originalWidth / currentScale / 2,
+      top: widget.station!.y * _mapSize - originalHeight / currentScale,
       width: originalWidth / currentScale,
       height: originalHeight / currentScale,
       child: IgnorePointer(
         ignoring: true,
-        child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+        child: Transform.translate(
+          offset: Offset(0.0, 3.5 / currentScale),
+          child: Icon(
+            Icons.add_location_rounded,
+            size: originalHeight / currentScale,
+          ),
+        ),
       ),
     );
   }
@@ -697,13 +703,19 @@ class _ArriveFlagState extends State<ArriveFlag> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: widget.station!.x * _mapSize,
-      top: widget.station!.y * _mapSize,
+      left: widget.station!.x * _mapSize - originalWidth / currentScale / 2,
+      top: widget.station!.y * _mapSize - originalHeight / currentScale,
       width: originalWidth / currentScale,
       height: originalHeight / currentScale,
       child: IgnorePointer(
         ignoring: true,
-        child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+        child: Transform.translate(
+          offset: Offset(0.0, 3.5 / currentScale),
+          child: Icon(
+            Icons.add_location_rounded,
+            size: originalHeight / currentScale,
+          ),
+        ),
       ),
     );
   }
@@ -749,13 +761,19 @@ class _TransferFlagState extends State<TransferFlag> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: widget.station!.x * _mapSize,
-      top: widget.station!.y * _mapSize,
+      left: widget.station!.x * _mapSize - originalWidth / currentScale / 2,
+      top: widget.station!.y * _mapSize - originalHeight / currentScale,
       width: originalWidth / currentScale,
       height: originalHeight / currentScale,
       child: IgnorePointer(
         ignoring: true,
-        child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+        child: Transform.translate(
+          offset: Offset(0.0, 3.5 / currentScale),
+          child: Icon(
+            Icons.add_location_rounded,
+            size: originalHeight / currentScale,
+          ),
+        ),
       ),
     );
   }
