@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:subway/api_service.dart';
 import 'package:subway/stations.dart';
 import 'package:subway/stationDetailsSheet.dart';
 import 'package:subway/stationSearchSheet.dart';
@@ -494,6 +495,9 @@ class StationOptionOverlay {
                             onPressed: () {
                               print('출발 누름');
                               onDepartureSelected(station);
+                              PathFinder(
+                                station: station,
+                              ).setDepartureStation();
                               dismiss();
                             },
                             child: Text('출발'),
@@ -523,6 +527,7 @@ class StationOptionOverlay {
                             onPressed: () {
                               print('도착 누름');
                               onArrivalSelected(station);
+                              PathFinder(station: station).setArrivalStation();
                               dismiss();
                             },
                             child: Text('도착'),
@@ -559,6 +564,7 @@ class StationOptionOverlay {
                             onPressed: () {
                               print('경유 누름');
                               onTransfetSelected(station);
+                              PathFinder(station: station).setTransferStation();
                               dismiss();
                             },
                             child: Text('경유'),
@@ -751,6 +757,113 @@ class TransferFlagOverlay {
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
   static OverlayEntry? _currentEntry;
+
+  OverlayEntry? show(
+    BuildContext context,
+
+    TransformationController _transformationController,
+    LayerLink _layerLink,
+  ) {
+    dismiss();
+
+    // 2. 새로운 OverlayEntry를 생성합니다.
+    _currentEntry = OverlayEntry(
+      builder: (context) {
+        final double currentScale = _transformationController
+            .value
+            .row0
+            .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+        const double originalWidth = 40.0;
+        const double originalHeight = 40.0;
+        return Positioned(
+          width: originalWidth / currentScale,
+          height: originalHeight / currentScale,
+          child: IgnorePointer(
+            ignoring: true,
+            child: CompositedTransformFollower(
+              targetAnchor: Alignment.bottomCenter,
+              followerAnchor: Alignment.bottomCenter,
+              link: _layerLink,
+              showWhenUnlinked: false,
+              offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+              child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+            ),
+          ),
+        );
+      },
+    );
+
+    // 3. 현재 화면의 Overlay에 삽입합니다.
+    return _currentEntry;
+  }
+
+  /// 현재 표시 중인 오버레이를 제거합니다.
+  static void dismiss() {
+    if (_currentEntry != null) {
+      _currentEntry!.remove();
+      _currentEntry = null;
+      print('OverlayEntry Remove함');
+    }
+  }
+}
+
+class PathFinder {
+  PathFinder({required this.station});
+
+  Station station;
+
+  // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
+  static OverlayEntry? _currentEntry;
+  static String DepartureStation = '';
+  static String ArrivalStation = '';
+  static String TransferStation = '';
+  List<String> _dataList = [];
+  bool _isLoading = false; // 로딩 상태 기억용 변수
+
+  void setDepartureStation() {
+    DepartureStation = station.name;
+    print('출발역: $DepartureStation');
+    if (DepartureStation != null && ArrivalStation != null) {
+      loadData();
+    }
+  }
+
+  void setArrivalStation() {
+    ArrivalStation = station.name;
+    if (DepartureStation != null && ArrivalStation != null) {
+      loadData();
+    }
+  }
+
+  void setTransferStation() {
+    TransferStation = station.name;
+    if (DepartureStation != null && ArrivalStation != null) {
+      loadData();
+    }
+  }
+
+  Future<void> loadData() async {
+    _isLoading = true; // 로딩 시작
+
+    try {
+      // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
+      List<String> result = await SeoulApiService.fetchPublicXmlData(
+        DepartureStation: DepartureStation,
+        ArrivalStation: ArrivalStation,
+        TransferStation: TransferStation,
+      );
+
+      _dataList = result; // 받아온 진짜 데이터를 변수에 저장
+      _isLoading = false; // 로딩 완료
+    } catch (e) {
+      _isLoading = false;
+
+      // 에러 처리 (예: 스낵바 띄우기)
+      /*ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('데이터를 가져오지 못했습니다: $e')));*/
+    }
+  }
 
   OverlayEntry? show(
     BuildContext context,

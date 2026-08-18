@@ -43,7 +43,7 @@ class SubwayApiService {
 }
 
 class SeoulApiService {
-  static Future<List<String>> fetchPublicXmlData(String stationName) async {
+  static Future<List<String>> fetchPublicXmlData({required String DepartureStation, required String ArrivalStation, String? TransferStation}) async {
     final String serviceKey = '4f6d59565373686b39335a4e696348';
     String formattedDate = DateFormat(
       'yyyy-MM-dd HH:mm:ss',
@@ -51,13 +51,14 @@ class SeoulApiService {
 
     //  XML 전용 API 주소
     final String url =
-        'http://openapi.seoul.go.kr:8088/$serviceKey/xml/getShtrmPath/1/5/답십리/망포/$formattedDate';
+        'http://openapi.seoul.go.kr:8088/$serviceKey/xml/getShtrmPath/1/5/$DepartureStation/$ArrivalStation/$formattedDate///$TransferStation';
 
     try {
       final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         print('response.statusCode : 200');
+        print(url);
         // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
         final String decodedBody = utf8.decode(response.bodyBytes);
 
@@ -74,6 +75,7 @@ class SeoulApiService {
           final stationName = item.findElements('stnNm').first.innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
           results.add(stationName);
         }
+        
         print('API.dart result: $results');
         return results; // 추출한 데이터 리스트 반환
       } else {
