@@ -73,6 +73,10 @@ class _MetroMapPageState extends State<MetroMapPage>
         )
         ..scaleByDouble(scale, scale, 1.0, 1.0);
     });
+
+    _mapController.addListener(() {
+      if (_isDepartSet) setState(() {});
+    });
   }
 
   void _onInteractionUpdate(ScaleUpdateDetails details) {
@@ -155,6 +159,30 @@ class _MetroMapPageState extends State<MetroMapPage>
     super.dispose();
   }
 
+  // Flag 구현
+  static Station? DepartureStation;
+  static Station? ArrivalStation;
+  static Station? TransferStation;
+  bool _isDepartSet = false;
+  bool _isArriveSet = false;
+  bool _isTransferSet = false;
+
+  void setDepartureStationFlag(Station station) {
+    setState(() {
+      DepartureStation = station;
+      _isDepartSet = true;
+      print('출발역 설정됨');
+    });
+  }
+
+  void setArrivalStationFlag(Station station) {
+    ArrivalStation = station;
+  }
+
+  void setTransferStationFlag(Station station) {
+    TransferStation = station;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,9 +219,23 @@ class _MetroMapPageState extends State<MetroMapPage>
                         onStationInformationSelected: (station) {
                           _openStationDetailsSheet(station);
                         },
+                        onDepartureStationSelected: (station) {
+                          setDepartureStationFlag(station);
+                        },
+                        onArrivalStationSelected: (station) {
+                          setArrivalStationFlag(station);
+                        },
+                        onTransferStationSelected: (station) {
+                          setTransferStationFlag(station);
+                        },
                         transformationController: _mapController,
                       ),
                     ),
+                    if (_isDepartSet)
+                      DepartFlag(
+                        transformationController: _mapController,
+                        station: DepartureStation,
+                      ),
                   ],
                 ),
               ),
@@ -229,11 +271,17 @@ class StationMarker extends StatefulWidget {
     super.key,
     required this.station,
     required this.onStationInformationSelected,
+    required this.onDepartureStationSelected,
+    required this.onArrivalStationSelected,
+    required this.onTransferStationSelected,
     required this._transformationController,
   });
 
   final Station station;
   final Function(Station) onStationInformationSelected;
+  final Function(Station) onDepartureStationSelected;
+  final Function(Station) onArrivalStationSelected;
+  final Function(Station) onTransferStationSelected;
   final TransformationController _transformationController;
 
   @override
@@ -243,15 +291,14 @@ class StationMarker extends StatefulWidget {
 class _StationMarkerState extends State<StationMarker> {
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _optionOverlayEntry;
-  OverlayEntry? _departFlagOverlayEntry;
-  OverlayEntry? _arriveFlagOverlayEntry;
-  OverlayEntry? _transferFlagOverlayEntry;
 
   @override
   void initState() {
     super.initState();
     // 2. 줌인/줌아웃(화면 조작)이 일어날 때마다 오버레이를 다시 그리도록 리스너 등록
-    widget._transformationController.addListener(_updateOverlay);
+    widget._transformationController.addListener(() {
+      _updateOverlay;
+    });
   }
 
   void _updateOverlay() {
@@ -261,18 +308,7 @@ class _StationMarkerState extends State<StationMarker> {
       _optionOverlayEntry = null;
       //print('Optionoverlay 업데이트');
       print(_optionOverlayEntry);
-    } else if (_departFlagOverlayEntry != null) {
-      _departFlagOverlayEntry!.markNeedsBuild();
-      //print('overlay 업데이트');
-    } else if (_arriveFlagOverlayEntry != null) {
-      _arriveFlagOverlayEntry!.markNeedsBuild();
-      //print('overlay 업데이트');
-    } else if (_transferFlagOverlayEntry != null) {
-      _transferFlagOverlayEntry!.markNeedsBuild();
-      //print('overlay 업데이트');
     }
-
-    //print('overlay 업데이트');
   }
 
   void _openStationOption(Station station) {
@@ -286,9 +322,9 @@ class _StationMarkerState extends State<StationMarker> {
     _optionOverlayEntry = StationOptionOverlay(
       station: station,
       onStationInformationSelected: widget.onStationInformationSelected,
-      onDepartureSelected: _setDepartFlag,
-      onArrivalSelected: _setArrivalFlag,
-      onTransfetSelected: _setTransferFlag,
+      onDepartureSelected: widget.onDepartureStationSelected,
+      onArrivalSelected: widget.onArrivalStationSelected,
+      onTransfetSelected: widget.onTransferStationSelected,
     ).show(context, widget._transformationController, _layerLink);
 
     // 화면 오버레이에 추가
@@ -296,65 +332,9 @@ class _StationMarkerState extends State<StationMarker> {
     print(_optionOverlayEntry);
   }
 
-  void _setDepartFlag(Station station) {
-    final double currentScale = widget
-        ._transformationController
-        .value
-        .row0
-        .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
-    print(currentScale);
-
-    _departFlagOverlayEntry = DepartFlagOverlay(
-      station: station,
-      onStationInformationSelected: widget.onStationInformationSelected,
-    ).show(context, widget._transformationController, _layerLink);
-
-    // 화면 오버레이에 추가
-    Overlay.of(context).insert(_departFlagOverlayEntry!);
-    print(_optionOverlayEntry);
-  }
-
-  void _setArrivalFlag(Station station) {
-    final double currentScale = widget
-        ._transformationController
-        .value
-        .row0
-        .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
-    print(currentScale);
-
-    _arriveFlagOverlayEntry = ArriveFlagOverlay(
-      station: station,
-      onStationInformationSelected: widget.onStationInformationSelected,
-    ).show(context, widget._transformationController, _layerLink);
-
-    // 화면 오버레이에 추가
-    Overlay.of(context).insert(_arriveFlagOverlayEntry!);
-    print(_optionOverlayEntry);
-  }
-
-  void _setTransferFlag(Station station) {
-    final double currentScale = widget
-        ._transformationController
-        .value
-        .row0
-        .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
-    print(currentScale);
-
-    _transferFlagOverlayEntry = TransferFlagOverlay(
-      station: station,
-      onStationInformationSelected: widget.onStationInformationSelected,
-    ).show(context, widget._transformationController, _layerLink);
-
-    // 화면 오버레이에 추가
-    Overlay.of(context).insert(_transferFlagOverlayEntry!);
-    print(_optionOverlayEntry);
-  }
-
   void _hideOverlay() {
     _optionOverlayEntry?.remove();
-    _departFlagOverlayEntry?.remove();
     _optionOverlayEntry = null;
-    _departFlagOverlayEntry = null;
   }
 
   @override
@@ -365,7 +345,6 @@ class _StationMarkerState extends State<StationMarker> {
 
   @override
   Widget build(BuildContext context) {
-    print('BuildContext');
     const markerSize = 38.0;
     return Positioned(
       left: widget.station.x * _mapSize - markerSize / 2,
@@ -624,64 +603,54 @@ class StationOptionOverlay {
   }
 }
 
-class DepartFlagOverlay {
-  DepartFlagOverlay({
+class DepartFlag extends StatefulWidget {
+  const DepartFlag({
+    super.key,
+    required this._transformationController,
     required this.station,
-    required this.onStationInformationSelected,
   });
+  final TransformationController _transformationController;
+  final Station? station;
+  @override
+  State<DepartFlag> createState() => _DepartFlagState();
+}
 
-  Station station;
-  final Function(Station) onStationInformationSelected;
-
+class _DepartFlagState extends State<DepartFlag> {
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
-  static OverlayEntry? _currentEntry;
+  static Widget? _currentWidget;
 
-  OverlayEntry? show(
-    BuildContext context,
-
-    TransformationController _transformationController,
-    LayerLink _layerLink,
-  ) {
-    dismiss();
-
-    // 2. 새로운 OverlayEntry를 생성합니다.
-    _currentEntry = OverlayEntry(
-      builder: (context) {
-        final double currentScale = _transformationController
-            .value
-            .row0
-            .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
-        const double originalWidth = 40.0;
-        const double originalHeight = 40.0;
-        return Positioned(
-          width: originalWidth / currentScale,
-          height: originalHeight / currentScale,
-          child: IgnorePointer(
-            ignoring: true,
-            child: CompositedTransformFollower(
-              targetAnchor: Alignment.bottomCenter,
-              followerAnchor: Alignment.bottomCenter,
-              link: _layerLink,
-              showWhenUnlinked: false,
-              offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-              child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
-            ),
-          ),
-        );
-      },
-    );
-
-    // 3. 현재 화면의 Overlay에 삽입합니다.
-    return _currentEntry;
+  @override
+  void initState() {
+    super.initState();
+    widget._transformationController.addListener(_onTransformationChanged);
+    print('depart 위젯 실행');
   }
 
-  /// 현재 표시 중인 오버레이를 제거합니다.
-  static void dismiss() {
-    if (_currentEntry != null) {
-      _currentEntry!.remove();
-      _currentEntry = null;
-      print('OverlayEntry Remove함');
-    }
+  void _onTransformationChanged() {
+    // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+
+    setState(() {
+      currentScale = widget._transformationController.value.row0.x;
+      print('flagupdate');
+    });
+  }
+
+  double currentScale = 1.0;
+  double originalWidth = 40.0;
+  double originalHeight = 40.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: widget.station!.x * _mapSize,
+      top: widget.station!.y * _mapSize,
+      width: originalWidth / currentScale,
+      height: originalHeight / currentScale,
+      child: IgnorePointer(
+        ignoring: true,
+        child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+      ),
+    );
   }
 }
 
@@ -814,8 +783,8 @@ class PathFinder {
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
   static OverlayEntry? _currentEntry;
-  static String DepartureStation = '';
-  static String ArrivalStation = '';
+  static String? DepartureStation;
+  static String? ArrivalStation;
   static String TransferStation = '';
   List<String> _dataList = [];
   bool _isLoading = false; // 로딩 상태 기억용 변수

@@ -43,7 +43,7 @@ class SubwayApiService {
 }
 
 class SeoulApiService {
-  static Future<List<String>> fetchPublicXmlData({required String DepartureStation, required String ArrivalStation, String? TransferStation}) async {
+  static Future<List<String>> fetchPublicXmlData({required String? DepartureStation, required String? ArrivalStation, String? TransferStation}) async {
     final String serviceKey = '4f6d59565373686b39335a4e696348';
     String formattedDate = DateFormat(
       'yyyy-MM-dd HH:mm:ss',
