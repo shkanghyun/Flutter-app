@@ -167,7 +167,6 @@ class _MetroMapPageState extends State<MetroMapPage>
     setState(() {
       DepartureStation = station;
       _isDepartSet = true;
-      print('출발역 설정됨');
     });
   }
 
@@ -239,12 +238,12 @@ class _MetroMapPageState extends State<MetroMapPage>
                         station: DepartureStation,
                       ),
                     if (_isArriveSet)
-                      DepartFlag(
+                      ArriveFlag(
                         transformationController: _mapController,
                         station: ArrivalStation,
                       ),
                     if (_isTransferSet)
-                      DepartFlag(
+                      TransferFlag(
                         transformationController: _mapController,
                         station: TransferStation,
                       ),
@@ -319,7 +318,6 @@ class _StationMarkerState extends State<StationMarker> {
       _optionOverlayEntry!.markNeedsBuild();
       _optionOverlayEntry = null;
       //print('Optionoverlay 업데이트');
-      print(_optionOverlayEntry);
     }
   }
 
@@ -329,14 +327,13 @@ class _StationMarkerState extends State<StationMarker> {
         .value
         .row0
         .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
-    print(currentScale);
 
     _optionOverlayEntry = StationOptionOverlay(
       station: station,
       onStationInformationSelected: widget.onStationInformationSelected,
       onDepartureSelected: widget.onDepartureStationSelected,
       onArrivalSelected: widget.onArrivalStationSelected,
-      onTransfetSelected: widget.onTransferStationSelected,
+      onTransferSelected: widget.onTransferStationSelected,
     ).show(context, widget._transformationController, _layerLink);
 
     // 화면 오버레이에 추가
@@ -413,13 +410,13 @@ class StationOptionOverlay {
   final Function(Station) onStationInformationSelected;
   final Function(Station) onDepartureSelected;
   final Function(Station) onArrivalSelected;
-  final Function(Station) onTransfetSelected;
+  final Function(Station) onTransferSelected;
   StationOptionOverlay({
     required this.station,
     required this.onStationInformationSelected,
     required this.onDepartureSelected,
     required this.onArrivalSelected,
-    required this.onTransfetSelected,
+    required this.onTransferSelected,
   });
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
@@ -454,7 +451,6 @@ class StationOptionOverlay {
               onTapOutside: (event) {
                 _currentEntry?.remove();
                 _currentEntry = null;
-                print('바깥을 누름');
                 //behavior: HitTestBehavior.opaque,
               },
 
@@ -484,7 +480,6 @@ class StationOptionOverlay {
                               textStyle: TextStyle(fontSize: 20 / currentScale),
                             ),
                             onPressed: () {
-                              print('출발 누름');
                               onDepartureSelected(station);
                               PathFinder(
                                 station: station,
@@ -516,7 +511,6 @@ class StationOptionOverlay {
                               textStyle: TextStyle(fontSize: 20 / currentScale),
                             ),
                             onPressed: () {
-                              print('도착 누름');
                               onArrivalSelected(station);
                               PathFinder(station: station).setArrivalStation();
                               dismiss();
@@ -553,8 +547,7 @@ class StationOptionOverlay {
                             ),
                             clipBehavior: Clip.antiAlias,
                             onPressed: () {
-                              print('경유 누름');
-                              onTransfetSelected(station);
+                              onTransferSelected(station);
                               PathFinder(station: station).setTransferStation();
                               dismiss();
                             },
@@ -610,7 +603,6 @@ class StationOptionOverlay {
     if (_currentEntry != null) {
       _currentEntry!.remove();
       _currentEntry = null;
-      print('OverlayEntry Remove함');
     }
   }
 }
@@ -634,6 +626,7 @@ class _DepartFlagState extends State<DepartFlag> {
   @override
   void initState() {
     super.initState();
+    currentScale = widget._transformationController.value.row0.x;
     widget._transformationController.addListener(_onTransformationChanged);
     print('depart 위젯 실행');
   }
@@ -643,7 +636,6 @@ class _DepartFlagState extends State<DepartFlag> {
 
     setState(() {
       currentScale = widget._transformationController.value.row0.x;
-      print('flagupdate');
     });
   }
 
@@ -685,8 +677,9 @@ class _ArriveFlagState extends State<ArriveFlag> {
   @override
   void initState() {
     super.initState();
+    currentScale = widget._transformationController.value.row0.x;
     widget._transformationController.addListener(_onTransformationChanged);
-    //print('depart 위젯 실행');
+    print('ARiive 위젯 실행');
   }
 
   void _onTransformationChanged() {
@@ -694,7 +687,6 @@ class _ArriveFlagState extends State<ArriveFlag> {
 
     setState(() {
       currentScale = widget._transformationController.value.row0.x;
-      print('flagupdate');
     });
   }
 
@@ -736,8 +728,10 @@ class _TransferFlagState extends State<TransferFlag> {
   @override
   void initState() {
     super.initState();
+    currentScale = widget._transformationController.value.row0.x;
+    print(currentScale);
     widget._transformationController.addListener(_onTransformationChanged);
-    //print('depart 위젯 실행');
+    print('transfer 위젯 실행');
   }
 
   void _onTransformationChanged() {
@@ -745,7 +739,6 @@ class _TransferFlagState extends State<TransferFlag> {
 
     setState(() {
       currentScale = widget._transformationController.value.row0.x;
-      print('flagupdate');
     });
   }
 
