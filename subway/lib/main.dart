@@ -243,8 +243,8 @@ class _StationMarkerState extends State<StationMarker> {
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _optionOverlayEntry;
   OverlayEntry? _departFlagOverlayEntry;
-OverlayEntry? _arriveFlagOverlayEntry;
-OverlayEntry? _transferFlagOverlayEntry;
+  OverlayEntry? _arriveFlagOverlayEntry;
+  OverlayEntry? _transferFlagOverlayEntry;
 
   @override
   void initState() {
@@ -263,14 +263,13 @@ OverlayEntry? _transferFlagOverlayEntry;
     } else if (_departFlagOverlayEntry != null) {
       _departFlagOverlayEntry!.markNeedsBuild();
       //print('overlay 업데이트');
-    }else if (_arriveFlagOverlayEntry != null) {
+    } else if (_arriveFlagOverlayEntry != null) {
       _arriveFlagOverlayEntry!.markNeedsBuild();
-//print('overlay 업데이트');
-    }else if (_transferFlagOverlayEntry != null) {
+      //print('overlay 업데이트');
+    } else if (_transferFlagOverlayEntry != null) {
       _transferFlagOverlayEntry!.markNeedsBuild();
       //print('overlay 업데이트');
     }
-
 
     //print('overlay 업데이트');
   }
@@ -332,7 +331,7 @@ OverlayEntry? _transferFlagOverlayEntry;
     print(_optionOverlayEntry);
   }
 
-    void _setTransferFlag(Station station) {
+  void _setTransferFlag(Station station) {
     final double currentScale = widget
         ._transformationController
         .value
@@ -355,7 +354,6 @@ OverlayEntry? _transferFlagOverlayEntry;
     _departFlagOverlayEntry?.remove();
     _optionOverlayEntry = null;
     _departFlagOverlayEntry = null;
-    
   }
 
   @override
@@ -652,13 +650,16 @@ class DepartFlagOverlay {
         return Positioned(
           width: originalWidth / currentScale,
           height: originalHeight / currentScale,
-          child: CompositedTransformFollower(
-            targetAnchor: Alignment.bottomCenter,
-            followerAnchor: Alignment.bottomCenter,
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-            child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+          child: IgnorePointer(
+            ignoring: true,
+            child: CompositedTransformFollower(
+              targetAnchor: Alignment.bottomCenter,
+              followerAnchor: Alignment.bottomCenter,
+              link: _layerLink,
+              showWhenUnlinked: false,
+              offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+              child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+            ),
           ),
         );
       },
@@ -710,13 +711,16 @@ class ArriveFlagOverlay {
         return Positioned(
           width: originalWidth / currentScale,
           height: originalHeight / currentScale,
-          child: CompositedTransformFollower(
-            targetAnchor: Alignment.bottomCenter,
-            followerAnchor: Alignment.bottomCenter,
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-            child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+          child: IgnorePointer(
+            ignoring: true,
+            child: CompositedTransformFollower(
+              targetAnchor: Alignment.bottomCenter,
+              followerAnchor: Alignment.bottomCenter,
+              link: _layerLink,
+              showWhenUnlinked: false,
+              offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+              child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+            ),
           ),
         );
       },
@@ -768,13 +772,16 @@ class TransferFlagOverlay {
         return Positioned(
           width: originalWidth / currentScale,
           height: originalHeight / currentScale,
-          child: CompositedTransformFollower(
-            targetAnchor: Alignment.bottomCenter,
-            followerAnchor: Alignment.bottomCenter,
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-            child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+          child: IgnorePointer(
+            ignoring: true,
+            child: CompositedTransformFollower(
+              targetAnchor: Alignment.bottomCenter,
+              followerAnchor: Alignment.bottomCenter,
+              link: _layerLink,
+              showWhenUnlinked: false,
+              offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+              child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
+            ),
           ),
         );
       },
