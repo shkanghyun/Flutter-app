@@ -164,24 +164,42 @@ class _MetroMapPageState extends State<MetroMapPage>
   bool _isTransferSet = false;
 
   void setDepartureStationFlag(Station station) {
-    setState(() {
-      DepartureStation = station;
-      _isDepartSet = true;
-    });
+    if (DepartureStation == station) {
+      setState(() {
+        _isDepartSet = false;
+      });
+    } else {
+      setState(() {
+        DepartureStation = station;
+        _isDepartSet = true;
+      });
+    }
   }
 
   void setArrivalStationFlag(Station station) {
-    setState(() {
-      ArrivalStation = station;
-      _isArriveSet = true;
-    });
+    if (ArrivalStation == station) {
+      setState(() {
+        _isArriveSet = false;
+      });
+    } else {
+      setState(() {
+        ArrivalStation = station;
+        _isArriveSet = true;
+      });
+    }
   }
 
   void setTransferStationFlag(Station station) {
-    setState(() {
-      TransferStation = station;
-      _isTransferSet = true;
-    });
+    if (TransferStation == station) {
+      setState(() {
+        _isTransferSet = false;
+      });
+    } else {
+      setState(() {
+        TransferStation = station;
+        _isTransferSet = true;
+      });
+    }
   }
 
   @override
@@ -633,7 +651,6 @@ class _DepartFlagState extends State<DepartFlag> {
 
   void _onTransformationChanged() {
     // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
-
     setState(() {
       currentScale = widget._transformationController.value.row0.x;
     });
@@ -661,6 +678,12 @@ class _DepartFlagState extends State<DepartFlag> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    widget._transformationController.removeListener(_onTransformationChanged);
+    super.dispose();
   }
 }
 
@@ -719,6 +742,12 @@ class _ArriveFlagState extends State<ArriveFlag> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    widget._transformationController.removeListener(_onTransformationChanged);
+    super.dispose();
+  }
 }
 
 class TransferFlag extends StatefulWidget {
@@ -776,6 +805,12 @@ class _TransferFlagState extends State<TransferFlag> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    widget._transformationController.removeListener(_onTransformationChanged);
+    super.dispose();
   }
 }
 
