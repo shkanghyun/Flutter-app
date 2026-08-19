@@ -11,7 +11,7 @@ class StationDetailsSheet extends StatefulWidget {
 }
 
 class StationDetailsSheetState extends State<StationDetailsSheet> {
-  List<String> _dataList = [];
+  List<List<String>> _dataList = [];
   bool _isLoading = false; // 로딩 상태 기억용 변수
 
   @override
@@ -29,14 +29,13 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
-      List<String> result = await SeoulApiService.fetchPublicXmlData(
-        DepartureStation: '왕십리',
-        ArrivalStation: '답십리',
-        TransferStation: null,
+      List<List<String>> result = await SubwayApiService.fetchPublicXmlData(
+        widget.station.name,
       );
 
       setState(() {
         _dataList = result; // 받아온 진짜 데이터를 변수에 저장
+        _dataList.sort((a, b) => a[1].compareTo(b[1])); // 라인 순서대로 정렬
         _isLoading = false; // 로딩 완료
       });
     } catch (e) {
@@ -237,12 +236,14 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                 child: _dataList.isEmpty
                     ? Center(child: Text('데이터가 없습니다.')) // 데이터가 없을 때
                     : ListView.builder(
-                        // 데이터가 있을 때 일반 변수(_dataList) 사용!
                         itemCount: _dataList.length,
                         itemBuilder: (context, index) {
+                          List<String> lineList = _dataList[index][0].split(',');  
+                          _dataList[index].sort;
                           return ListTile(
+                            //for(i in _dataList[index]){text = text + i;}
                             leading: CircleAvatar(child: Text('${index + 1}')),
-                            title: Text(_dataList[index]), // 일반 변수의 값 출력
+                            title: Text(_dataList[index].toString()), // 일반 변수의 값 출력
                           );
                         },
                       ),

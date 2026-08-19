@@ -227,7 +227,7 @@ class _MetroMapPageState extends State<MetroMapPage>
                   children: [
                     Positioned.fill(
                       child: Image.asset(
-                        'assets/images/seoul_subway_map-2.png',
+                        'assets/images/seoul_subway_map_foreigners.png',
                         fit: BoxFit.fill,
                         filterQuality: FilterQuality.high,
                       ),
@@ -638,15 +638,11 @@ class DepartFlag extends StatefulWidget {
 }
 
 class _DepartFlagState extends State<DepartFlag> {
-  // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
-  static Widget? _currentWidget;
-
   @override
   void initState() {
     super.initState();
     currentScale = widget._transformationController.value.row0.x;
     widget._transformationController.addListener(_onTransformationChanged);
-    print('depart 위젯 실행');
   }
 
   void _onTransformationChanged() {
@@ -672,7 +668,7 @@ class _DepartFlagState extends State<DepartFlag> {
         child: Transform.translate(
           offset: Offset(0.0, 3.5 / currentScale),
           child: Icon(
-            Icons.add_location_rounded,
+            Icons.location_on,
             size: originalHeight / currentScale,
           ),
         ),
@@ -700,15 +696,11 @@ class ArriveFlag extends StatefulWidget {
 }
 
 class _ArriveFlagState extends State<ArriveFlag> {
-  // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
-  static Widget? _currentWidget;
-
   @override
   void initState() {
     super.initState();
     currentScale = widget._transformationController.value.row0.x;
     widget._transformationController.addListener(_onTransformationChanged);
-    print('ARiive 위젯 실행');
   }
 
   void _onTransformationChanged() {
@@ -735,7 +727,7 @@ class _ArriveFlagState extends State<ArriveFlag> {
         child: Transform.translate(
           offset: Offset(0.0, 3.5 / currentScale),
           child: Icon(
-            Icons.add_location_rounded,
+            Icons.location_off,
             size: originalHeight / currentScale,
           ),
         ),
@@ -763,16 +755,12 @@ class TransferFlag extends StatefulWidget {
 }
 
 class _TransferFlagState extends State<TransferFlag> {
-  // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
-  static Widget? _currentWidget;
-
   @override
   void initState() {
     super.initState();
     currentScale = widget._transformationController.value.row0.x;
     print(currentScale);
     widget._transformationController.addListener(_onTransformationChanged);
-    print('transfer 위젯 실행');
   }
 
   void _onTransformationChanged() {
@@ -821,31 +809,45 @@ class PathFinder {
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
   static OverlayEntry? _currentEntry;
-  static String? DepartureStation;
-  static String? ArrivalStation;
-  static String TransferStation = '';
+  static String? departureStation;
+  static String? arrivalStation;
+  static String transferStation = '';
   List<String> _dataList = [];
   bool _isLoading = false; // 로딩 상태 기억용 변수
 
   void setDepartureStation() {
-    DepartureStation = station.name;
-    print('출발역: $DepartureStation');
-    if (DepartureStation != null && ArrivalStation != null) {
-      loadData();
+    if (departureStation == station.name) {
+      departureStation = null;
+    } else {
+      departureStation = station.name;
+      if (departureStation != null && arrivalStation != null) {
+        loadData();
+      }
     }
   }
 
   void setArrivalStation() {
-    ArrivalStation = station.name;
-    if (DepartureStation != null && ArrivalStation != null) {
-      loadData();
+    if (arrivalStation == station.name) {
+      arrivalStation = null;
+    } else {
+      arrivalStation = station.name;
+      if (departureStation != null && arrivalStation != null) {
+        loadData();
+      }
     }
   }
 
   void setTransferStation() {
-    TransferStation = station.name;
-    if (DepartureStation != null && ArrivalStation != null) {
-      loadData();
+    if (transferStation == station.name) {
+      transferStation = '';
+      if (departureStation != null && arrivalStation != null) {
+        loadData();
+      }
+    } else {
+      transferStation = station.name;
+      if (departureStation != null && arrivalStation != null) {
+        loadData();
+      }
     }
   }
 
@@ -855,9 +857,9 @@ class PathFinder {
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
       List<String> result = await SeoulApiService.fetchPublicXmlData(
-        DepartureStation: DepartureStation,
-        ArrivalStation: ArrivalStation,
-        TransferStation: TransferStation,
+        DepartureStation: departureStation,
+        ArrivalStation: arrivalStation,
+        TransferStation: transferStation,
       );
 
       _dataList = result; // 받아온 진짜 데이터를 변수에 저장

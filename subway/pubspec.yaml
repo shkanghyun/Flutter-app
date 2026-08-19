@@ -22,4 +22,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/seoul_subway_map-2.png
+    - assets/images/seoul_subway_map_foreigners.png
