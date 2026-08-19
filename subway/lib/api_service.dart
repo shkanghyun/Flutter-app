@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml; // XML 패키지 임포트
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:subway/stationTranslate.dart';
 
 class SubwayApiService {
   static Future<List<List<String>>> fetchPublicXmlData(
@@ -35,6 +36,7 @@ class SubwayApiService {
           final lineId = item.findElements('subwayId').first.innerText;
           final headingTo = item.findElements('trainLineNm').first.innerText;
           final trainType = item.findElements('btrainSttus').first.innerText;
+          final finalStation = item.findElements('bstatnNm').first.innerText;
           final arvlMsg = item.findElements('arvlMsg2').first.innerText;
           final trainAt = item.findElements('arvlMsg3').first.innerText;
           final trainOn = item.findElements('arvlCd').first.innerText;
@@ -64,15 +66,24 @@ class SubwayApiService {
           };
 
           List<String> heading = headingTo.split(' - ');
-          String finalStation = heading[0];
           String nextStation = heading[1];
 
+          String enFinalStation = translate(finalStation);
+
+          String enNextStation = '';
+          if (nextStation.length >= 2) {
+            String nextStationChopped = nextStation.substring(
+              0,
+              nextStation.length - 2,
+            );
+            enNextStation = translate(nextStationChopped);
+          }
 
           results.add([
             lineList,
             line,
-            nextStation,
-            finalStation,
+            'toward $enNextStation',
+            'bound for $enFinalStation',
             arvlMsg,
             trainAt,
             trainType,

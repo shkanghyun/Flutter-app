@@ -217,22 +217,8 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                 iconColor: const Color(0xFF5F6D89),
               ),
               const SizedBox(height: 10),
-              _InfoCard(
-                icon: Icons.info_outline_rounded,
-                label: '역 안내',
-                value: widget.station.note,
-                iconColor: const Color(0xFF5F6D89),
-              ),
-              const SizedBox(height: 10),
-
-              _InfoCard(
-                icon: Icons.info_outline_rounded,
-                label: '도착 정보',
-                value: widget.station.note,
-                iconColor: const Color(0xFF5F6D89),
-              ),
               SizedBox(
-                height: 200,
+                height: 500,
                 child: _dataList.isEmpty
                     ? Center(child: Text('데이터가 없습니다.')) // 데이터가 없을 때
                     : ListView.builder(
