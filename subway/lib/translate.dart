@@ -313,6 +313,7 @@ const Map<String, String> stationTranslationMap = {
   '서동탄': 'Seodongtan',
   '서부여성회관': "West Woman's Community Center",
   '서빙고': 'Seobinggo',
+  '서울': 'Seoul Station',
   '서울대벤처타운': 'seouldaebencheotaun',
   '서울대입구': 'Seoul National University',
   '서울숲': 'Seoul Forest',
@@ -659,9 +660,9 @@ const Map<String, String> stationTranslationMap = {
   '흑석': 'Heukseok',
   '흥선': 'heungseon',
 
-  '전역출발': 'prev. station (Departed)',
+  '전역출발': 'previous station (Departed)',
   ' 전역': ' stations away',
-  '전역': 'prev. station',
+  '전역': 'previous station',
 };
 
 final Map<String, String> sortedStationTranslationMap = Map.fromEntries(

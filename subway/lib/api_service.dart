@@ -10,9 +10,13 @@ class SubwayApiService {
     String stationName,
   ) async {
     final String serviceKey = '6b4f495a6773686b3639514c624a65';
+    String url =
+          'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/$stationName';
     //  XML 전용 API 주소를 입력하세요.
-    final String url =
-        'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/20/$stationName';
+    if (stationName == '서울역') {
+      url =
+          'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/서울';
+    }
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -67,9 +71,9 @@ class SubwayApiService {
           };
 
           List<String> heading = headingTo.split(' - ');
-          String nextStation = heading[1];
+          String nextStation = heading[1];                                       // '..방면' 추출
 
-          String enFinalStation = translateStationName(finalStation);
+          String enFinalStation = translateStationName(finalStation);            
 
           String enNextStation = '';
           if (nextStation.length >= 2) {
@@ -80,14 +84,13 @@ class SubwayApiService {
           String enArvlMsg = translateArrivalInfo(arvlMsg);
 
           results.add([
-            lineList,
             line,
             'toward $enNextStation',
             'bound for $enFinalStation',
             enArvlMsg,
             trainAt,
             trainType,
-            trainOn,
+            lineList,
           ]);
         }
         print('API.dart result: $results');

@@ -35,7 +35,14 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
       setState(() {
         _dataList = result; // 받아온 진짜 데이터를 변수에 저장
-        _dataList.sort((a, b) => a[1].compareTo(b[1])); // 라인 순서대로 정렬
+        _dataList.sort((a, b) {         // 라인 순서대로 정렬 (Line1->9->이외)
+          bool hasTargetA = a[0].startsWith('Line');
+          bool hasTargetB = b[0].startsWith('Line');
+
+          if (hasTargetA && !hasTargetB) return -1; // a를 맨 앞으로
+          if (!hasTargetA && hasTargetB) return 1; // b를 맨 앞으로
+          return a[0].compareTo(b[0]);
+        }); 
         _isLoading = false; // 로딩 완료
       });
     } catch (e) {
@@ -55,6 +62,8 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
     // 기기의 픽셀 밀도 (배율)
     final double devicePixelRatio = View.of(context).devicePixelRatio;
+
+    Set<String> forStationLineWidget = {};
 
     return SizedBox(
       height:
@@ -210,23 +219,42 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                 iconColor: const Color(0xFF5F6D89),
               ),
               const SizedBox(height: 10),
+
               SizedBox(
+                height: 500,
+                child: ListView(
+                  children: [
+                    for (List<String> i in _dataList)
+                      if (forStationLineWidget.add(i[0])) ...[
+                        // 같은 라인이 들어가면 false가 반환
+                        SizedBox(height: 50, child: Center(child: Text(i[0]))),
+                        ListTile(title: Text(i.toString())),
+                      ] else
+                        ListTile(title: Text(i.toString())),
+                  ],
+                ),
+              ),
+
+              /*SizedBox(
                 height: 500,
                 child: _dataList.isEmpty
                     ? Center(child: Text('데이터가 없습니다.')) // 데이터가 없을 때
                     : ListView.builder(
                         itemCount: _dataList.length,
                         itemBuilder: (context, index) {
-                          List<String> lineList = _dataList[index][0].split(',');  
+                          List<String> lineList = _dataList[index][0].split(
+                            ',',
+                          );
                           _dataList[index].sort;
                           return ListTile(
-                            //for(i in _dataList[index]){text = text + i;}
                             leading: CircleAvatar(child: Text('${index + 1}')),
-                            title: Text(_dataList[index].toString()), // 일반 변수의 값 출력
+                            title: Text(
+                              _dataList[index].toString(),
+                            ), // 일반 변수의 값 출력
                           );
                         },
                       ),
-              ),
+              ),*/
               FilledButton.icon(
                 onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
