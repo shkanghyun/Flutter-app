@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml; // XML 패키지 임포트
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'package:subway/stationTranslate.dart';
+import 'package:subway/translate.dart';
 
 class SubwayApiService {
   static Future<List<List<String>>> fetchPublicXmlData(
@@ -19,6 +19,7 @@ class SubwayApiService {
 
       if (response.statusCode == 200) {
         print('response.statusCode : 200');
+        print(url);
         // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
         final String decodedBody = utf8.decode(response.bodyBytes);
 
@@ -68,7 +69,7 @@ class SubwayApiService {
           List<String> heading = headingTo.split(' - ');
           String nextStation = heading[1];
 
-          String enFinalStation = translate(finalStation);
+          String enFinalStation = translateStationName(finalStation);
 
           String enNextStation = '';
           if (nextStation.length >= 2) {
@@ -76,7 +77,7 @@ class SubwayApiService {
               0,
               nextStation.length - 2,
             );
-            enNextStation = translate(nextStationChopped);
+            enNextStation = translateStationName(nextStationChopped);
           }
 
           results.add([
