@@ -73,19 +73,18 @@ class SubwayApiService {
 
           String enNextStation = '';
           if (nextStation.length >= 2) {
-            String nextStationChopped = nextStation.substring(
-              0,
-              nextStation.length - 2,
-            );
+            String nextStationChopped = nextStation.split('방면').first;
             enNextStation = translateStationName(nextStationChopped);
           }
+
+          String enArvlMsg = translateArrivalInfo(arvlMsg);
 
           results.add([
             lineList,
             line,
             'toward $enNextStation',
             'bound for $enFinalStation',
-            arvlMsg,
+            enArvlMsg,
             trainAt,
             trainType,
             trainOn,

@@ -526,8 +526,8 @@ const Map<String, String> stationTranslationMap = {
   '인덕원': 'Indeogwon',
   '인천': 'Incheon',
   '인천가좌': 'Incheon Gajwa',
-  '인천공항1터미널': 'Incheon International Airport',
-  '인천공항2터미널': 'incheongonghang2teomineol',
+  '인천공항1터미널': 'Incheon Int\'l Airport T1',
+  '인천공항2터미널': 'Incheon Int\'l Airport T2',
   '인천논현': 'Incheon Nonhyeon',
   '인천대공원': 'Incheon Grand Park',
   '인천대입구': 'University of Incheon',
@@ -659,13 +659,46 @@ const Map<String, String> stationTranslationMap = {
   '흑석': 'Heukseok',
   '흥선': 'heungseon',
 
-  '전역': 'Prev. Station',
+  '전역출발': 'prev. station (Departed)',
+  ' 전역': ' stations away',
+  '전역': 'prev. station',
 };
 
+final Map<String, String> sortedStationTranslationMap = Map.fromEntries(
+  stationTranslationMap.entries.toList()
+    ..sort((a, b) => b.key.length.compareTo(a.key.length)),
+);
+
 String translateStationName(String stationName) {
-  return stationTranslationMap[stationName] ?? stationName;
+  return sortedStationTranslationMap[stationName] ?? stationName;
 }
 
-/*String translateArrivalInfo(String ArrivalInfo) {
-  ArrivalInfo.replaceAll('분', 'm').replaceAll('초', 's');
-}*/
+String translateArrivalInfo(String arrivalInfo) {
+  String enArrivalInfo = arrivalInfo.split(' (').first;
+
+  sortedStationTranslationMap.forEach((ko, en) {
+    enArrivalInfo = enArrivalInfo.replaceAll(ko, en);
+  });
+
+  enArrivalInfo = enArrivalInfo
+      .replaceAll('분', 'm')
+      .replaceAll('초', 's')
+      .replaceAll('역', 'station');
+  enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+    RegExp(r'(.+)후'),
+    (match) => 'arriving in ${match[1]}',
+  );
+  enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+    RegExp(r'(.+)도착'),
+    (match) => 'arrived ${match[1]}',
+  );
+    enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+    RegExp(r'(.+)출발'),
+    (match) => 'departed ${match[1]}',
+  );
+      enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+    RegExp(r'(.+)진입'),
+    (match) => 'entering ${match[1]}',
+  );
+  return enArrivalInfo;
+}

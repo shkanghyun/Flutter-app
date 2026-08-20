@@ -204,13 +204,6 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
               ),
               const SizedBox(height: 24),
               _InfoCard(
-                icon: Icons.swap_horiz_rounded,
-                label: '환승 안내',
-                value: widget.station.transferNote,
-                iconColor: widget.station.color,
-              ),
-              const SizedBox(height: 10),
-              _InfoCard(
                 icon: Icons.location_on_outlined,
                 label: '주변 주요 장소',
                 value: widget.station.nearby,
