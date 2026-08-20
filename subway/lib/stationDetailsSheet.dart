@@ -121,7 +121,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.station.name,
+                          widget.station.englishName,
                           style: const TextStyle(
                             fontSize: 25,
                             fontWeight: FontWeight.w800,
@@ -130,7 +130,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          widget.station.englishName,
+                          widget.station.name,
                           style: const TextStyle(
                             color: Color(0xFF68748E),
                             fontSize: 14,
@@ -156,7 +156,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                               ),
                             ),
                             onPressed: () => Navigator.pop(context),
-                            child: Text('출발'),
+                            child: Text('From'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
                           OutlinedButton(
@@ -171,7 +171,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                               ),
                             ),
                             onPressed: () => Navigator.pop(context),
-                            child: Text('도착'),
+                            child: Text('To'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
                         ],
@@ -189,7 +189,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                           ),
                         ),
                         onPressed: () => Navigator.pop(context),
-                        child: Text('경유'),
+                        child: Text('Via'),
                         //icon: const Icon(Icons.close_rounded),
                       ),
                     ],
@@ -202,7 +202,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                 ],
               ),
               const SizedBox(height: 22),
-              const Text('운행 노선', style: _sectionTitle),
+              const Text('Connections', style: _sectionTitle),
               const SizedBox(height: 10),
               Wrap(
                 spacing: 8,

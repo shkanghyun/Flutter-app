@@ -58,7 +58,7 @@ class SubwayApiService {
             '1009' => 'Line 9',
             '1061' => 'Jungang Line',
             '1063' => 'Gyeongui·Jungang Line',
-            '1065' => 'Airport Railroad Line',
+            '1065' => 'Airport Railroad',
             '1067' => 'Gyuongchun Line',
             '1075' => 'Suin·Bundang Line',
             '1077' => 'Shinbundang Line',

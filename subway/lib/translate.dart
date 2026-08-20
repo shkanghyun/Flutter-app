@@ -693,13 +693,18 @@ String translateArrivalInfo(String arrivalInfo) {
     RegExp(r'(.+)도착'),
     (match) => 'arrived ${match[1]}',
   );
-    enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+  enArrivalInfo = enArrivalInfo.replaceFirstMapped(
     RegExp(r'(.+)출발'),
     (match) => 'departed ${match[1]}',
   );
-      enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+  enArrivalInfo = enArrivalInfo.replaceFirstMapped(
     RegExp(r'(.+)진입'),
     (match) => 'entering ${match[1]}',
   );
+  enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+    RegExp(r'\[(\d+)\]번째'),
+    (match) => '${match[1]}',
+  );
+
   return enArrivalInfo;
 }

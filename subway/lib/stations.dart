@@ -38,7 +38,32 @@ class Station {
   }
 }
 
-const line1 = MetroLine('1호선', Color(0xFF1F4B99));
+const line1 = MetroLine('Line 1', Color(0xFF1F4B99));
+const line2 = MetroLine('Line 2', Color(0xFF13A538));
+const line3 = MetroLine('Line 3', Color(0xFFF27822));
+const line4 = MetroLine('Line 4', Color(0xFF38A4D5));
+const line5 = MetroLine('Line 5', Color(0xFF8B4EBB));
+const line6 = MetroLine('Line 6', Color(0xFF9B4D31));
+const line7 = MetroLine('Line 7', Color(0xFF67772D));
+const line8 = MetroLine('Line 8', Color(0xFFE91B74));
+const line9 = MetroLine('Line 9', Color(0xFF9E9D92));
+const airport = MetroLine('Airport Railroad', Color(0xFF5AAFC3));
+const gtxA = MetroLine('GTX-A', Color(0xFFAA4398));
+const suinBundang = MetroLine('Suin·Bundang Line', Color(0xFFF4BB38));
+const gyeongui = MetroLine('Gyeongui·Jungang Line', Color(0xFF73C5B4));
+const gyeongchun = MetroLine('Gyeongchun Line', Color(0xFF2C7A5B));
+const uijeongbu = MetroLine('Uijeongbu Lrt', Color(0xFFFF8A00));
+const uiSinseol = MetroLine('Ui Shinseol Line', Color(0xFFB2C72E));
+const sillim = MetroLine('Shillim Line', Color(0xFF376EAF));
+const gimpoGold = MetroLine('Gimpo Goldline', Color(0xFFC6A600));
+const incheon1 = MetroLine('Incheon Line 1', Color(0xFF6BAED6));
+const incheon2 = MetroLine('Incheon Line 2', Color(0xFFFFA64D));
+const everline = MetroLine('Yongin Everline', Color(0xFF55B657));
+const shinBundang = MetroLine('Shinbundang Line', Color(0xFFD31145));
+const gyeonggang = MetroLine('Gyeonggang Line', Color(0xFF0055A5));
+const seohae = MetroLine('Seohae Line', Color(0xFF6FBF4B));
+
+/*const line1 = MetroLine('1호선', Color(0xFF1F4B99));
 const line2 = MetroLine('2호선', Color(0xFF13A538));
 const line3 = MetroLine('3호선', Color(0xFFF27822));
 const line4 = MetroLine('4호선', Color(0xFF38A4D5));
@@ -61,7 +86,9 @@ const incheon2 = MetroLine('인천2호선', Color(0xFFFFA64D));
 const everline = MetroLine('에버라인', Color(0xFF55B657));
 const shinBundang = MetroLine('신분당선', Color(0xFFD31145));
 const gyeonggang = MetroLine('경강선', Color(0xFF0055A5));
-const seohae = MetroLine('서해선', Color(0xFF6FBF4B));
+const seohae = MetroLine('서해선', Color(0xFF6FBF4B));*/
+
+
 
 const _lineById = <String, MetroLine>{
   'line1': line1,

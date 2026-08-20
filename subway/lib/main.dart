@@ -504,7 +504,7 @@ class StationOptionOverlay {
                               ).setDepartureStation();
                               dismiss();
                             },
-                            child: Text('출발'),
+                            child: Text('From'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
                         ),
@@ -533,7 +533,7 @@ class StationOptionOverlay {
                               PathFinder(station: station).setArrivalStation();
                               dismiss();
                             },
-                            child: Text('도착'),
+                            child: Text('To'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
                         ),
@@ -569,7 +569,7 @@ class StationOptionOverlay {
                               PathFinder(station: station).setTransferStation();
                               dismiss();
                             },
-                            child: Text('경유'),
+                            child: Text('Via'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
                         ),
@@ -597,7 +597,7 @@ class StationOptionOverlay {
                               dismiss();
                               onStationInformationSelected(station);
                             },
-                            child: Text('정보'),
+                            child: Text('Info'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
                         ),
