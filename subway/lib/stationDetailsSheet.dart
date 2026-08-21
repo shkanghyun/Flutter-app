@@ -35,14 +35,15 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
       setState(() {
         _dataList = result; // 받아온 진짜 데이터를 변수에 저장
-        _dataList.sort((a, b) {         // 라인 순서대로 정렬 (Line1->9->이외)
+        _dataList.sort((a, b) {
+          // 라인 순서대로 정렬 (Line1->9->이외)
           bool hasTargetA = a[0].startsWith('Line');
           bool hasTargetB = b[0].startsWith('Line');
 
           if (hasTargetA && !hasTargetB) return -1; // a를 맨 앞으로
           if (!hasTargetA && hasTargetB) return 1; // b를 맨 앞으로
           return a[0].compareTo(b[0]);
-        }); 
+        });
         _isLoading = false; // 로딩 완료
       });
     } catch (e) {
@@ -255,19 +256,47 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                         },
                       ),
               ),*/
-              FilledButton.icon(
-                onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${widget.station.name}역을 즐겨찾기에 저장했습니다.'),
+              Row(
+                children: [
+                  Flexible(
+                    child: FilledButton.icon(
+                      onPressed: () =>
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${widget.station.name}역을 즐겨찾기에 저장했습니다.',
+                              ),
+                            ),
+                          ),
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(52),
+                        backgroundColor: const Color(0xFF101B36),
+                        foregroundColor: Colors.white,
+                      ),
+                      icon: const Icon(Icons.schedule),
+                      label: const Text('Timetable'),
+                    ),
                   ),
-                ),
-                style: FilledButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                  backgroundColor: const Color(0xFF101B36),
-                  foregroundColor: Colors.white,
-                ),
-                icon: const Icon(Icons.bookmark_border_rounded),
-                label: const Text('즐겨찾기에 저장'),
+                  SizedBox(
+                    width: 100,
+                    child: IconButton.filled(
+                        onPressed: () =>
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  '${widget.station.name}역을 즐겨찾기에 저장했습니다.',
+                                ),
+                              ),
+                            ),
+                        style: FilledButton.styleFrom(
+                          minimumSize: const Size.fromHeight(52),
+                          backgroundColor: const Color(0xFF101B36),
+                          foregroundColor: Colors.white,
+                        ),
+                        icon: const Icon(size: 30, Icons.star_border),
+                      ),
+                  ),
+                ],
               ),
             ],
           ),

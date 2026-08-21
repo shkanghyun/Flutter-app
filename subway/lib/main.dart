@@ -635,15 +635,15 @@ class StationOptionOverlay {
               child: Material(
                 color: Colors.transparent,
                 child: Container(
-                  height: 110,
+                  height: 120,
                   padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 10,
+                    top: MediaQuery.of(context).padding.top ,
                     left: 16,
                     right: 16,
                   ),
                   color: Colors.white,
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
                         width: 54,
@@ -658,10 +658,11 @@ class StationOptionOverlay {
                           size: 30,
                         ),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               station.englishName,
