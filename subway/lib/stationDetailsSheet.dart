@@ -58,6 +58,8 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final double bottomPadding = MediaQuery.of(context).padding.bottom;
+
     // 기기의 물리적 상단 패딩 값 (픽셀 단위)
     final double physicalTopPadding = View.of(context).viewPadding.top;
 
@@ -80,89 +82,109 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
         //snapSizes: const [0.2, 0.3],
         //maxChildSize: 1.0,
         //expand: false,
-        builder: (context, scrollController) => Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-          ),
-          child: ListView(
-            controller: scrollController,
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 32),
-            children: [
-              Center(
-                child: Container(
-                  width: 38,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFD9DFED),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
+        builder: (context, scrollController) => Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
               ),
-              const SizedBox(height: 22),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
+                controller: scrollController,
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 32),
                 children: [
-                  Container(
-                    width: 54,
-                    height: 54,
-                    decoration: BoxDecoration(
-                      color: widget.station.color,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: const Icon(
-                      Icons.subway_rounded,
-                      color: Colors.white,
-                      size: 30,
+                  Center(
+                    child: Container(
+                      width: 38,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD9DFED),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.station.englishName,
-                          style: const TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF101B36),
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          widget.station.name,
-                          style: const TextStyle(
-                            color: Color(0xFF68748E),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                  const SizedBox(height: 22),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Row(
+                      Container(
+                        width: 54,
+                        height: 54,
+                        decoration: BoxDecoration(
+                          color: widget.station.color,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Icon(
+                          Icons.subway_rounded,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.station.englishName,
+                              style: const TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF101B36),
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              widget.station.name,
+                              style: const TextStyle(
+                                color: Color(0xFF68748E),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: const Size(50, 20),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
+                          Row(
+                            children: [
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  fixedSize: const Size(50, 20),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 0.0,
+                                    vertical: 0.0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('From'),
+                                //icon: const Icon(Icons.close_rounded),
                               ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  fixedSize: const Size(50, 20),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 0.0,
+                                    vertical: 0.0,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                                child: Text('To'),
+                                //icon: const Icon(Icons.close_rounded),
                               ),
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text('From'),
-                            //icon: const Icon(Icons.close_rounded),
+                            ],
                           ),
-                          OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: const Size(50, 20),
+                          ElevatedButton(
+                            //tooltip: '닫기',
+                            style: ElevatedButton.styleFrom(
+                              //fixedSize: const Size(50, 20),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 0.0,
                                 vertical: 0.0,
@@ -172,71 +194,56 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                               ),
                             ),
                             onPressed: () => Navigator.pop(context),
-                            child: Text('To'),
+                            child: Text('Via'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
                         ],
                       ),
-                      ElevatedButton(
-                        //tooltip: '닫기',
-                        style: ElevatedButton.styleFrom(
-                          //fixedSize: const Size(50, 20),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 0.0,
-                            vertical: 0.0,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
+                      IconButton(
+                        tooltip: '닫기',
                         onPressed: () => Navigator.pop(context),
-                        child: Text('Via'),
-                        //icon: const Icon(Icons.close_rounded),
+                        icon: const Icon(Icons.close_rounded),
                       ),
                     ],
                   ),
-                  IconButton(
-                    tooltip: '닫기',
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close_rounded),
+                  const SizedBox(height: 22),
+                  const Text('Connections', style: _sectionTitle),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: widget.station.lines
+                        .map((line) => LineBadge(line: line))
+                        .toList(),
                   ),
-                ],
-              ),
-              const SizedBox(height: 22),
-              const Text('Connections', style: _sectionTitle),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: widget.station.lines
-                    .map((line) => LineBadge(line: line))
-                    .toList(),
-              ),
-              const SizedBox(height: 24),
-              _InfoCard(
-                icon: Icons.location_on_outlined,
-                label: '주변 주요 장소',
-                value: widget.station.nearby,
-                iconColor: const Color(0xFF5F6D89),
-              ),
-              const SizedBox(height: 10),
+                  const SizedBox(height: 24),
+                  _InfoCard(
+                    icon: Icons.location_on_outlined,
+                    label: '주변 주요 장소',
+                    value: widget.station.nearby,
+                    iconColor: const Color(0xFF5F6D89),
+                  ),
+                  const SizedBox(height: 10),
 
-              SizedBox(
-                height: 500,
-                child: ListView(
-                  children: [
-                    for (List<String> i in _dataList)
-                      if (forStationLineWidget.add(i[0])) ...[
-                        // 같은 라인이 들어가면 false가 반환
-                        SizedBox(height: 50, child: Center(child: Text(i[0]))),
-                        ListTile(title: Text(i.toString())),
-                      ] else
-                        ListTile(title: Text(i.toString())),
-                  ],
-                ),
-              ),
+                  SizedBox(
+                    height: 450,
+                    child: ListView(
+                      children: [
+                        for (List<String> i in _dataList)
+                          if (forStationLineWidget.add(i[0])) ...[
+                            // 같은 라인이 들어가면 false가 반환
+                            SizedBox(
+                              height: 50,
+                              child: Center(child: Text(i[0])),
+                            ),
+                            ListTile(title: Text(i.toString())),
+                          ] else
+                            ListTile(title: Text(i.toString())),
+                      ],
+                    ),
+                  ),
 
-              /*SizedBox(
+                  /*SizedBox(
                 height: 500,
                 child: _dataList.isEmpty
                     ? Center(child: Text('데이터가 없습니다.')) // 데이터가 없을 때
@@ -256,7 +263,15 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                         },
                       ),
               ),*/
-              Row(
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: bottomPadding + 10,
+              left: 20,
+              right: 20,
+              height: 52,
+              child: Row(
                 children: [
                   Flexible(
                     child: FilledButton.icon(
@@ -280,26 +295,26 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                   SizedBox(
                     width: 100,
                     child: IconButton.filled(
-                        onPressed: () =>
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  '${widget.station.name}역을 즐겨찾기에 저장했습니다.',
-                                ),
+                      onPressed: () =>
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${widget.station.name}역을 즐겨찾기에 저장했습니다.',
                               ),
                             ),
-                        style: FilledButton.styleFrom(
-                          minimumSize: const Size.fromHeight(52),
-                          backgroundColor: const Color(0xFF101B36),
-                          foregroundColor: Colors.white,
-                        ),
-                        icon: const Icon(size: 30, Icons.star_border),
+                          ),
+                      style: FilledButton.styleFrom(
+                        minimumSize: const Size.fromHeight(52),
+                        backgroundColor: const Color(0xFF101B36),
+                        foregroundColor: Colors.white,
                       ),
+                      icon: const Icon(size: 30, Icons.star_border),
+                    ),
                   ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
