@@ -44,7 +44,7 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
               autofocus: true,
               onChanged: (value) => setState(() => _query = value.trim()),
               decoration: InputDecoration(
-                hintText: '역 이름 검색',
+                hintText: 'Search stations',
                 prefixIcon: const Icon(Icons.search_rounded),
                 filled: true,
                 fillColor: const Color(0xFFF1F4FA),
@@ -83,7 +83,7 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
                         ),
                       ),
                       title: Text(
-                        station.name,
+                        station.englishName,
                         style: const TextStyle(fontWeight: FontWeight.w800),
                       ),
                       subtitle: Text(

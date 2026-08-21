@@ -231,7 +231,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                       ListTile(title: Text(i.toString())),
                     ] else
                       ListTile(title: Text(i.toString())),
-                  SizedBox(height: bottomPadding+10+52),
+                  SizedBox(height: bottomPadding + 10 + 52),
                   /*SizedBox(
                 height: 500,
                 child: _dataList.isEmpty
