@@ -701,7 +701,7 @@ String translateArrivalInfo(String arrivalInfo) {
     RegExp(r'(.+)진입'),
     (match) => 'entering ${match[1]}',
   );
-  enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+  enArrivalInfo = enArrivalInfo.replaceFirstMapped(   // '[숫자]번째'를 '숫자'로
     RegExp(r'\[(\d+)\]번째'),
     (match) => '${match[1]}',
   );

@@ -140,6 +140,8 @@ class _MetroMapPageState extends State<MetroMapPage>
   }
 
   void _openStationDetailsSheet(Station station) {
+    final topPadding = MediaQuery.of(context).padding.top;
+    print('toppadding=$topPadding');
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -456,158 +458,236 @@ class StationOptionOverlay {
             .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
         const double originalWidth = 150.0;
         const double originalHeight = 40.0;
-        return Positioned(
-          width: originalWidth / currentScale,
-          height: originalHeight / currentScale * 2,
-          child: CompositedTransformFollower(
-            targetAnchor: Alignment.bottomCenter,
-            followerAnchor: Alignment.topCenter,
-            link: _layerLink,
-            showWhenUnlinked: false,
-            offset: const Offset(0, 0), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-            child: TapRegion(
-              onTapOutside: (event) {
-                _currentEntry?.remove();
-                _currentEntry = null;
-                //behavior: HitTestBehavior.opaque,
-              },
+        return Stack(
+          children: [
+            Positioned(
+              width: originalWidth / currentScale,
+              height: originalHeight / currentScale * 2,
+              child: CompositedTransformFollower(
+                targetAnchor: Alignment.bottomCenter,
+                followerAnchor: Alignment.topCenter,
+                link: _layerLink,
+                showWhenUnlinked: false,
+                offset: const Offset(0, 0), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
+                child: TapRegion(
+                  onTapOutside: (event) {
+                    _currentEntry?.remove();
+                    _currentEntry = null;
+                    //behavior: HitTestBehavior.opaque,
+                  },
 
-              child: Column(
-                children: [
-                  Flexible(
-                    child: Row(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: Column(
                       children: [
                         Flexible(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: Size(
-                                originalWidth / currentScale,
-                                originalHeight / currentScale,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  15 / currentScale,
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    fixedSize: Size(
+                                      originalWidth / currentScale,
+                                      originalHeight / currentScale,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 0.0,
+                                      vertical: 0.0,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        15 / currentScale,
+                                      ),
+                                    ),
+                                    side: BorderSide(width: 1.0 / currentScale),
+                                    backgroundColor: Colors.white,
+                                    textStyle: TextStyle(
+                                      fontSize: 20 / currentScale,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    onDepartureSelected(station);
+                                    PathFinder(
+                                      station: station,
+                                    ).setDepartureStation();
+                                    dismiss();
+                                  },
+                                  child: Text('From'),
+                                  //icon: const Icon(Icons.close_rounded),
                                 ),
                               ),
-                              side: BorderSide(width: 1.0 / currentScale),
-                              backgroundColor: Colors.white,
-                              textStyle: TextStyle(fontSize: 20 / currentScale),
-                            ),
-                            onPressed: () {
-                              onDepartureSelected(station);
-                              PathFinder(
-                                station: station,
-                              ).setDepartureStation();
-                              dismiss();
-                            },
-                            child: Text('From'),
-                            //icon: const Icon(Icons.close_rounded),
+                              Flexible(
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    fixedSize: Size(
+                                      originalWidth / currentScale,
+                                      originalHeight / currentScale,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 0.0,
+                                      vertical: 0.0,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        15 / currentScale,
+                                      ),
+                                    ),
+                                    side: BorderSide(width: 1.0 / currentScale),
+                                    backgroundColor: Colors.white,
+                                    textStyle: TextStyle(
+                                      fontSize: 20 / currentScale,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    onArrivalSelected(station);
+                                    PathFinder(
+                                      station: station,
+                                    ).setArrivalStation();
+                                    dismiss();
+                                  },
+                                  child: Text('To'),
+                                  //icon: const Icon(Icons.close_rounded),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Flexible(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: Size(
-                                originalWidth / currentScale,
-                                originalHeight / currentScale,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  15 / currentScale,
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    fixedSize: Size(
+                                      originalWidth / currentScale,
+                                      originalHeight / currentScale,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 0.0,
+                                      vertical: 0.0,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        15 / currentScale,
+                                      ),
+                                    ),
+                                    side: BorderSide(width: 1.0 / currentScale),
+                                    backgroundColor: Colors.white,
+                                    textStyle: TextStyle(
+                                      fontSize: 20 / currentScale,
+                                    ),
+                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  onPressed: () {
+                                    onTransferSelected(station);
+                                    PathFinder(
+                                      station: station,
+                                    ).setTransferStation();
+                                    dismiss();
+                                  },
+                                  child: Text('Via'),
+                                  //icon: const Icon(Icons.close_rounded),
                                 ),
                               ),
-                              side: BorderSide(width: 1.0 / currentScale),
-                              backgroundColor: Colors.white,
-                              textStyle: TextStyle(fontSize: 20 / currentScale),
-                            ),
-                            onPressed: () {
-                              onArrivalSelected(station);
-                              PathFinder(station: station).setArrivalStation();
-                              dismiss();
-                            },
-                            child: Text('To'),
-                            //icon: const Icon(Icons.close_rounded),
+                              Flexible(
+                                child: OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                    fixedSize: Size(
+                                      originalWidth / currentScale,
+                                      originalHeight / currentScale,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 0.0,
+                                      vertical: 0.0,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        15 / currentScale,
+                                      ),
+                                    ),
+                                    side: BorderSide(width: 1.0 / currentScale),
+                                    backgroundColor: Colors.white,
+                                    textStyle: TextStyle(
+                                      fontSize: 20 / currentScale,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    dismiss();
+                                    onStationInformationSelected(station);
+                                  },
+                                  child: Text('Info'),
+                                  //icon: const Icon(Icons.close_rounded),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Flexible(
-                    child: Row(
-                      children: [
-                        Flexible(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: Size(
-                                originalWidth / currentScale,
-                                originalHeight / currentScale,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  15 / currentScale,
-                                ),
-                              ),
-                              side: BorderSide(width: 1.0 / currentScale),
-                              backgroundColor: Colors.white,
-                              textStyle: TextStyle(fontSize: 20 / currentScale),
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            onPressed: () {
-                              onTransferSelected(station);
-                              PathFinder(station: station).setTransferStation();
-                              dismiss();
-                            },
-                            child: Text('Via'),
-                            //icon: const Icon(Icons.close_rounded),
-                          ),
-                        ),
-                        Flexible(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              fixedSize: Size(
-                                originalWidth / currentScale,
-                                originalHeight / currentScale,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                  15 / currentScale,
-                                ),
-                              ),
-                              side: BorderSide(width: 1.0 / currentScale),
-                              backgroundColor: Colors.white,
-                              textStyle: TextStyle(fontSize: 20 / currentScale),
-                            ),
-                            onPressed: () {
-                              dismiss();
-                              onStationInformationSelected(station);
-                            },
-                            child: Text('Info'),
-                            //icon: const Icon(Icons.close_rounded),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Material(
+                color: Colors.transparent,
+                child: Container(
+                  height: 110,
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top + 10,
+                    left: 16,
+                    right: 16,
+                  ),
+                  color: Colors.white,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 54,
+                        height: 54,
+                        decoration: BoxDecoration(
+                          color: station.color,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Icon(
+                          Icons.subway_rounded,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              station.englishName,
+                              style: const TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF101B36),
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              station.name,
+                              style: const TextStyle(
+                                color: Color(0xFF68748E),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -667,10 +747,7 @@ class _DepartFlagState extends State<DepartFlag> {
         ignoring: true,
         child: Transform.translate(
           offset: Offset(0.0, 3.5 / currentScale),
-          child: Icon(
-            Icons.location_on,
-            size: originalHeight / currentScale,
-          ),
+          child: Icon(Icons.location_on, size: originalHeight / currentScale),
         ),
       ),
     );
@@ -726,10 +803,7 @@ class _ArriveFlagState extends State<ArriveFlag> {
         ignoring: true,
         child: Transform.translate(
           offset: Offset(0.0, 3.5 / currentScale),
-          child: Icon(
-            Icons.location_off,
-            size: originalHeight / currentScale,
-          ),
+          child: Icon(Icons.location_off, size: originalHeight / currentScale),
         ),
       ),
     );
