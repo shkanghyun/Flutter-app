@@ -224,25 +224,14 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                     iconColor: const Color(0xFF5F6D89),
                   ),
                   const SizedBox(height: 10),
-
-                  SizedBox(
-                    height: 450,
-                    child: ListView(
-                      children: [
-                        for (List<String> i in _dataList)
-                          if (forStationLineWidget.add(i[0])) ...[
-                            // 같은 라인이 들어가면 false가 반환
-                            SizedBox(
-                              height: 50,
-                              child: Center(child: Text(i[0])),
-                            ),
-                            ListTile(title: Text(i.toString())),
-                          ] else
-                            ListTile(title: Text(i.toString())),
-                      ],
-                    ),
-                  ),
-
+                  for (List<String> i in _dataList)
+                    if (forStationLineWidget.add(i[0])) ...[
+                      // 같은 라인이 들어가면 false가 반환
+                      SizedBox(height: 50, child: Center(child: Text(i[0]))),
+                      ListTile(title: Text(i.toString())),
+                    ] else
+                      ListTile(title: Text(i.toString())),
+                  SizedBox(height: bottomPadding+10+52),
                   /*SizedBox(
                 height: 500,
                 child: _dataList.isEmpty
