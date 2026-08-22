@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:subway/api_service.dart';
 import 'package:subway/stations.dart';
+import 'package:subway/timeTableSheet.dart';
 
 class StationDetailsSheet extends StatefulWidget {
   final Station station;
@@ -264,14 +265,13 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                 children: [
                   Flexible(
                     child: FilledButton.icon(
-                      onPressed: () =>
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${widget.station.name}역을 즐겨찾기에 저장했습니다.',
-                              ),
-                            ),
-                          ),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => timeTableSheet(),
+                        ),
+                      ),
+
                       style: FilledButton.styleFrom(
                         minimumSize: const Size.fromHeight(52),
                         backgroundColor: const Color(0xFF101B36),
