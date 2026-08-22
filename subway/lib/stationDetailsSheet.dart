@@ -268,7 +268,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => timeTableSheet(),
+                          builder: (context) => TimeTableSheet(),
                         ),
                       ),
 
