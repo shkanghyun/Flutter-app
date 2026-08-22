@@ -10,7 +10,7 @@ class TimeTableSheet extends StatefulWidget {
 class TimeTableSheetState extends State<TimeTableSheet> {
   // 1. 페이지를 제어할 컨트롤러 생성
   final PageController _pageController = PageController();
-
+  int selectedIndex = 0;
   @override
   void dispose() {
     // 2. 위젯이 사라질 때 컨트롤러를 메모리에서 해제 (메모리 누수 방지)
@@ -18,7 +18,7 @@ class TimeTableSheetState extends State<TimeTableSheet> {
     super.dispose();
   }
 
-  List<String> lineList = ['line1', 'line5', 'line7', 'suinbundang']; 
+  List<String> lineList = ['line1', 'line5', 'line7', 'suinbundang'];
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +31,77 @@ class TimeTableSheetState extends State<TimeTableSheet> {
             isScrollable: true,
             tabAlignment: TabAlignment.start,
             indicator: BoxDecoration(),
-            tabs: lineList.map((title) => SizedBox(width: 50, child: Tab(text: title))).toList(),
-             dividerColor: Colors.transparent,
+            tabs: lineList
+                .map((title) => SizedBox(width: 50, child: Tab(text: title)))
+                .toList(),
+            dividerColor: Colors.transparent,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white60,
           ),
         ),
-        body: TabBarView(
-          children: lineList.map((title) {
-            return Center(
-              child: Text('🔥 $title 콘텐츠 화면입니다.', style: const TextStyle(fontSize: 20)),
-            );
-          }).toList(),
+        body: Column(
+          children: [
+            Flexible(
+              child: Row(
+                children: [
+                  SizedBox(width: 15),
+                  Flexible(child: Text('weekday')),
+                  Flexible(
+                    child: Checkbox(
+                      value: selectedIndex == 0,
+                      onChanged: (bool? value) {
+                        if (selectedIndex == 0) return;
+                        setState(() {
+                          selectedIndex = 0;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Flexible(child: Text('saturday')),
+                  Flexible(
+                    child: Checkbox(
+                      value: selectedIndex == 1,
+                      onChanged: (bool? value) {
+                        if (selectedIndex == 1) return;
+                        setState(() {
+                          selectedIndex = 1;
+                        });
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Flexible(child: Text('holiday')),
+                  Flexible(
+                    child: Checkbox(
+                      value: selectedIndex == 2,
+                      onChanged: (bool? value) {
+                        if (selectedIndex == 2) return;
+                        setState(() {
+                          selectedIndex = 2;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            Expanded(
+              child: TabBarView(
+                children: lineList.map((title) {
+                  return ListView(
+                    children: [
+                      Text(
+                        '🔥 $title 콘텐츠 화면입니다.',
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ],
+                  );
+                }).toList(),
+              ),
+            ),
+          ],
         ),
       ),
     );
