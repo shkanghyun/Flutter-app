@@ -44,6 +44,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
           if (hasTargetA && !hasTargetB) return -1; // a를 맨 앞으로
           if (!hasTargetA && hasTargetB) return 1; // b를 맨 앞으로
           return a[0].compareTo(b[0]);
+          
         });
         _isLoading = false; // 로딩 완료
       });
@@ -225,11 +226,20 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                     iconColor: const Color(0xFF5F6D89),
                   ),
                   const SizedBox(height: 10),
+                  
+                  if (_dataList.isEmpty)
+                    ListTile(
+                      title: Text(
+                        'This station does not support real-time info',
+                      ),
+                    ),
                   for (List<String> i in _dataList)
                     if (forStationLineWidget.add(i[0])) ...[
                       // 같은 라인이 들어가면 false가 반환
                       SizedBox(height: 50, child: Center(child: Text(i[0]))),
-                      ListTile(title: Text(i.toString())),
+                      ListTile(
+                        title: Text(i.toString()),
+                      ),
                     ] else
                       ListTile(title: Text(i.toString())),
                   SizedBox(height: bottomPadding + 10 + 52),
@@ -268,7 +278,8 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                       onPressed: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => TimeTableSheet(station: widget.station,),
+                          builder: (context) =>
+                              TimeTableSheet(station: widget.station),
                         ),
                       ),
 
