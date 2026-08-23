@@ -1,24 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:subway/api_service.dart';
+import 'package:subway/stations.dart';
 
 class TimeTableSheet extends StatefulWidget {
-  const TimeTableSheet({super.key});
+  final Station station;
+  const TimeTableSheet({super.key, required this.station});
 
   @override
   State<TimeTableSheet> createState() => TimeTableSheetState();
 }
 
 class TimeTableSheetState extends State<TimeTableSheet> {
-  // 1. 페이지를 제어할 컨트롤러 생성
-  final PageController _pageController = PageController();
+  bool _isLoading = false; // 로딩 상태 기억용 변수
+  List<String> lineList=[];
+
+  void initState() {
+    super.initState();
+    loadData(); // 화면이 열리자마자 데이터를 가져옵니다.
+    print('initState 실행');
+  }
+
+  Future<void> loadData() async {
+    setState(() {
+      _isLoading = true; // 로딩 시작
+      print('setState 실행');
+    });
+
+    try {
+      // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
+      List<String> result = await StationNameApiService.fetchPublicXmlData(
+        stationName: widget.station.name,
+      );
+
+      setState(() {
+        lineList = result; // 받아온 진짜 데이터를 변수에 저장
+        lineList.sort((a, b) {
+          // 라인 순서대로 정렬 (Line1->9->이외)
+          bool hasTargetA = a.startsWith('Line');
+          bool hasTargetB = b.startsWith('Line');
+
+          if (hasTargetA && !hasTargetB) return -1; // a를 맨 앞으로
+          if (!hasTargetA && hasTargetB) return 1; // b를 맨 앞으로
+          return a.compareTo(b);
+        });
+        _isLoading = false; // 로딩 완료
+      });
+    } catch (e) {
+      _isLoading = false;
+
+      // 에러 처리 (예: 스낵바 띄우기)
+      /*ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('데이터를 가져오지 못했습니다: $e')));*/
+    }
+  }
+
   int selectedIndex = 0;
   @override
   void dispose() {
     // 2. 위젯이 사라질 때 컨트롤러를 메모리에서 해제 (메모리 누수 방지)
-    _pageController.dispose();
     super.dispose();
   }
 
-  List<String> lineList = ['line1', 'line5', 'line7', 'suinbundang'];
+
 
   @override
   Widget build(BuildContext context) {

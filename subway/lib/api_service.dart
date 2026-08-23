@@ -11,7 +11,7 @@ class SubwayApiService {
   ) async {
     final String serviceKey = '6b4f495a6773686b3639514c624a65';
     String url =
-          'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/$stationName';
+        'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/$stationName';
     //  XML 전용 API 주소를 입력하세요.
     if (stationName == '서울역') {
       url =
@@ -71,9 +71,9 @@ class SubwayApiService {
           };
 
           List<String> heading = headingTo.split(' - ');
-          String nextStation = heading[1];                                       // '..방면' 추출
+          String nextStation = heading[1]; // '..방면' 추출
 
-          String enFinalStation = translateStationName(finalStation);            
+          String enFinalStation = translateStationName(finalStation);
 
           String enNextStation = '';
           if (nextStation.length >= 2) {
@@ -145,6 +145,84 @@ class SeoulApiService {
               .first
               .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
           results.add(stationName);
+        }
+
+        print('API.dart result: $results');
+        return results; // 추출한 데이터 리스트 반환
+      } else {
+        throw Exception('데이터 로드 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('네트워크 또는 XML 파싱 오류: $e');
+    }
+  }
+}
+
+class StationNameApiService {
+  static Future<List<String>> fetchPublicXmlData({
+    required String? stationName,
+  }) async {
+    final String serviceKey =
+        'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
+
+    //  XML 전용 API 주소
+    final String url =
+        'https://apis.data.go.kr/1613000/SubwayInfo/GetKwrdFndSubwaySttnList?serviceKey=$serviceKey&pageNo=1&numOfRows=20&_type=xml&subwayStationName=$stationName';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        print('response.statusCode : 200');
+        print(url);
+        // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
+        final String decodedBody = utf8.decode(response.bodyBytes);
+
+        // 2. 문자열을 XML 문서 객체로 파싱(해석)
+        final document = xml.XmlDocument.parse(decodedBody);
+
+        // 3. 원하는 태그 찾기 (예: <item> 태그 내의 <stationName> 태그 데이터를 가져오고 싶을 때)
+        // 💡 활용하시는 API 명세서상의 태그 이름으로 바꾸셔야 합니다!
+        final items = document.findAllElements(
+          'item',
+        ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
+
+        List<String> results = [];
+        for (var item in items) {
+          // item 태그 내부에서 'subwayRouteName'이라는 태그의 텍스트 추출
+          final stationName = item
+              .findElements('subwayRouteName')
+              .first
+              .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
+
+          String enStationName = switch (stationName) {
+            '1호선' => 'Line 1',
+            '2호선' => 'Line 2',
+            '3호선' => 'Line 3',
+            '4호선' => 'Line 4',
+            '5호선' => 'Line 5',
+            '6호선' => 'Line 6',
+            '7호선' => 'Line 7',
+            '8호선' => 'Line 8',
+            '9호선' => 'Line 9',
+            '경의중앙' => 'Gyeongui·Jungang Line',
+            '공항' => 'Airport Railroad',
+            '경춘' => 'Gyuongchun Line',
+            '수인분당' => 'Suin·Bundang Line',
+            '신분당' => 'Shinbundang Line',
+            '우이신설' => 'Ui Sinseol Line',
+            '서해선' => 'Seohae Line',
+            '신림선' => 'Sillim Line',
+            '경강' => 'Gyeonggang Line',
+            'GTX-A' => 'GTX-A',
+            '에버라인' => 'Yongin Everline',
+            '김포골드라인' => 'Gimpo Goldline',
+            '인천1호선' => 'Incheon Line 1',
+            '인천2호선' => 'Incheon Line 2',
+            '의정부' => 'Uijeongbu Lrt',
+            _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
+          };
+          results.add(enStationName);
         }
 
         print('API.dart result: $results');
