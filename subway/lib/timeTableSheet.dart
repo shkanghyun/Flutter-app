@@ -132,42 +132,10 @@ class TimeTableSheetState extends State<TimeTableSheet> {
 
             Expanded(
               child: TabBarView(
-                children: lineStationIdList.map((stationId) {
-                  return FutureBuilder <List<List<String>>>(
-                    // 1. title을 기반으로 데이터를 가져오는 비동기 함수 호출
-                    future: StationScheduleApiService.fetchPublicXmlData(stationId: stationId[1], dailyTypeCode: selectedIndex, upDownTypeCode: 'U'),
-                    builder: (context, snapshot) {
-                      // 2. 데이터를 로딩 중일 때 표시할 화면
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-
-                      // 3. 에러가 발생했을 때 표시할 화면
-                      if (snapshot.hasError) {
-                        return Center(child: Text('에러 발생: ${snapshot.error}'));
-                      }
-
-                      // 4. 데이터를 성공적으로 가져왔을 때 화면 표시
-                      final serverData = snapshot.data ?? '데이터가 없습니다.';
-
-                      return ListView(
-                        padding: const EdgeInsets.all(16.0),
-                        children: [
-                          Text(
-                            '🔥 $stationId 콘텐츠 화면입니다.',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            '서버 데이터: $serverData',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      );
-                    },
+                children: lineStationIdList.map((lineStationId) {
+                  return StationScheduleTab(
+                    stationId: lineStationId[1],
+                    dailyTypeCode: selectedIndex,
                   );
                 }).toList(),
               ),
@@ -175,6 +143,108 @@ class TimeTableSheetState extends State<TimeTableSheet> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class StationScheduleTab extends StatefulWidget {
+  final String stationId;
+  final String dailyTypeCode;
+
+  const StationScheduleTab({
+    super.key,
+    required this.stationId,
+    required this.dailyTypeCode,
+  });
+
+  @override
+  StationScheduleTabState createState() => StationScheduleTabState();
+}
+
+class StationScheduleTabState extends State<StationScheduleTab> {
+  late Future<(List<List<String>>, List<List<String>>)> _scheduleFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    // initState에서 최초 1회만 API를 호출하여 상태를 보존합니다.
+    _fetchCombinedData();
+  }
+
+  // 💡 부모 위젯이 변경되어 dailyTypeCode(selectedIndex)가 바뀔 때 실행됨
+  @override
+  void didUpdateWidget(covariant StationScheduleTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // 이전 값과 새로운 값이 다를 때만 데이터를 다시 요청합니다.
+    if (oldWidget.dailyTypeCode != widget.dailyTypeCode) {
+      setState(() {
+        _fetchCombinedData(); // 데이터 새로고침
+      });
+    }
+  }
+
+  void _fetchCombinedData() {
+    // 💡 Future.wait를 사용해 두 서버에 동시에 병렬(Parallel) 요청을 보냅니다.
+    // Dart 3.0 이상부터는 아래처럼 Record 패턴을 사용하면 타입이 정확히 매칭되어 편리합니다.
+    _scheduleFuture =
+        Future.wait([
+          StationScheduleApiService.fetchPublicXmlData(
+            stationId: widget.stationId,
+            dailyTypeCode: widget.dailyTypeCode,
+            upDownTypeCode: 'U',
+          ),
+          StationScheduleApiService.fetchPublicXmlData(
+            stationId: widget.stationId,
+            dailyTypeCode: widget.dailyTypeCode,
+            upDownTypeCode: 'D',
+          ),
+        ]).then((results) {
+          // 첫 번째 결과와 두 번째 결과를 각각 알맞은 타입으로 묶어서 반환합니다.
+          return (results[0], results[1]);
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<(List<List<String>>, List<List<String>>)>(
+      future: _scheduleFuture, // 보존된 Future 사용
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('에러 발생: ${snapshot.error}'));
+        }
+        if (snapshot.hasData) {
+          // 💡 구조 분해(Destructuring) 문법으로 깔끔하게 각 변수에 나눠 담습니다.
+          final (serverOneData, serverTwoData) = snapshot.data!;
+
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: serverOneData.length,
+                  itemBuilder: (context, index) {
+                    // 첫 번째 서버 데이터를 화면에 출력
+                    return ListTile(
+                      title: Text(
+                        '서버1 데이터: ${serverOneData[index].toString()}',
+                      ),
+                      subtitle: index < serverTwoData.length
+                          ? Text(
+                              '서버2 매칭 데이터: ${serverTwoData[index].toString()}',
+                            )
+                          : null,
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        }
+        return const Center(child: Text('조회된 데이터가 없습니다.'));
+      },
     );
   }
 }

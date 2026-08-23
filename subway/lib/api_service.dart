@@ -255,10 +255,7 @@ class StationScheduleApiService {
         'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=10&_type=xml&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
 
     try {
-      print("1번 지점 통과");
       final response = await http.get(Uri.parse(url));
-      print("서버 응답 상태 코드: ${response.statusCode}");
-      print("서버가 준 실제 데이터: ${response.body}");
 
       if (response.statusCode == 200) {
         print('response.statusCode : 200');
@@ -277,14 +274,12 @@ class StationScheduleApiService {
 
         List<List<String>> results = [];
         for (var item in items) {
-          // item 태그 내부에서 'subwayRouteName'이라는 태그의 텍스트 추출
           var element = item.findElements('endSubwayStationNm').firstOrNull;
-          // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
           String endStationName = element != null ? element.innerText : "";
 
-          final departureTime = item.findElements('depTime').first.innerText;
-
-          results.add([endStationName, departureTime]);
+          String departureTime = item.findElements('depTime').first.innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
+          if(departureTime == '0') departureTime = item.findElements('arrTime').first.innerText;
+          results.add([departureTime, endStationName]);
         }
 
         print('schedule API result: $results');
