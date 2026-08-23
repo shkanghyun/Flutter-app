@@ -164,6 +164,8 @@ class StationScheduleTab extends StatefulWidget {
 class StationScheduleTabState extends State<StationScheduleTab> {
   late Future<(List<List<String>>, List<List<String>>)> _scheduleFuture;
 
+  static final Map<String, (List<List<String>>, List<List<String>>)> _dataCache = {};
+
   @override
   void initState() {
     super.initState();
@@ -185,6 +187,15 @@ class StationScheduleTabState extends State<StationScheduleTab> {
   }
 
   void _fetchCombinedData() {
+    // 💡 1. 고유한 캐시 키를 생성합니다 (예: "STATION123_WEEKDAY")
+    final cacheKey = '${widget.stationId}_${widget.dailyTypeCode}';
+
+    // 💡 2. 이미 캐시에 데이터가 존재하는지 확인합니다.
+    if (_dataCache.containsKey(cacheKey)) {
+      // 이미 불러온 적이 있다면, 서버 요청 없이 기존 데이터를 Future.value로 즉시 반환합니다.
+      _scheduleFuture = Future.value(_dataCache[cacheKey]);
+      return;
+    }
     // 💡 Future.wait를 사용해 두 서버에 동시에 병렬(Parallel) 요청을 보냅니다.
     // Dart 3.0 이상부터는 아래처럼 Record 패턴을 사용하면 타입이 정확히 매칭되어 편리합니다.
     _scheduleFuture =
@@ -200,8 +211,11 @@ class StationScheduleTabState extends State<StationScheduleTab> {
             upDownTypeCode: 'D',
           ),
         ]).then((results) {
+          _dataCache[cacheKey] = (results[0], results[1]);
+          
           // 첫 번째 결과와 두 번째 결과를 각각 알맞은 타입으로 묶어서 반환합니다.
           return (results[0], results[1]);
+          
         });
   }
 
