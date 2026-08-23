@@ -159,7 +159,7 @@ class SeoulApiService {
 }
 
 class StationNameApiService {
-  static Future<List<String>> fetchPublicXmlData({
+  static Future<List<List<String>>> fetchPublicXmlData({
     required String? stationName,
   }) async {
     final String serviceKey =
@@ -187,13 +187,17 @@ class StationNameApiService {
           'item',
         ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
 
-        List<String> results = [];
+        List<List<String>> results = [];
         for (var item in items) {
           // item 태그 내부에서 'subwayRouteName'이라는 태그의 텍스트 추출
           final stationName = item
               .findElements('subwayRouteName')
               .first
               .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
+          final stationId = item
+              .findElements('subwayStationId')
+              .first
+              .innerText;
 
           String enStationName = switch (stationName) {
             '1호선' => 'Line 1',
@@ -222,7 +226,7 @@ class StationNameApiService {
             '의정부' => 'Uijeongbu Lrt',
             _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
           };
-          results.add(enStationName);
+          results.add([enStationName, stationId]);
         }
 
         print('API.dart result: $results');

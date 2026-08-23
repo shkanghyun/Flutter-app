@@ -12,7 +12,7 @@ class TimeTableSheet extends StatefulWidget {
 
 class TimeTableSheetState extends State<TimeTableSheet> {
   bool _isLoading = false; // 로딩 상태 기억용 변수
-  List<String> lineList=[];
+  List<List<String>> lineList=[];
 
   void initState() {
     super.initState();
@@ -28,7 +28,7 @@ class TimeTableSheetState extends State<TimeTableSheet> {
 
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
-      List<String> result = await StationNameApiService.fetchPublicXmlData(
+      List<List<String>> result = await StationNameApiService.fetchPublicXmlData(
         stationName: widget.station.name,
       );
 
@@ -36,12 +36,12 @@ class TimeTableSheetState extends State<TimeTableSheet> {
         lineList = result; // 받아온 진짜 데이터를 변수에 저장
         lineList.sort((a, b) {
           // 라인 순서대로 정렬 (Line1->9->이외)
-          bool hasTargetA = a.startsWith('Line');
-          bool hasTargetB = b.startsWith('Line');
+          bool hasTargetA = a[0].startsWith('Line');
+          bool hasTargetB = b[0].startsWith('Line');
 
           if (hasTargetA && !hasTargetB) return -1; // a를 맨 앞으로
           if (!hasTargetA && hasTargetB) return 1; // b를 맨 앞으로
-          return a.compareTo(b);
+          return a[0].compareTo(b[0]);
         });
         _isLoading = false; // 로딩 완료
       });
@@ -76,7 +76,7 @@ class TimeTableSheetState extends State<TimeTableSheet> {
             tabAlignment: TabAlignment.start,
             indicator: BoxDecoration(),
             tabs: lineList
-                .map((title) => SizedBox(width: 50, child: Tab(text: title)))
+                .map((title) => SizedBox(width: 50, child: Tab(text: title[0])))
                 .toList(),
             dividerColor: Colors.transparent,
             labelColor: Colors.white,
