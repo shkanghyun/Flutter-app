@@ -12,7 +12,7 @@ class StationDetailsSheet extends StatefulWidget {
 }
 
 class StationDetailsSheetState extends State<StationDetailsSheet> {
-  List<List<String>> _dataList = [];
+  List<List<String>> _dataList = [['Loading..']];
   bool _isLoading = false; // 로딩 상태 기억용 변수
 
   @override
@@ -230,7 +230,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                   if (_dataList.isEmpty)
                     ListTile(
                       title: Text(
-                        'This station does not support real-time info',
+                        'There is no metro running or this station does not support real-time info',
                       ),
                     ),
                   for (List<String> i in _dataList)

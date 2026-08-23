@@ -12,7 +12,7 @@ class TimeTableSheet extends StatefulWidget {
 
 class TimeTableSheetState extends State<TimeTableSheet> {
   bool _isLoading = false; // 로딩 상태 기억용 변수
-  List<List<String>> lineList=[];
+  List<List<String>> lineStationIdList = [];
 
   void initState() {
     super.initState();
@@ -28,13 +28,14 @@ class TimeTableSheetState extends State<TimeTableSheet> {
 
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
-      List<List<String>> result = await StationNameApiService.fetchPublicXmlData(
-        stationName: widget.station.name,
-      );
+      List<List<String>> result =
+          await StationNameApiService.fetchPublicXmlData(
+            stationName: widget.station.name,
+          );
 
       setState(() {
-        lineList = result; // 받아온 진짜 데이터를 변수에 저장
-        lineList.sort((a, b) {
+        lineStationIdList = result; // 받아온 진짜 데이터를 변수에 저장
+        lineStationIdList.sort((a, b) {
           // 라인 순서대로 정렬 (Line1->9->이외)
           bool hasTargetA = a[0].startsWith('Line');
           bool hasTargetB = b[0].startsWith('Line');
@@ -55,27 +56,25 @@ class TimeTableSheetState extends State<TimeTableSheet> {
     }
   }
 
-  int selectedIndex = 0;
+  String selectedIndex = '01';
   @override
   void dispose() {
     // 2. 위젯이 사라질 때 컨트롤러를 메모리에서 해제 (메모리 누수 방지)
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      key: ValueKey(lineList.length),
-      length: lineList.length,
+      key: ValueKey(lineStationIdList.length),
+      length: lineStationIdList.length,
       child: Scaffold(
         appBar: AppBar(
           title: TabBar(
             isScrollable: true,
             tabAlignment: TabAlignment.start,
             indicator: BoxDecoration(),
-            tabs: lineList
+            tabs: lineStationIdList
                 .map((title) => SizedBox(width: 50, child: Tab(text: title[0])))
                 .toList(),
             dividerColor: Colors.transparent,
@@ -92,11 +91,11 @@ class TimeTableSheetState extends State<TimeTableSheet> {
                   Flexible(child: Text('weekday')),
                   Flexible(
                     child: Checkbox(
-                      value: selectedIndex == 0,
+                      value: selectedIndex == '01',
                       onChanged: (bool? value) {
-                        if (selectedIndex == 0) return;
+                        if (selectedIndex == '01') return;
                         setState(() {
-                          selectedIndex = 0;
+                          selectedIndex = '01';
                         });
                       },
                     ),
@@ -105,11 +104,11 @@ class TimeTableSheetState extends State<TimeTableSheet> {
                   Flexible(child: Text('saturday')),
                   Flexible(
                     child: Checkbox(
-                      value: selectedIndex == 1,
+                      value: selectedIndex == '02',
                       onChanged: (bool? value) {
-                        if (selectedIndex == 1) return;
+                        if (selectedIndex == '02') return;
                         setState(() {
-                          selectedIndex = 1;
+                          selectedIndex = '02';
                         });
                       },
                     ),
@@ -118,11 +117,11 @@ class TimeTableSheetState extends State<TimeTableSheet> {
                   Flexible(child: Text('holiday')),
                   Flexible(
                     child: Checkbox(
-                      value: selectedIndex == 2,
+                      value: selectedIndex == '03',
                       onChanged: (bool? value) {
-                        if (selectedIndex == 2) return;
+                        if (selectedIndex == '03') return;
                         setState(() {
-                          selectedIndex = 2;
+                          selectedIndex = '03';
                         });
                       },
                     ),
@@ -133,14 +132,42 @@ class TimeTableSheetState extends State<TimeTableSheet> {
 
             Expanded(
               child: TabBarView(
-                children: lineList.map((title) {
-                  return ListView(
-                    children: [
-                      Text(
-                        '🔥 $title 콘텐츠 화면입니다.',
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                    ],
+                children: lineStationIdList.map((stationId) {
+                  return FutureBuilder <List<List<String>>>(
+                    // 1. title을 기반으로 데이터를 가져오는 비동기 함수 호출
+                    future: StationScheduleApiService.fetchPublicXmlData(stationId: stationId[1], dailyTypeCode: selectedIndex, upDownTypeCode: 'U'),
+                    builder: (context, snapshot) {
+                      // 2. 데이터를 로딩 중일 때 표시할 화면
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      // 3. 에러가 발생했을 때 표시할 화면
+                      if (snapshot.hasError) {
+                        return Center(child: Text('에러 발생: ${snapshot.error}'));
+                      }
+
+                      // 4. 데이터를 성공적으로 가져왔을 때 화면 표시
+                      final serverData = snapshot.data ?? '데이터가 없습니다.';
+
+                      return ListView(
+                        padding: const EdgeInsets.all(16.0),
+                        children: [
+                          Text(
+                            '🔥 $stationId 콘텐츠 화면입니다.',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            '서버 데이터: $serverData',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      );
+                    },
                   );
                 }).toList(),
               ),
