@@ -198,6 +198,10 @@ class StationNameApiService {
               .findElements('subwayStationId')
               .first
               .innerText;
+          final stationNm = item
+              .findElements('subwayStationName')
+              .first
+              .innerText;
 
           String enStationLine = switch (stationLine) {
             '1호선' => 'Line 1',
@@ -227,7 +231,9 @@ class StationNameApiService {
             '자기부상' => 'Maglev Line',
             _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
           };
-          results.add([enStationLine, stationId]);
+          if (stationName == stationNm) {
+            results.add([enStationLine, stationId]);
+          }
         }
 
         print('station line list API result: $results');
@@ -277,8 +283,12 @@ class StationScheduleApiService {
           var element = item.findElements('endSubwayStationNm').firstOrNull;
           String endStationName = element != null ? element.innerText : "";
 
-          String departureTime = item.findElements('depTime').first.innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
-          if(departureTime == '0') departureTime = item.findElements('arrTime').first.innerText;
+          String departureTime = item
+              .findElements('depTime')
+              .first
+              .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
+          if (departureTime == '0')
+            departureTime = item.findElements('arrTime').first.innerText;
           results.add([departureTime, endStationName]);
         }
 
