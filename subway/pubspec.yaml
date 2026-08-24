@@ -23,3 +23,5 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/seoul_subway_map_foreigners.png
+    - assets/data/timetable_data.json
+    - assets/data/seoul_stationname_code.json

@@ -425,7 +425,7 @@ const _stationRows = <String>[
   '새절|Saejeol|0.339|0.366|line6',
   '샘터공원|Saemteogongwon|0.858|0.512|line9',
   '샛강|Saetgang|0.419|0.546|line9,sillim',
-  '서강|Seogang|0.429|0.444|gyeongui',
+  '서강대|Sogang Univ.|0.429|0.444|gyeongui',
   '서구청|Seo-gu Office|0.041|0.392|incheon2',
   '서대문|Seodaemun|0.497|0.383|line5',
   '서동탄|Seodongtan|0.753|0.960|line1',

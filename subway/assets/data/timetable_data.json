@@ -1,0 +1,68 @@
+{
+    "stations": {
+        "약수": {
+            "Line 6": {
+                "U": {
+                    "01": {
+                        "timetable": [
+                            {
+                                "week_type": "1",
+                                "up_down": "1",
+                                "depTime": "05:10:00",
+                                "endSubwayStationNm": "신도림"
+                            },
+                            {
+                                "week_type": "1",
+                                "up_down": "1",
+                                "depTime": "05:20:00",
+                                "endSubwayStationNm": "홍대입구"
+                            },
+                            {
+                                "week_type": "1",
+                                "up_down": "2",
+                                "depTime": "05:30:00",
+                                "endSubwayStationNm": "잠실"
+                            },
+                            {
+                                "week_type": "2",
+                                "up_down": "1",
+                                "depTime": "05:40:00",
+                                "endSubwayStationNm": "신도림"
+                            }
+                        ]
+                    }
+                },
+                "D": {
+                    "01": {
+                        "timetable": [
+                            {
+                                "week_type": "1",
+                                "up_down": "1",
+                                "depTime": "05:10:00",
+                                "endSubwayStationNm": "신도림"
+                            },
+                            {
+                                "week_type": "1",
+                                "up_down": "1",
+                                "depTime": "05:20:00",
+                                "endSubwayStationNm": "홍대입구"
+                            },
+                            {
+                                "week_type": "1",
+                                "up_down": "2",
+                                "depTime": "05:30:00",
+                                "endSubwayStationNm": "잠실"
+                            },
+                            {
+                                "week_type": "2",
+                                "up_down": "1",
+                                "depTime": "05:40:00",
+                                "endSubwayStationNm": "신도림"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}

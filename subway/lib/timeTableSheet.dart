@@ -137,6 +137,8 @@ class TimeTableSheetState extends State<TimeTableSheet> {
                   return StationScheduleTab(
                     stationId: lineStationId[1],
                     dailyTypeCode: selectedIndex,
+                    enLine: lineStationId[0],
+                    stationName: lineStationId[2],
                     pageCache: _pageCache,
                   );
                 }).toList(),
@@ -152,12 +154,16 @@ class TimeTableSheetState extends State<TimeTableSheet> {
 class StationScheduleTab extends StatefulWidget {
   final String stationId;
   final String dailyTypeCode;
+  final String enLine;
+  final String stationName;
   final Map<String, (List<List<String>>, List<List<String>>)> pageCache;
 
   const StationScheduleTab({
     super.key,
     required this.stationId,
     required this.dailyTypeCode,
+    required this.enLine,
+    required this.stationName,
     required this.pageCache,
   });
 
@@ -206,11 +212,15 @@ class StationScheduleTabState extends State<StationScheduleTab> {
             stationId: widget.stationId,
             dailyTypeCode: widget.dailyTypeCode,
             upDownTypeCode: 'U',
+            enLine: widget.enLine,
+            stationName: widget.stationName,
           ),
           StationScheduleApiService.fetchPublicXmlData(
             stationId: widget.stationId,
             dailyTypeCode: widget.dailyTypeCode,
             upDownTypeCode: 'D',
+            enLine: widget.enLine,
+            stationName: widget.stationName,
           ),
         ]).then((results) {
           widget.pageCache[cacheKey] = (results[0], results[1]);

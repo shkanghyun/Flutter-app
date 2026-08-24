@@ -160,7 +160,7 @@ class SeoulApiService {
 
 class StationNameApiService {
   static Future<List<List<String>>> fetchPublicXmlData({
-    required String? stationName,
+    required String stationName,
   }) async {
     final String serviceKey =
         'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
@@ -231,8 +231,9 @@ class StationNameApiService {
             '자기부상' => 'Maglev Line',
             _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
           };
-          if (stationName == stationNm) {
-            results.add([enStationLine, stationId]);
+          if (stationName == stationNm ||
+              stationName == stationNm.split('(').first) {
+            results.add([enStationLine, stationId, stationName]);
           }
         }
 
@@ -252,6 +253,8 @@ class StationScheduleApiService {
     required String? stationId,
     required String? dailyTypeCode,
     required String? upDownTypeCode,
+    required String? stationName,
+    required String enLine,
   }) async {
     final String serviceKey =
         'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
@@ -280,22 +283,124 @@ class StationScheduleApiService {
         final List<dynamic> itemList = itemsData['item'];
 
         List<List<String>> results = [];
-        for (var item in itemList) {
-          String endStationName = '';
+        if (itemList.isNotEmpty) {
+          for (var item in itemList) {
+            String endStationName = '';
 
-          if (item['endSubwayStationNm'] != null) {
-            endStationName = item['endSubwayStationNm'];
-          } 
-
-          String departureTime = item['depTime'];
-          if (departureTime == '0') {
-            departureTime = item['arrTime'];
+            String departureTime = item['depTime'];
+            if (departureTime == '0') {
+              departureTime = item['arrTime'];
+            }
+            if (item['endSubwayStationNm'] != null) {
+              endStationName = item['endSubwayStationNm'];
+            }
+            results.add([departureTime, endStationName]);
           }
-          results.add([departureTime, endStationName]);
-        }
 
-        print('schedule API result: $results');
-        return results; // 추출한 데이터 리스트 반환
+          print('schedule API result: $results');
+
+          return results; // 추출한 데이터 리스트 반환
+        } else if (enLine.contains(RegExp(r'^Line\s\d$'))) {
+          //국토교통부 API에 시간표 데이터 없을 경우 서울교통공사 API에서 시간표 받아오기
+          List<dynamic> rawData = [];
+          String stationCode = '';
+
+          final String response = await rootBundle.loadString(
+            'assets/data/seoul_stationname_code.json',
+          );
+          rawData = jsonDecode(response)['DATA'];
+
+          var targetStation = rawData.firstWhere(
+            (item) => item['station_nm'] == stationName,
+            orElse: () => null,
+          );
+          if (targetStation != null) {
+            stationCode = targetStation['station_cd'];
+          }
+
+          String weekTag = dailyTypeCode!.split('').last;
+          String inoutTag = switch (upDownTypeCode) {
+            'U' => '1',
+            'D' => '2',
+            _ => '?',
+          };
+
+          final String serviceKey = '4f6d59565373686b39335a4e696348';
+          final String url =
+              'http://openapi.seoul.go.kr:8088/$serviceKey/json/SearchSTNTimeTableByIDService/1/5/$stationCode/$weekTag/$inoutTag/';
+
+          try {
+            final response = await http.get(Uri.parse(url));
+            print(url);
+
+            if (response.statusCode == 200) {
+              // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
+              final Map<String, dynamic> jsonMap = jsonDecode(
+                utf8.decode(response.bodyBytes),
+              );
+
+              final Map<String, dynamic> responseData =
+                  jsonMap['SearchSTNTimeTableByIDService'];
+              final List<dynamic> itemList = responseData['row'];
+
+              List<List<String>> results = [];
+              if (itemList.isNotEmpty) {
+                for (var item in itemList) {
+                  String endStationName = '';
+
+                  String departureTime = item['LEFTTIME'];
+                  if (departureTime == '0') {
+                    departureTime = item['ARRIVETIME'];
+                  }
+                  if (item['SUBWAYENAME'] != null) {
+                    endStationName = item['SUBWAYENAME'];
+                  }
+                  results.add([departureTime, endStationName]);
+                }
+              }
+
+              print('station line list API result: $results');
+              return results; // 추출한 데이터 리스트 반환
+            } else {
+              throw Exception('데이터 로드 실패: ${response.statusCode}');
+            }
+          } catch (e) {
+            throw Exception('네트워크 또는 XML 파싱 오류: $e');
+          }
+        } else {
+          Map<String, dynamic> rawData = {};
+
+          final String response = await rootBundle.loadString(
+            'assets/data/timetable_data.json',
+          );
+          rawData = jsonDecode(response)['stations'];
+
+          final Map<String, dynamic> stationDataByName = rawData[stationName];
+          final Map<String, dynamic> stationDataByLine =
+              stationDataByName[enLine];
+          final Map<String, dynamic> stationDataByUpDown =
+              stationDataByLine[upDownTypeCode];
+          final Map<String, dynamic> stationDataByWeekCode =
+              stationDataByUpDown[dailyTypeCode];
+          final List<dynamic> stationTimeTableData =
+              stationDataByWeekCode['timetable'];
+
+          for (var item in stationTimeTableData) {
+            String endStationName = '';
+
+            String departureTime = item['depTime'];
+            if (departureTime == '0') {
+              departureTime = item['arrTime'];
+            }
+            if (item['endSubwayStationNm'] != null) {
+              endStationName = item['endSubwayStationNm'];
+            }
+            results.add([departureTime, endStationName]);
+          }
+
+          //if (stationData != null) {}
+          return results;
+        }
       } else {
         throw Exception('데이터 로드 실패: ${response.statusCode}');
       }
