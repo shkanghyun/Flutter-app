@@ -258,7 +258,7 @@ class StationScheduleApiService {
 
     //  XML 전용 API 주소
     final String url =
-        'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=10&_type=xml&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
+        'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=10&_type=json&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -266,29 +266,31 @@ class StationScheduleApiService {
       if (response.statusCode == 200) {
         print('response.statusCode : 200');
         print(url);
-        // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
-        final String decodedBody = utf8.decode(response.bodyBytes);
+        // 응답받은 문자열(Body)을 UTF-8 디코딩 후 JSON 객체로 파싱
+        final Map<String, dynamic> jsonMap = jsonDecode(
+          utf8.decode(response.bodyBytes),
+        );
 
-        // 2. 문자열을 XML 문서 객체로 파싱(해석)
-        final document = xml.XmlDocument.parse(decodedBody);
+        // 3. 중첩된 계층 구조를 따라가며 'item' 리스트까지 접근
+        final Map<String, dynamic> responseData = jsonMap['response'];
+        final Map<String, dynamic> bodyData = responseData['body'];
+        final Map<String, dynamic> itemsData = bodyData['items'];
 
-        // 3. 원하는 태그 찾기 (예: <item> 태그 내의 <stationName> 태그 데이터를 가져오고 싶을 때)
-        // 💡 활용하시는 API 명세서상의 태그 이름으로 바꾸셔야 합니다!
-        final items = document.findAllElements(
-          'item',
-        ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
+        // 'item' 키 안에 든 리스트를 가져옴
+        final List<dynamic> itemList = itemsData['item'];
 
         List<List<String>> results = [];
-        for (var item in items) {
-          var element = item.findElements('endSubwayStationNm').firstOrNull;
-          String endStationName = element != null ? element.innerText : "";
+        for (var item in itemList) {
+          String endStationName = '';
 
-          String departureTime = item
-              .findElements('depTime')
-              .first
-              .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
-          if (departureTime == '0')
-            departureTime = item.findElements('arrTime').first.innerText;
+          if (item['endSubwayStationNm'] != null) {
+            endStationName = item['endSubwayStationNm'];
+          } 
+
+          String departureTime = item['depTime'];
+          if (departureTime == '0') {
+            departureTime = item['arrTime'];
+          }
           results.add([departureTime, endStationName]);
         }
 

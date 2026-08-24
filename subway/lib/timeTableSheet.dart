@@ -76,7 +76,7 @@ class TimeTableSheetState extends State<TimeTableSheet> {
             tabAlignment: TabAlignment.start,
             indicator: BoxDecoration(),
             tabs: lineStationIdList
-                .map((title) => SizedBox( child: Tab(text: title[0])))
+                .map((title) => SizedBox(child: Tab(text: title[0])))
                 .toList(),
             dividerColor: Colors.transparent,
             labelColor: Colors.white,
