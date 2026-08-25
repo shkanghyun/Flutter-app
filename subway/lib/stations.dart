@@ -562,7 +562,7 @@ const _stationRows = <String>[
   '양촌|yangchon|0.024|0.276|gimpoGold',
   '양평|Yangpyeong|0.295|0.510|line5,gyeongui',
   '어룡|Eoryong|0.771|0.101|uijeongbu',
-  '어린이대공원|Children\'s Grand Park|0.755|0.431|line7',
+  '어린이대공원(세종대)|Children\'s Grand Park|0.755|0.431|line7',
   '어정|eojeong|0.868|0.875|everline',
   '어천|Eocheon|0.058|0.216|suinBundang',
   '언주|Eonju|0.676|0.653|line9',

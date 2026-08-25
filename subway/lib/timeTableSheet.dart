@@ -230,6 +230,70 @@ class StationScheduleTabState extends State<StationScheduleTab> {
         });
   }
 
+  Widget? buildTimetablePage(
+    List<List<String>> serverOneData,
+    List<List<String>> serverTwoData,
+    int i,
+  ) {
+    List<List<String>> result1 = serverOneData
+        .where(
+          (innerList) => innerList.any(
+            (item) => item.substring(0, 2) == i.toString().padLeft(2, '0'),
+          ),
+        )
+        .toList();
+    List<List<String>> result2 = serverTwoData
+        .where(
+          (innerList) => innerList.any(
+            (item) => item.substring(0, 2) == i.toString().padLeft(2, '0'),
+          ),
+        )
+        .toList();
+
+    if (result1.isNotEmpty || result2.isNotEmpty) {
+      return ListTile(
+        titleTextStyle: const TextStyle(fontSize: 16, color: Colors.black),
+        title: Row(
+          children: [
+            // 텍스트가 아무리 길어져도 화면 밖으로 터지지 않고 줄바꿈이 되도록 보호!
+            Expanded(
+              child: Column(
+                children: [
+                  for (var item in result1)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Text(
+                        item.toString(),
+                        //maxLines: 1, // 한 줄로만 제한하고 싶을 때 (선택)
+                        overflow: TextOverflow.ellipsis, // 말줄임표(...) 표시 (선택)
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  for (var item in result2)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: Text(
+                        item.toString(),
+                        //maxLines: 1, // 한 줄로만 제한하고 싶을 때 (선택)
+                        overflow: TextOverflow.ellipsis, // 말줄임표(...) 표시 (선택)
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<(List<List<String>>, List<List<String>>)>(
@@ -244,27 +308,12 @@ class StationScheduleTabState extends State<StationScheduleTab> {
         if (snapshot.hasData) {
           // 💡 구조 분해(Destructuring) 문법으로 깔끔하게 각 변수에 나눠 담습니다.
           final (serverOneData, serverTwoData) = snapshot.data!;
-
-          return Column(
+          return ListView(
             children: [
-              Expanded(
-                child: ListView.builder(
-                  itemCount: serverOneData.length,
-                  itemBuilder: (context, index) {
-                    // 첫 번째 서버 데이터를 화면에 출력
-                    return ListTile(
-                      title: Text(
-                        '서버1 데이터: ${serverOneData[index].toString()}',
-                      ),
-                      subtitle: index < serverTwoData.length
-                          ? Text(
-                              '서버2 매칭 데이터: ${serverTwoData[index].toString()}',
-                            )
-                          : null,
-                    );
-                  },
-                ),
-              ),
+              for (int i = 1; i <= 24; i++)
+                if (buildTimetablePage(serverOneData, serverTwoData, i)
+                    case Widget widget)
+                  widget,
             ],
           );
         }

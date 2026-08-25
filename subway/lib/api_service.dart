@@ -294,7 +294,12 @@ class StationScheduleApiService {
             if (item['endSubwayStationNm'] != null) {
               endStationName = item['endSubwayStationNm'];
             }
-            results.add([departureTime, endStationName]);
+            String departureTimeFormatted = departureTime.substring(0, 4);
+            if (departureTimeFormatted.startsWith("00")) {
+              departureTimeFormatted =
+                  "24${departureTimeFormatted.substring(2)}";
+            }
+            results.add([departureTimeFormatted, endStationName]);
           }
 
           print('schedule API result: $results');
@@ -355,7 +360,15 @@ class StationScheduleApiService {
                   if (item['SUBWAYENAME'] != null) {
                     endStationName = item['SUBWAYENAME'];
                   }
-                  results.add([departureTime, endStationName]);
+                  String departureTimeFormatted = departureTime
+                      .replaceAll(':', '')
+                      .substring(0, 4);
+                  if (departureTimeFormatted.startsWith("00")) {
+                    departureTimeFormatted =
+                        "24${departureTimeFormatted.substring(2)}";
+                  }
+
+                  results.add([departureTimeFormatted, endStationName]);
                 }
               }
 
@@ -395,7 +408,14 @@ class StationScheduleApiService {
             if (item['endSubwayStationNm'] != null) {
               endStationName = item['endSubwayStationNm'];
             }
-            results.add([departureTime, endStationName]);
+            String departureTimeFormatted = departureTime
+                .replaceAll(':', '')
+                .substring(0, 4);
+            if (departureTimeFormatted.startsWith("00")) {
+              departureTimeFormatted =
+                  "24${departureTimeFormatted.substring(2)}";
+            }
+            results.add([departureTimeFormatted, endStationName]);
           }
 
           //if (stationData != null) {}
