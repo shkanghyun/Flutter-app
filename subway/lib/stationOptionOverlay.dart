@@ -212,19 +212,33 @@ class StationOptionOverlay {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
+                      SizedBox(
                         width: 54,
                         height: 54,
-                        decoration: BoxDecoration(
-                          color: station.color,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: const Icon(
-                          Icons.subway_rounded,
-                          color: Colors.white,
-                          size: 30,
+                        child: SingleChildScrollView(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(minHeight: 54),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (var line in station.lines)
+                                  Text(
+                                    line.name,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                      color: line.color,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
+
                       const SizedBox(width: 16),
                       Expanded(
                         child: Column(
@@ -233,6 +247,8 @@ class StationOptionOverlay {
                           children: [
                             Text(
                               station.englishName,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 fontSize: 25,
                                 fontWeight: FontWeight.w800,
