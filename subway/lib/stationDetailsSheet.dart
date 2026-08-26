@@ -5,14 +5,23 @@ import 'package:subway/timeTableSheet.dart';
 
 class StationDetailsSheet extends StatefulWidget {
   final Station station;
-  const StationDetailsSheet({super.key, required this.station});
+  final Function(Station) onDepartureSelected;
+  final Function(Station) onArrivalSelected;
+  const StationDetailsSheet({
+    super.key,
+    required this.station,
+    required this.onDepartureSelected,
+    required this.onArrivalSelected,
+  });
 
   @override
   State<StationDetailsSheet> createState() => StationDetailsSheetState();
 }
 
 class StationDetailsSheetState extends State<StationDetailsSheet> {
-  List<List<String>> _dataList = [['Loading..']];
+  List<List<String>> _dataList = [
+    ['Loading..'],
+  ];
   bool _isLoading = false; // 로딩 상태 기억용 변수
 
   @override
@@ -44,7 +53,6 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
           if (hasTargetA && !hasTargetB) return -1; // a를 맨 앞으로
           if (!hasTargetA && hasTargetB) return 1; // b를 맨 앞으로
           return a[0].compareTo(b[0]);
-          
         });
         _isLoading = false; // 로딩 완료
       });
@@ -162,7 +170,10 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: () {
+                                  widget.onDepartureSelected(widget.station);
+                                  Navigator.pop(context);
+                                },
                                 child: Text('From'),
                                 //icon: const Icon(Icons.close_rounded),
                               ),
@@ -177,7 +188,10 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: () {
+                                  widget.onArrivalSelected(widget.station);
+                                  Navigator.pop(context);
+                                },
                                 child: Text('To'),
                                 //icon: const Icon(Icons.close_rounded),
                               ),
@@ -226,7 +240,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                     iconColor: const Color(0xFF5F6D89),
                   ),
                   const SizedBox(height: 10),
-                  
+
                   if (_dataList.isEmpty)
                     ListTile(
                       title: Text(
@@ -237,9 +251,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                     if (forStationLineWidget.add(i[0])) ...[
                       // 같은 라인이 들어가면 false가 반환
                       SizedBox(height: 50, child: Center(child: Text(i[0]))),
-                      ListTile(
-                        title: Text(i.toString()),
-                      ),
+                      ListTile(title: Text(i.toString())),
                     ] else
                       ListTile(title: Text(i.toString())),
                   SizedBox(height: bottomPadding + 10 + 52),
