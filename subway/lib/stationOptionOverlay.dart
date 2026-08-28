@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:subway/stations.dart';
 
 class StationOptionOverlay {
@@ -46,6 +47,7 @@ class StationOptionOverlay {
                 showWhenUnlinked: false,
                 offset: const Offset(0, 0), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
                 child: TapRegion(
+                  groupId: 'my_group',
                   onTapOutside: (event) {
                     _currentEntry?.remove();
                     _currentEntry = null;
@@ -195,78 +197,80 @@ class StationOptionOverlay {
                 ),
               ),
             ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Material(
-                color: Colors.transparent,
-                child: Container(
-                  height: 120,
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top,
-                    left: 16,
-                    right: 16,
-                  ),
-                  color: Colors.white,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 54,
-                        height: 54,
-                        child: SingleChildScrollView(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(minHeight: 54),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                for (var line in station.lines)
-                                  Text(
-                                    line.name,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w800,
-                                      color: line.color,
+            TapRegion(
+              groupId: 'my_group',
+              child: Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    height: 130,
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).padding.top,
+                      left: 16,
+                      right: 16,
+                    ),
+                    color: Colors.white,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                station.englishName,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w800,
+                                  color: Color(0xFF101B36),
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                station.name,
+                                style: const TextStyle(
+                                  color: Color(0xFF68748E),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        SizedBox(
+                          width: 100,
+                          height: 80,
+                          child: SingleChildScrollView(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(minHeight: 80),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  for (var line in station.lines)
+                                    AutoMarqueeText(
+                                      text:
+                                          line.name, // 54px보다 길면 흐르고, 짧으면 멈춥니다.
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w800,
+                                        color: line.color,
+                                      ),
                                     ),
-                                  ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              station.englishName,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w800,
-                                color: Color(0xFF101B36),
-                              ),
-                            ),
-                            const SizedBox(height: 2),
-                            Text(
-                              station.name,
-                              style: const TextStyle(
-                                color: Color(0xFF68748E),
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -286,5 +290,44 @@ class StationOptionOverlay {
       _currentEntry!.remove();
       _currentEntry = null;
     }
+  }
+}
+
+class AutoMarqueeText extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+
+  const AutoMarqueeText({super.key, required this.text, required this.style});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // 1. 텍스트가 차지할 실제 가로 길이를 계산합니다.
+        final textPainter = TextPainter(
+          text: TextSpan(text: text, style: style),
+          maxLines: 1,
+          textDirection: TextDirection.ltr,
+        )..layout(maxWidth: double.infinity);
+
+        // 2. 텍스트 길이가 부모 박스의 최대 가로 폭(constraints.maxWidth)보다 긴지 확인
+        final isOverflowing = textPainter.size.width > constraints.maxWidth;
+
+        // 3. 길면 Marquee를, 짧으면 일반 Text 위젯을 반환합니다.
+        if (isOverflowing) {
+          return SizedBox(
+            height: textPainter.size.height + 10, // 텍스트 높이에 맞게 조절
+            child: Marquee(
+              text: text,
+              style: style,
+              blankSpace: 20.0, // 반복 공백
+              velocity: 30.0, // 속도
+            ),
+          );
+        } else {
+          return Text(text, style: style, maxLines: 1);
+        }
+      },
+    );
   }
 }
