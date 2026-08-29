@@ -252,23 +252,25 @@ class StationOptionOverlay {
                             minHeight: 80,
                             minWidth: 80,
                           ),
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(minHeight: 80),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                for (var line in station.lines)
-                                  Text(
-                                    line.name,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w800,
-                                      color: line.color,
+                          child: SingleChildScrollView(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(minHeight: 80),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  for (var line in station.lines)
+                                    Text(
+                                      line.name,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w800,
+                                        color: line.color,
+                                      ),
+                                      maxLines: 1,
                                     ),
-                                    maxLines: 1,
-                                  ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
