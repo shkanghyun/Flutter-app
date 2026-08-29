@@ -197,12 +197,13 @@ class StationOptionOverlay {
                 ),
               ),
             ),
-            TapRegion(
-              groupId: 'my_group',
-              child: Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
+
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: TapRegion(
+                groupId: 'my_group',
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
@@ -244,28 +245,30 @@ class StationOptionOverlay {
                           ),
                         ),
                         const SizedBox(width: 16),
-                        SizedBox(
-                          width: 100,
-                          height: 80,
-                          child: SingleChildScrollView(
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(minHeight: 80),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  for (var line in station.lines)
-                                    AutoMarqueeText(
-                                      text:
-                                          line.name, // 54px보다 길면 흐르고, 짧으면 멈춥니다.
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w800,
-                                        color: line.color,
-                                      ),
+                        ConstrainedBox(
+                          //width: 100,
+                          //height: 80,
+                          constraints: const BoxConstraints(
+                            minHeight: 80,
+                            minWidth: 80,
+                          ),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(minHeight: 80),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (var line in station.lines)
+                                  Text(
+                                    line.name,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                      color: line.color,
                                     ),
-                                ],
-                              ),
+                                    maxLines: 1,
+                                  ),
+                              ],
                             ),
                           ),
                         ),
