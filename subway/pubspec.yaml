@@ -9,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_svg: ^2.3.0
   http: ^1.6.0
   intl: ^0.20.3
   marquee: ^2.3.0
@@ -26,3 +27,6 @@ flutter:
     - assets/images/seoul_subway_map_foreigners.png
     - assets/data/timetable_data.json
     - assets/data/seoul_stationname_code.json
+    - assets/data/seoul_stationname_code.json
+    - assets/icons/start_flag.svg
+    - assets/icons/destination_flag.svg

@@ -5,6 +5,7 @@ import 'package:subway/stations.dart';
 import 'package:subway/stationDetailsSheet.dart';
 import 'package:subway/stationSearchSheet.dart';
 import 'package:subway/stationOptionOverlay.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const SeoulMetroApp());
@@ -171,7 +172,7 @@ class _MetroMapPageState extends State<MetroMapPage>
   bool _isTransferSet = false;
 
   void setDepartureStationFlag(Station station) {
-    if (DepartureStation == station) {
+    if (DepartureStation == station && _isDepartSet == true) {
       setState(() {
         _isDepartSet = false;
       });
@@ -185,7 +186,7 @@ class _MetroMapPageState extends State<MetroMapPage>
   }
 
   void setArrivalStationFlag(Station station) {
-    if (ArrivalStation == station) {
+    if (ArrivalStation == station && _isArriveSet == true) {
       setState(() {
         _isArriveSet = false;
       });
@@ -199,7 +200,7 @@ class _MetroMapPageState extends State<MetroMapPage>
   }
 
   void setTransferStationFlag(Station station) {
-    if (TransferStation == station) {
+    if (TransferStation == station && _isTransferSet == true) {
       setState(() {
         _isTransferSet = false;
       });
@@ -209,7 +210,7 @@ class _MetroMapPageState extends State<MetroMapPage>
         _isTransferSet = true;
       });
     }
-        PathFinder(station: station).setTransferStation();
+    PathFinder(station: station).setTransferStation();
   }
 
   @override
@@ -461,8 +462,8 @@ class _DepartFlagState extends State<DepartFlag> {
   }
 
   double currentScale = 1.0;
-  double originalWidth = 40.0;
-  double originalHeight = 40.0;
+  double originalWidth = 60.0;
+  double originalHeight = 60.0;
 
   @override
   Widget build(BuildContext context) {
@@ -475,7 +476,12 @@ class _DepartFlagState extends State<DepartFlag> {
         ignoring: true,
         child: Transform.translate(
           offset: Offset(0.0, 3.5 / currentScale),
-          child: Icon(Icons.location_on, size: originalHeight / currentScale),
+          child: SvgPicture.asset(
+            'assets/icons/start_flag.svg',
+            width: 1,
+            height: 1,
+            //Icon(Icons.location_on, size: originalHeight / currentScale),
+          ),
         ),
       ),
     );
@@ -517,8 +523,8 @@ class _ArriveFlagState extends State<ArriveFlag> {
   }
 
   double currentScale = 1.0;
-  double originalWidth = 40.0;
-  double originalHeight = 40.0;
+  double originalWidth = 60.0;
+  double originalHeight = 60.0;
 
   @override
   Widget build(BuildContext context) {
@@ -531,7 +537,12 @@ class _ArriveFlagState extends State<ArriveFlag> {
         ignoring: true,
         child: Transform.translate(
           offset: Offset(0.0, 3.5 / currentScale),
-          child: Icon(Icons.location_off, size: originalHeight / currentScale),
+          child: SvgPicture.asset(
+            'assets/icons/destination_flag.svg',
+            width: 1,
+            height: 1,
+            //Icon(Icons.location_on, size: originalHeight / currentScale),
+          ),
         ),
       ),
     );
