@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart' as xml; // XML 패키지 임포트
@@ -106,6 +107,7 @@ class SubwayApiService {
 
 class SeoulApiService {
   static Future<List<String>> fetchPublicXmlData({
+    required BuildContext context,
     required String? DepartureStation,
     required String? ArrivalStation,
     String? TransferStation,
@@ -116,7 +118,7 @@ class SeoulApiService {
     ).format(DateTime.now());
 
     //  XML 전용 API 주소
-    final String url =
+    String url =
         'http://openapi.seoul.go.kr:8088/$serviceKey/xml/getShtrmPath/1/5/$DepartureStation/$ArrivalStation/$formattedDate///$TransferStation';
 
     try {
@@ -148,7 +150,44 @@ class SeoulApiService {
         }
 
         print('API.dart result: $results');
-        return results; // 추출한 데이터 리스트 반환
+        if (results.isNotEmpty) {
+          return results;
+        } else {
+          // 조회 시간 이슈로 데이터 조회가 안될경우
+          formattedDate = '${formattedDate.substring(0, 11)}07:00:00';
+          print(url);
+          url =
+              'http://openapi.seoul.go.kr:8088/$serviceKey/xml/getShtrmPath/1/5/$DepartureStation/$ArrivalStation/$formattedDate///$TransferStation';
+          try {
+            final response = await http.get(Uri.parse(url));
+
+            if (response.statusCode == 200) {
+              print('response.statusCode : 200');
+              print(url);
+              final String decodedBody = utf8.decode(response.bodyBytes);
+
+              final document = xml.XmlDocument.parse(decodedBody);
+
+              final items = document.findAllElements('arvlStn');
+
+              List<String> results = [];
+              for (var item in items) {
+                final stationName = item.findElements('stnNm').first.innerText;
+                results.add(stationName);
+              }
+              print('API.dart result: $results');
+              if (!context.mounted) return [];
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text('Can\'t search path departing now. Search route depart time set to 7AM')));
+              return results;
+            } else {
+              throw Exception('데이터 로드 실패: ${response.statusCode}');
+            }
+          } catch (e) {
+            throw Exception('네트워크 또는 XML 파싱 오류: $e');
+          }
+        }
       } else {
         throw Exception('데이터 로드 실패: ${response.statusCode}');
       }

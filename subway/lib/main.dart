@@ -182,7 +182,7 @@ class _MetroMapPageState extends State<MetroMapPage>
         _isDepartSet = true;
       });
     }
-    PathFinder(station: station).setDepartureStation();
+    PathFinder(station: station, context: context).setDepartureStation();
   }
 
   void setArrivalStationFlag(Station station) {
@@ -196,7 +196,7 @@ class _MetroMapPageState extends State<MetroMapPage>
         _isArriveSet = true;
       });
     }
-    PathFinder(station: station).setArrivalStation();
+    PathFinder(station: station, context: context).setArrivalStation();
   }
 
   void setTransferStationFlag(Station station) {
@@ -210,7 +210,7 @@ class _MetroMapPageState extends State<MetroMapPage>
         _isTransferSet = true;
       });
     }
-    PathFinder(station: station).setTransferStation();
+    PathFinder(station: station, context: context).setTransferStation();
   }
 
   @override
@@ -616,8 +616,8 @@ class _TransferFlagState extends State<TransferFlag> {
 }
 
 class PathFinder {
-  PathFinder({required this.station});
-
+  PathFinder({required this.context, required this.station});
+BuildContext context;
   Station station;
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
@@ -670,6 +670,7 @@ class PathFinder {
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
       List<String> result = await SeoulApiService.fetchPublicXmlData(
+        context: context,
         DepartureStation: departureStation,
         ArrivalStation: arrivalStation,
         TransferStation: transferStation,
