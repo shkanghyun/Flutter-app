@@ -164,54 +164,83 @@ class _MetroMapPageState extends State<MetroMapPage>
   }
 
   // Flag 구현
-  static Station? DepartureStation;
-  static Station? ArrivalStation;
-  static Station? TransferStation;
+  static Station? departureStation;
+  static Station? arrivalStation;
+  static Station? transferStation;
   bool _isDepartSet = false;
   bool _isArriveSet = false;
   bool _isTransferSet = false;
+  bool _isPathSet = false;
 
   void setDepartureStationFlag(Station station) {
-    if (DepartureStation == station && _isDepartSet == true) {
+    if (departureStation == station && _isDepartSet == true) {
       setState(() {
         _isDepartSet = false;
       });
     } else {
       setState(() {
-        DepartureStation = station;
+        departureStation = station;
         _isDepartSet = true;
       });
     }
-    PathFinder(station: station, context: context).setDepartureStation();
+    PathFinder(
+      station: station,
+      context: context,
+      showPath: showPath,
+      hidePath: hidePath,
+    ).setDepartureStation();
   }
 
   void setArrivalStationFlag(Station station) {
-    if (ArrivalStation == station && _isArriveSet == true) {
+    if (arrivalStation == station && _isArriveSet == true) {
       setState(() {
         _isArriveSet = false;
       });
     } else {
       setState(() {
-        ArrivalStation = station;
+        arrivalStation = station;
         _isArriveSet = true;
       });
     }
-    PathFinder(station: station, context: context).setArrivalStation();
+    PathFinder(
+      station: station,
+      context: context,
+      showPath: showPath,
+      hidePath: hidePath,
+    ).setArrivalStation();
   }
 
   void setTransferStationFlag(Station station) {
-    if (TransferStation == station && _isTransferSet == true) {
+    if (transferStation == station && _isTransferSet == true) {
       setState(() {
         _isTransferSet = false;
       });
     } else {
       setState(() {
-        TransferStation = station;
+        transferStation = station;
         _isTransferSet = true;
       });
     }
-    PathFinder(station: station, context: context).setTransferStation();
+    PathFinder(
+      station: station,
+      context: context,
+      showPath: showPath,
+      hidePath: hidePath,
+    ).setTransferStation();
   }
+
+  // Path 표시
+  List<Station> pathStations = [];
+  void showPath(List<String> stationList) {
+    setState(() {
+      _isPathSet = true;
+      pathStations = stations.where((station) => stationList.contains(station.name)).toList();
+
+    });
+    
+  }
+
+  void hidePath() {}
 
   @override
   Widget build(BuildContext context) {
@@ -264,18 +293,20 @@ class _MetroMapPageState extends State<MetroMapPage>
                     if (_isDepartSet)
                       DepartFlag(
                         transformationController: _mapController,
-                        station: DepartureStation,
+                        station: departureStation,
                       ),
                     if (_isArriveSet)
                       ArriveFlag(
                         transformationController: _mapController,
-                        station: ArrivalStation,
+                        station: arrivalStation,
                       ),
                     if (_isTransferSet)
                       TransferFlag(
                         transformationController: _mapController,
-                        station: TransferStation,
+                        station: transferStation,
                       ),
+                    if (_isPathSet)
+                      ...pathStations.map((station) => PathMarker(transformationController: _mapController, station: station))
                   ],
                 ),
               ),
@@ -616,9 +647,16 @@ class _TransferFlagState extends State<TransferFlag> {
 }
 
 class PathFinder {
-  PathFinder({required this.context, required this.station});
-BuildContext context;
+  PathFinder({
+    required this.context,
+    required this.station,
+    required this.showPath,
+    required this.hidePath,
+  });
+  BuildContext context;
   Station station;
+  Function(List<String>) showPath;
+  Function() hidePath;
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
   static OverlayEntry? _currentEntry;
@@ -631,10 +669,13 @@ BuildContext context;
   void setDepartureStation() {
     if (departureStation == station.name) {
       departureStation = null;
+      hidePath();
     } else {
       departureStation = station.name;
       if (departureStation != null && arrivalStation != null) {
-        loadData();
+        loadPath();
+      } else {
+        hidePath();
       }
     }
   }
@@ -642,10 +683,13 @@ BuildContext context;
   void setArrivalStation() {
     if (arrivalStation == station.name) {
       arrivalStation = null;
+      hidePath();
     } else {
       arrivalStation = station.name;
       if (departureStation != null && arrivalStation != null) {
-        loadData();
+        loadPath();
+      } else {
+        hidePath();
       }
     }
   }
@@ -654,17 +698,17 @@ BuildContext context;
     if (transferStation == station.name) {
       transferStation = '';
       if (departureStation != null && arrivalStation != null) {
-        loadData();
+        loadPath();
       }
     } else {
       transferStation = station.name;
       if (departureStation != null && arrivalStation != null) {
-        loadData();
+        loadPath();
       }
     }
   }
 
-  Future<void> loadData() async {
+  Future<void> loadPath() async {
     _isLoading = true; // 로딩 시작
 
     try {
@@ -678,6 +722,7 @@ BuildContext context;
 
       _dataList = result; // 받아온 진짜 데이터를 변수에 저장
       _isLoading = false; // 로딩 완료
+      showPath(_dataList);
     } catch (e) {
       _isLoading = false;
 
@@ -734,5 +779,65 @@ BuildContext context;
       _currentEntry = null;
       print('OverlayEntry Remove함');
     }
+  }
+}
+
+class PathMarker extends StatefulWidget {
+  const PathMarker({
+    super.key,
+    required this._transformationController,
+    required this.station,
+  });
+  final TransformationController _transformationController;
+  final Station? station;
+  @override
+  State<PathMarker> createState() => _PathMarkerState();
+}
+
+class _PathMarkerState extends State<PathMarker> {
+  @override
+  void initState() {
+    super.initState();
+    currentScale = widget._transformationController.value.row0.x;
+    print(currentScale);
+    widget._transformationController.addListener(_onTransformationChanged);
+  }
+
+  void _onTransformationChanged() {
+    // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
+
+    setState(() {
+      currentScale = widget._transformationController.value.row0.x;
+    });
+  }
+
+  double currentScale = 1.0;
+  double originalWidth = 40.0;
+  double originalHeight = 40.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: widget.station!.x * _mapSize - originalWidth / currentScale / 2,
+      top: widget.station!.y * _mapSize - originalHeight / currentScale,
+      width: originalWidth / currentScale,
+      height: originalHeight / currentScale,
+      child: IgnorePointer(
+        ignoring: true,
+        child: Transform.translate(
+          offset: Offset(0.0, 3.5 / currentScale),
+          child: Icon(
+            Icons.add_location_rounded,
+            size: originalHeight / currentScale,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    widget._transformationController.removeListener(_onTransformationChanged);
+    super.dispose();
   }
 }
