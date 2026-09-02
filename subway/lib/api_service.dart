@@ -106,7 +106,7 @@ class SubwayApiService {
 }
 
 class SeoulApiService {
-  static Future<List<String>> fetchPublicXmlData({
+  static Future<List<List<String>>> fetchPublicXmlData({
     required BuildContext context,
     required String? DepartureStation,
     required String? ArrivalStation,
@@ -138,15 +138,21 @@ class SeoulApiService {
         final items = document.findAllElements(
           'arvlStn',
         ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
+        final totalReqTimeinSeconds = document.findAllElements(
+          'totalReqHr',
+        ); // 총 소요시간 (초)
 
-        List<String> results = [];
+        List<List<String>> results = [];
+        results.add([totalReqTimeinSeconds.first.innerText]);
+
         for (var item in items) {
           // item 태그 내부에서 'stationName'이라는 태그의 텍스트 추출
           final stationName = item
               .findElements('stnNm')
               .first
               .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
-          results.add(stationName);
+          final lineName = item.findElements('lineNm').first.innerText;
+          results.add([stationName, lineName]);
         }
 
         print('API.dart result: $results');
@@ -170,16 +176,27 @@ class SeoulApiService {
 
               final items = document.findAllElements('arvlStn');
 
-              List<String> results = [];
+              List<List<String>> results = [];
+              results.add([totalReqTimeinSeconds.first.innerText]);
+
               for (var item in items) {
-                final stationName = item.findElements('stnNm').first.innerText;
-                results.add(stationName);
+                // item 태그 내부에서 'stationName'이라는 태그의 텍스트 추출
+                final stationName = item
+                    .findElements('stnNm')
+                    .first
+                    .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
+                final lineName = item.findElements('lineNm').first.innerText;
+                results.add([stationName, lineName]);
               }
               print('API.dart result: $results');
               if (!context.mounted) return [];
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('Can\'t search path departing now. Search route depart time set to 7AM')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Can\'t search path departing now. Search route depart time set to 7AM',
+                  ),
+                ),
+              );
               return results;
             } else {
               throw Exception('데이터 로드 실패: ${response.statusCode}');

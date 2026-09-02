@@ -19,7 +19,7 @@ class _StationSearchSheetState extends State<StationSearchSheet> {
         .where((station) => station.matches(_query))
         .toList();
     return DraggableScrollableSheet(
-      initialChildSize: 0.68,
+      initialChildSize: 0.80,
       minChildSize: 0.42,
       maxChildSize: 0.92,
       expand: false,

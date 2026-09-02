@@ -120,13 +120,17 @@ class _MetroMapPageState extends State<MetroMapPage>
     if (targetX >= 50) {
       onEdgeMatrix.setEntry(0, 3, 50);
       print('OnEdge!!!!!!!!!!!!');
-    } else if (dx <= viewport.width - _mapSize * scale - 50) {
+    } else if (viewport.width < _mapSize * scale &&
+        targetX <= viewport.width - _mapSize * scale - 50) {
       onEdgeMatrix.setEntry(0, 3, viewport.width - _mapSize * scale - 50);
     }
     if (targetY >= 50) {
       onEdgeMatrix.setEntry(1, 3, 50);
-    } else if (dy <= viewport.height - _mapSize * scale - 70) {
+      print('OnEdge!!');
+    } else if (viewport.height < _mapSize * scale &&
+        targetY <= viewport.height - _mapSize * scale - 70) {
       onEdgeMatrix.setEntry(1, 3, viewport.height - _mapSize * scale - 70);
+      print('OnEdge!!!!');
     }
 
     _mapController.value = onEdgeMatrix;
@@ -231,16 +235,28 @@ class _MetroMapPageState extends State<MetroMapPage>
 
   // Path 표시
   List<Station> pathStations = [];
-  void showPath(List<String> stationList) {
+
+  void showPath(List<List<String>> stationList) {
     setState(() {
       _isPathSet = true;
-      pathStations = stations.where((station) => stationList.contains(station.name)).toList();
-
+      pathStations = stations
+          .where((station) => stationList.expand((list) => list).contains(station.name))
+          .toList();
     });
-    
   }
 
-  void hidePath() {}
+  void hidePath() {
+    _isPathSet = false;
+  }
+
+  void showPathText() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => StationSearchSheet(onSelect: _openStationDetailsSheet),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +284,7 @@ class _MetroMapPageState extends State<MetroMapPage>
                     Positioned.fill(
                       child: Image.asset(
                         'assets/images/seoul_subway_map_foreigners.png',
-                        fit: BoxFit.fill,
+                        fit: BoxFit.contain,
                         filterQuality: FilterQuality.high,
                       ),
                     ),
@@ -305,13 +321,37 @@ class _MetroMapPageState extends State<MetroMapPage>
                         transformationController: _mapController,
                         station: transferStation,
                       ),
-                    if (_isPathSet)
-                      ...pathStations.map((station) => PathMarker(transformationController: _mapController, station: station))
+                    if (_isPathSet) ...[
+                      ...pathStations.map(
+                        (station) => PathMarker(
+                          transformationController: _mapController,
+                          station: station,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
             ),
           ),
+          if (_isPathSet)
+            Positioned(
+              right: 16,
+              top: 60,
+              width: 60,
+              height: 60,
+              child: Material(
+                color: Colors.white,
+                elevation: 3,
+                shadowColor: const Color(0x25000000),
+                borderRadius: BorderRadius.circular(14),
+                child: IconButton(
+                  tooltip: '역 검색',
+                  onPressed: _openSearch,
+                  icon: const Icon(Icons.search_rounded),
+                ),
+              ),
+            ),
           Positioned(
             right: 16,
             bottom: 60,
@@ -655,7 +695,7 @@ class PathFinder {
   });
   BuildContext context;
   Station station;
-  Function(List<String>) showPath;
+  Function(List<List<String>>) showPath;
   Function() hidePath;
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
@@ -663,7 +703,7 @@ class PathFinder {
   static String? departureStation;
   static String? arrivalStation;
   static String transferStation = '';
-  List<String> _dataList = [];
+  List<List<String>> _dataList = [];
   bool _isLoading = false; // 로딩 상태 기억용 변수
 
   void setDepartureStation() {
@@ -679,7 +719,6 @@ class PathFinder {
       }
     }
   }
-
   void setArrivalStation() {
     if (arrivalStation == station.name) {
       arrivalStation = null;
@@ -693,7 +732,6 @@ class PathFinder {
       }
     }
   }
-
   void setTransferStation() {
     if (transferStation == station.name) {
       transferStation = '';
@@ -707,13 +745,11 @@ class PathFinder {
       }
     }
   }
-
   Future<void> loadPath() async {
     _isLoading = true; // 로딩 시작
-
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
-      List<String> result = await SeoulApiService.fetchPublicXmlData(
+      List<List<String>> result = await SeoulApiService.fetchPublicXmlData(
         context: context,
         DepartureStation: departureStation,
         ArrivalStation: arrivalStation,
@@ -730,54 +766,6 @@ class PathFinder {
       /*ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('데이터를 가져오지 못했습니다: $e')));*/
-    }
-  }
-
-  OverlayEntry? show(
-    BuildContext context,
-
-    TransformationController _transformationController,
-    LayerLink _layerLink,
-  ) {
-    dismiss();
-
-    // 2. 새로운 OverlayEntry를 생성합니다.
-    _currentEntry = OverlayEntry(
-      builder: (context) {
-        final double currentScale = _transformationController
-            .value
-            .row0
-            .x; // 컨트롤러의 매트릭스에서 현재 X축 확대 배율을 추출
-        const double originalWidth = 40.0;
-        const double originalHeight = 40.0;
-        return Positioned(
-          width: originalWidth / currentScale,
-          height: originalHeight / currentScale,
-          child: IgnorePointer(
-            ignoring: true,
-            child: CompositedTransformFollower(
-              targetAnchor: Alignment.bottomCenter,
-              followerAnchor: Alignment.bottomCenter,
-              link: _layerLink,
-              showWhenUnlinked: false,
-              offset: const Offset(0, -10), // 버튼 기준 위젯이 뜰 위치 (X축, Y축)
-              child: Icon(Icons.add_location_rounded, size: 30 / currentScale),
-            ),
-          ),
-        );
-      },
-    );
-
-    // 3. 현재 화면의 Overlay에 삽입합니다.
-    return _currentEntry;
-  }
-
-  /// 현재 표시 중인 오버레이를 제거합니다.
-  static void dismiss() {
-    if (_currentEntry != null) {
-      _currentEntry!.remove();
-      _currentEntry = null;
-      print('OverlayEntry Remove함');
     }
   }
 }
