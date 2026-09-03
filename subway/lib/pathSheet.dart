@@ -34,6 +34,21 @@ class PathSheetState extends State<PathSheet> {
 
     Set<String> forStationLineWidget = {};
 
+    final List<List<String>> pathStationsSummary = [];
+
+    for (int i = 1; i < widget.pathStations.length; i++) {
+      // 1. 첫 번째 요소이거나, 앞의 요소와 값이 다르면 '연속 구간의 시작'이므로 추가
+      if (i == 1 || widget.pathStations[i][1] != widget.pathStations[i - 1][1]) {
+        pathStationsSummary.add(widget.pathStations[i]);
+      }
+      // 2. 마지막 요소이거나, 뒤의 요소와 값이 다르면 '연속 구간의 끝'이므로 추가
+      else if (i == widget.pathStations.length - 1 ||
+          widget.pathStations[i][1] != widget.pathStations[i + 1][1]) {
+        pathStationsSummary.add(widget.pathStations[i]);
+      }
+      // 3. 앞뒤가 모두 나와 같은 값이면 '연속 구간의 중간'이므로 무시(제거 효과)
+    }
+
     return DraggableScrollableSheet(
       expand: false,
       snap: true,
@@ -82,8 +97,22 @@ class PathSheetState extends State<PathSheet> {
                     ),
                   ),
 
-
-
+                  for (List<String> i in pathStationsSummary)
+                    if (forStationLineWidget.add(i[1])) ...[
+                      // 같은 라인이 들어가면 false가 반환
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 50,
+                          child: Center(child: Text(i[1])),
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: ListTile(title: Text(i.toString())),
+                      ),
+                    ] else
+                      SliverToBoxAdapter(
+                        child: ListTile(title: Text(i.toString())),
+                      ),
 
                   SliverToBoxAdapter(
                     child: Text(widget.pathStations.toString()),
