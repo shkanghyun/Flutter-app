@@ -138,12 +138,13 @@ class SeoulApiService {
         final paths = document.findAllElements(
           'path',
         ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
-        final totalReqTimeinSeconds = document.findAllElements(
-          'totalReqHr',
-        ); // 총 소요시간 (초)
 
         List<List<String>> results = [];
-        results.add([totalReqTimeinSeconds.first.innerText]);
+        results.add([
+          document.findAllElements('totalReqHr').first.innerText,
+          document.findAllElements('trsitNmtm').first.innerText,
+          document.findAllElements('totalCardCrg').first.innerText,
+        ]);
 
         for (var path in paths) {
           final arrivalStation = path
@@ -157,8 +158,39 @@ class SeoulApiService {
               .findElements('lineNm')
               .first
               .innerText;
-          results.add([stationName, lineName]);
+          String enStationName = translateStationName(stationName);
+          String enLineName = switch (lineName) {
+            '1호선' => 'Line 1',
+            '2호선' => 'Line 2',
+            '3호선' => 'Line 3',
+            '4호선' => 'Line 4',
+            '5호선' => 'Line 5',
+            '6호선' => 'Line 6',
+            '7호선' => 'Line 7',
+            '8호선' => 'Line 8',
+            '9호선' => 'Line 9',
+            '경의선' => 'Gyeongui·Jungang Line',
+            '공항철도' => 'Airport Railroad',
+            '경춘선' => 'Gyuongchun Line',
+            '수인분당선' => 'Suin·Bundang Line',
+            '신분당선' => 'Shinbundang Line',
+            '우이신설경전철' => 'Ui Sinseol Line',
+            '서해선' => 'Seohae Line',
+            '신림선' => 'Sillim Line',
+            '경강선' => 'Gyeonggang Line',
+            'GTX-A' => 'GTX-A',
+            '용인경전철' => 'Yongin Everline',
+            '김포도시철도' => 'Gimpo Goldline',
+            '인천선' => 'Incheon Line 1',
+            '인천2호선' => 'Incheon Line 2',
+            '의정부경전철' => 'Uijeongbu Lrt',
+            '자기부상' => 'Maglev Line',
+            _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
+          };
+          results.add([enStationName, enLineName]);
         }
+
+        results.insert(1, [translateStationName(DepartureStation!), results[1][1]]);
 
         print('API.dart result: $results');
         if (results.isNotEmpty && results[0][0] != '0') {
@@ -200,8 +232,38 @@ class SeoulApiService {
                     .findElements('lineNm')
                     .first
                     .innerText;
-                results.add([stationName, lineName]);
+                String enStationName = translateStationName(stationName);
+                String enLineName = switch (lineName) {
+                  '1호선' => 'Line 1',
+                  '2호선' => 'Line 2',
+                  '3호선' => 'Line 3',
+                  '4호선' => 'Line 4',
+                  '5호선' => 'Line 5',
+                  '6호선' => 'Line 6',
+                  '7호선' => 'Line 7',
+                  '8호선' => 'Line 8',
+                  '9호선' => 'Line 9',
+                  '경의선' => 'Gyeongui·Jungang Line',
+                  '공항철도' => 'Airport Railroad',
+                  '경춘선' => 'Gyuongchun Line',
+                  '수인분당선' => 'Suin·Bundang Line',
+                  '신분당선' => 'Shinbundang Line',
+                  '우이신설경전철' => 'Ui Sinseol Line',
+                  '서해선' => 'Seohae Line',
+                  '신림선' => 'Sillim Line',
+                  '경강선' => 'Gyeonggang Line',
+                  'GTX-A' => 'GTX-A',
+                  '용인경전철' => 'Yongin Everline',
+                  '김포도시철도' => 'Gimpo Goldline',
+                  '인천선' => 'Incheon Line 1',
+                  '인천2호선' => 'Incheon Line 2',
+                  '의정부경전철' => 'Uijeongbu Lrt',
+                  '자기부상' => 'Maglev Line',
+                  _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
+                };
+                results.add([enStationName, enLineName]);
               }
+              results.insert(1, [translateStationName(DepartureStation), results[1][1]]);
               print('API.dart result: $results');
               if (!context.mounted) return [];
               ScaffoldMessenger.of(context).showSnackBar(

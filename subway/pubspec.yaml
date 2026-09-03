@@ -30,3 +30,4 @@ flutter:
     - assets/data/seoul_stationname_code.json
     - assets/icons/start_flag.svg
     - assets/icons/destination_flag.svg
+    - assets/icons/money_icon.png

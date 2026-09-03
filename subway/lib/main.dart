@@ -243,7 +243,7 @@ class _MetroMapPageState extends State<MetroMapPage>
       _isPathSet = true;
       pathList = stationList;
       pathStations = stations
-          .where((station) => stationList.expand((list) => list).contains(station.name))
+          .where((station) => stationList.expand((list) => list).contains(station.englishName))
           .toList();
     });
   }
