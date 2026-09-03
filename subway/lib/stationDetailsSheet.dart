@@ -76,6 +76,11 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
     // 기기의 픽셀 밀도 (배율)
     final double devicePixelRatio = View.of(context).devicePixelRatio;
 
+    // 상단 패딩을 뺀 화면의 높이
+    double safeAreaHeight =
+        MediaQuery.sizeOf(context).height -
+        physicalTopPadding / devicePixelRatio;
+        
     Set<String> forStationLineWidget = {};
 
     return SizedBox(
@@ -255,26 +260,6 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                     ] else
                       ListTile(title: Text(i.toString())),
                   SizedBox(height: bottomPadding + 10 + 52),
-                  /*SizedBox(
-                height: 500,
-                child: _dataList.isEmpty
-                    ? Center(child: Text('데이터가 없습니다.')) // 데이터가 없을 때
-                    : ListView.builder(
-                        itemCount: _dataList.length,
-                        itemBuilder: (context, index) {
-                          List<String> lineList = _dataList[index][0].split(
-                            ',',
-                          );
-                          _dataList[index].sort;
-                          return ListTile(
-                            leading: CircleAvatar(child: Text('${index + 1}')),
-                            title: Text(
-                              _dataList[index].toString(),
-                            ), // 일반 변수의 값 출력
-                          );
-                        },
-                      ),
-              ),*/
                 ],
               ),
             ),

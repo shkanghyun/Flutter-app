@@ -135,8 +135,8 @@ class SeoulApiService {
 
         // 3. 원하는 태그 찾기 (예: <item> 태그 내의 <stationName> 태그 데이터를 가져오고 싶을 때)
         // 💡 활용하시는 API 명세서상의 태그 이름으로 바꾸셔야 합니다!
-        final items = document.findAllElements(
-          'arvlStn',
+        final paths = document.findAllElements(
+          'path',
         ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
         final totalReqTimeinSeconds = document.findAllElements(
           'totalReqHr',
@@ -145,18 +145,23 @@ class SeoulApiService {
         List<List<String>> results = [];
         results.add([totalReqTimeinSeconds.first.innerText]);
 
-        for (var item in items) {
-          // item 태그 내부에서 'stationName'이라는 태그의 텍스트 추출
-          final stationName = item
+        for (var path in paths) {
+          final arrivalStation = path
+              .findElements('arvlStn')
+              .first; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
+          final stationName = arrivalStation
               .findElements('stnNm')
               .first
               .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
-          final lineName = item.findElements('lineNm').first.innerText;
+          final lineName = arrivalStation
+              .findElements('lineNm')
+              .first
+              .innerText;
           results.add([stationName, lineName]);
         }
 
         print('API.dart result: $results');
-        if (results.isNotEmpty) {
+        if (results.isNotEmpty && results[0][0] != '0') {
           return results;
         } else {
           // 조회 시간 이슈로 데이터 조회가 안될경우
@@ -174,18 +179,27 @@ class SeoulApiService {
 
               final document = xml.XmlDocument.parse(decodedBody);
 
-              final items = document.findAllElements('arvlStn');
+              final paths = document.findAllElements('path');
 
               List<List<String>> results = [];
-              results.add([totalReqTimeinSeconds.first.innerText]);
+              results.add([
+                document.findAllElements('totalReqHr').first.innerText,
+                document.findAllElements('trsitNmtm').first.innerText,
+                document.findAllElements('totalCardCrg').first.innerText,
+              ]);
 
-              for (var item in items) {
-                // item 태그 내부에서 'stationName'이라는 태그의 텍스트 추출
-                final stationName = item
+              for (var path in paths) {
+                final arrivalStation = path
+                    .findElements('arvlStn')
+                    .first; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
+                final stationName = arrivalStation
                     .findElements('stnNm')
                     .first
                     .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
-                final lineName = item.findElements('lineNm').first.innerText;
+                final lineName = arrivalStation
+                    .findElements('lineNm')
+                    .first
+                    .innerText;
                 results.add([stationName, lineName]);
               }
               print('API.dart result: $results');

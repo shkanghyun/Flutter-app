@@ -5,6 +5,7 @@ import 'package:subway/stations.dart';
 import 'package:subway/stationDetailsSheet.dart';
 import 'package:subway/stationSearchSheet.dart';
 import 'package:subway/stationOptionOverlay.dart';
+import 'package:subway/pathSheet.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
@@ -233,12 +234,14 @@ class _MetroMapPageState extends State<MetroMapPage>
     ).setTransferStation();
   }
 
-  // Path 표시
+  // Path 표시  
+  List<List<String>> pathList = [];
   List<Station> pathStations = [];
 
   void showPath(List<List<String>> stationList) {
     setState(() {
       _isPathSet = true;
+      pathList = stationList;
       pathStations = stations
           .where((station) => stationList.expand((list) => list).contains(station.name))
           .toList();
@@ -249,12 +252,12 @@ class _MetroMapPageState extends State<MetroMapPage>
     _isPathSet = false;
   }
 
-  void showPathText() {
+  void openPathSheet() {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => StationSearchSheet(onSelect: _openStationDetailsSheet),
+      builder: (_) => PathSheet(pathStations: pathList,),
     );
   }
 
@@ -347,7 +350,7 @@ class _MetroMapPageState extends State<MetroMapPage>
                 borderRadius: BorderRadius.circular(14),
                 child: IconButton(
                   tooltip: '역 검색',
-                  onPressed: _openSearch,
+                  onPressed: openPathSheet,
                   icon: const Icon(Icons.search_rounded),
                 ),
               ),
