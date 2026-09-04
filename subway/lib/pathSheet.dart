@@ -38,7 +38,8 @@ class PathSheetState extends State<PathSheet> {
 
     for (int i = 1; i < widget.pathStations.length; i++) {
       // 1. 첫 번째 요소이거나, 앞의 요소와 값이 다르면 '연속 구간의 시작'이므로 추가
-      if (i == 1 || widget.pathStations[i][1] != widget.pathStations[i - 1][1]) {
+      if (i == 1 ||
+          widget.pathStations[i][1] != widget.pathStations[i - 1][1]) {
         pathStationsSummary.add(widget.pathStations[i]);
       }
       // 2. 마지막 요소이거나, 뒤의 요소와 값이 다르면 '연속 구간의 끝'이므로 추가
@@ -49,6 +50,7 @@ class PathSheetState extends State<PathSheet> {
       // 3. 앞뒤가 모두 나와 같은 값이면 '연속 구간의 중간'이므로 무시(제거 효과)
     }
 
+    forStationLineWidget.add(pathStationsSummary[0][1]);
     return DraggableScrollableSheet(
       expand: false,
       snap: true,
@@ -96,23 +98,35 @@ class PathSheetState extends State<PathSheet> {
                       ],
                     ),
                   ),
-
-                  for (List<String> i in pathStationsSummary)
+                  const SliverPadding(padding: EdgeInsets.only(bottom: 10.0)),
+                  _InfoCard(
+                    stationName: pathStationsSummary[0][0],
+                    lineName: pathStationsSummary[0][1],
+                  ),
+                  for (List<String> i in pathStationsSummary.skip(
+                    1,
+                  )) // 첫번째 역은 바로 표시 및 build에서 forStationLineWidget에 추가
                     if (forStationLineWidget.add(i[1])) ...[
                       // 같은 라인이 들어가면 false가 반환
                       SliverToBoxAdapter(
-                        child: SizedBox(
-                          height: 50,
-                          child: Center(child: Text(i[1])),
+                        child: Container(
+                          height: 40,
+                          alignment: Alignment.centerLeft,
+                          padding: const EdgeInsets.fromLTRB(9, 0, 14, 0),
+                          margin: const EdgeInsets.fromLTRB(10, 0, 14, 0),
+                          child: Text(
+                            'Transfer to ${i[1]}.   (${int.parse(i[2]) % 60 == 0 ? int.parse(i[2]) ~/ 60 : '${int.parse(i[2]) ~/ 60}~${int.parse(i[2]) ~/ 60 + 1}'} minutes)',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Color.fromARGB(255, 72, 75, 119),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
                       ),
-                      SliverToBoxAdapter(
-                        child: ListTile(title: Text(i.toString())),
-                      ),
+                      _InfoCard(stationName: i[0], lineName: i[1]),
                     ] else
-                      SliverToBoxAdapter(
-                        child: ListTile(title: Text(i.toString())),
-                      ),
+                      _InfoCard(stationName: i[0], lineName: i[1]),
 
                   SliverToBoxAdapter(
                     child: Text(widget.pathStations.toString()),
@@ -136,6 +150,58 @@ class PathSheetState extends State<PathSheet> {
           ],
         );
       },
+    );
+  }
+}
+
+class _InfoCard extends StatelessWidget {
+  const _InfoCard({required this.stationName, required this.lineName});
+
+  final String stationName;
+  final String lineName;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        margin: const EdgeInsets.fromLTRB(10, 5, 14, 5),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAFAFA),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    stationName,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF68748E),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    lineName,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: lineById[lineName]!.color,
+                      fontWeight: FontWeight.w500,
+                      height: 1.35,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

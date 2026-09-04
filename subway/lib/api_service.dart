@@ -84,15 +84,24 @@ class SubwayApiService {
 
           String enArvlMsg = translateArrivalInfo(arvlMsg);
 
-          results.add([
-            line,
-            'toward $enNextStation',
-            'bound for $enFinalStation',
-            enArvlMsg,
-            trainAt,
-            trainType,
-            lineList,
-          ]);
+          if (trainType == '급행') {
+            String enTrainType = '(Express)';
+            results.add([
+              line,
+              'toward $enNextStation',
+              'bound for $enFinalStation',
+              enArvlMsg,
+              enTrainType,
+            ]);
+          } else {
+            results.add([
+              line,
+              'toward $enNextStation',
+              'bound for $enFinalStation',
+              enArvlMsg,
+              trainType,
+            ]);
+          }
         }
         print('API.dart result: $results');
         return results; // 추출한 데이터 리스트 반환
@@ -140,11 +149,13 @@ class SeoulApiService {
         ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
 
         List<List<String>> results = [];
-        results.add([
-          document.findAllElements('totalReqHr').first.innerText,
-          document.findAllElements('trsitNmtm').first.innerText,
-          document.findAllElements('totalCardCrg').first.innerText,
-        ]);
+        if (document.findAllElements('totalReqHr').isNotEmpty) {
+          results.add([
+            document.findAllElements('totalReqHr').first.innerText,
+            document.findAllElements('trsitNmtm').first.innerText,
+            document.findAllElements('totalCardCrg').first.innerText,
+          ]);
+        }
 
         for (var path in paths) {
           final arrivalStation = path
@@ -158,6 +169,7 @@ class SeoulApiService {
               .findElements('lineNm')
               .first
               .innerText;
+          final timeRequired = path.findElements('reqHr').first.innerText;
           String enStationName = translateStationName(stationName);
           String enLineName = switch (lineName) {
             '1호선' => 'Line 1',
@@ -187,16 +199,20 @@ class SeoulApiService {
             '자기부상' => 'Maglev Line',
             _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
           };
-          results.add([enStationName, enLineName]);
+          results.add([enStationName, enLineName, timeRequired]);
         }
-
-        results.insert(1, [translateStationName(DepartureStation!), results[1][1]]);
+        if (paths.isNotEmpty) {
+          results.insert(1, [
+            translateStationName(DepartureStation!),
+            results[1][1],
+          ]);
+        }
 
         print('API.dart result: $results');
         if (results.isNotEmpty && results[0][0] != '0') {
           return results;
         } else {
-          // 조회 시간 이슈로 데이터 조회가 안될경우
+          // 조회 시간 이슈로 데이터 조회가 안될 경우
           formattedDate = '${formattedDate.substring(0, 11)}07:00:00';
           print(url);
           url =
@@ -232,6 +248,7 @@ class SeoulApiService {
                     .findElements('lineNm')
                     .first
                     .innerText;
+                final timeRequired = path.findElements('reqHr').first.innerText;
                 String enStationName = translateStationName(stationName);
                 String enLineName = switch (lineName) {
                   '1호선' => 'Line 1',
@@ -261,9 +278,15 @@ class SeoulApiService {
                   '자기부상' => 'Maglev Line',
                   _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
                 };
-                results.add([enStationName, enLineName]);
+                results.add([enStationName, enLineName, timeRequired]);
               }
-              results.insert(1, [translateStationName(DepartureStation), results[1][1]]);
+              if (paths.isNotEmpty) {
+                results.insert(1, [
+                  translateStationName(DepartureStation!),
+                  results[1][1],
+                ]);
+              }
+
               print('API.dart result: $results');
               if (!context.mounted) return [];
               ScaffoldMessenger.of(context).showSnackBar(

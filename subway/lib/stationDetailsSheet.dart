@@ -80,7 +80,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
     double safeAreaHeight =
         MediaQuery.sizeOf(context).height -
         physicalTopPadding / devicePixelRatio;
-        
+
     Set<String> forStationLineWidget = {};
 
     return SizedBox(
@@ -253,12 +253,20 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                       ),
                     ),
                   for (List<String> i in _dataList)
-                    if (forStationLineWidget.add(i[0])) ...[
+                    if (forStationLineWidget.add(i[0]) && i.length > 4) ...[
                       // 같은 라인이 들어가면 false가 반환
                       SizedBox(height: 50, child: Center(child: Text(i[0]))),
-                      ListTile(title: Text(i.toString())),
-                    ] else
-                      ListTile(title: Text(i.toString())),
+                      ListTile(
+                        title: Text('Train ${i.sublist(1, 3).join(', ')}\n${i[3]} ${i[4] == '(Express)' ? '(Express)' : ''}'),
+                        subtitle: Text('${i[3]} ${i[4] == '(Express)' ? '(Express)' : ''}'),
+                      ),
+                    ] else if (i.length > 4)
+                      ListTile(
+                        title: Text('Train ${i.sublist(1, 3).join(', ')}\n${i[3]} ${i[4] == '(Express)' ? '(Express)' : ''}'),
+                        subtitle: Text('${i[3]} ${i[4] == '(Express)' ? '(Express)' : ''}'),
+                      )
+                    else
+                      ListTile(title: Center(child: Text(i[0]))),
                   SizedBox(height: bottomPadding + 10 + 52),
                 ],
               ),
