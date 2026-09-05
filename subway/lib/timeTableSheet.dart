@@ -237,56 +237,62 @@ class StationScheduleTabState extends State<StationScheduleTab> {
   ) {
     List<List<String>> result1 = serverOneData
         .where(
-          (innerList) => innerList.any(
-            (item) => item.substring(0, 2) == i.toString().padLeft(2, '0'),
-          ),
+          (innerList) =>
+              innerList[0].substring(0, 2) == i.toString().padLeft(2, '0'),
         )
         .toList();
     List<List<String>> result2 = serverTwoData
         .where(
-          (innerList) => innerList.any(
-            (item) => item.substring(0, 2) == i.toString().padLeft(2, '0'),
-          ),
+          (innerList) =>
+              innerList[0].substring(0, 2) == i.toString().padLeft(2, '0'),
         )
         .toList();
 
     if (result1.isNotEmpty || result2.isNotEmpty) {
       return ListTile(
         titleTextStyle: const TextStyle(fontSize: 16, color: Colors.black),
-        title: Row(
-          children: [
-            // 텍스트가 아무리 길어져도 화면 밖으로 터지지 않고 줄바꿈이 되도록 보호!
-            Expanded(
-              child: Column(
-                children: [
-                  for (var item in result1)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: Text(
-                        item.toString(),
-                        //maxLines: 1, // 한 줄로만 제한하고 싶을 때 (선택)
-                        overflow: TextOverflow.ellipsis, // 말줄임표(...) 표시 (선택)
+        title: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // 텍스트가 아무리 길어져도 화면 밖으로 터지지 않고 줄바꿈이 되도록 보호!
+              Expanded(
+                child: Column(
+                  children: [
+                    for (var item in result1)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Text(
+                          '${item[0].substring(2)} ${item[1]}',
+                          //maxLines: 1, // 한 줄로만 제한하고 싶을 때 (선택)
+                          overflow: TextOverflow.ellipsis, // 말줄임표(...) 표시 (선택)
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  for (var item in result2)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 2),
-                      child: Text(
-                        item.toString(),
-                        //maxLines: 1, // 한 줄로만 제한하고 싶을 때 (선택)
-                        overflow: TextOverflow.ellipsis, // 말줄임표(...) 표시 (선택)
+              Container(
+                width: 40,
+                color: Colors.blue.withAlpha(50),
+                child: Center(child: Text(i.toString().padLeft(2, '0'))),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    for (var item in result2)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2),
+                        child: Text(
+                          '${item[0].substring(2)} ${item[1]}',
+                          //maxLines: 1, // 한 줄로만 제한하고 싶을 때 (선택)
+                          overflow: TextOverflow.ellipsis, // 말줄임표(...) 표시 (선택)
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     } else {
@@ -312,8 +318,14 @@ class StationScheduleTabState extends State<StationScheduleTab> {
             children: [
               for (int i = 1; i <= 24; i++)
                 if (buildTimetablePage(serverOneData, serverTwoData, i)
-                    case Widget widget)
+                    case Widget widget) ...[
                   widget,
+                  const Divider(
+                    thickness: 1.0, // 선의 두께
+                    height: 1.0, // 선이 차지하는 전체 위아래 영역 (0이나 1로 주면 여백이 최소화됩니다)
+                    color: Colors.grey, // 선의 색상
+                  ),
+                ],
             ],
           );
         }

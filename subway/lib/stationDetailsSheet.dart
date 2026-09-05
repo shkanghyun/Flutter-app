@@ -283,7 +283,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                             color: lineById[i[0]]!.color.withValues(
                               alpha: 0.12,
                             ),
-                            borderRadius: BorderRadius.circular(16.0),
+                            borderRadius: BorderRadius.circular(10.0),
                           ),
                           height: 40,
                           child: Center(
@@ -294,39 +294,51 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
 
                       if (forStationTowardWidget.add(i[1])) ...[
                         Container(
-                          padding: EdgeInsets.only(top: 10),
+                          padding: EdgeInsets.only(top: 10, left: 14),
                           height: 30,
-                          child: Center(
-                            child: Text(
-                              'Train ${i[1]}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          child: Text(
+                            'Train ${i[1]}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
-                        _ArrivalInfoCard(boundFor: i[2], arvlMessage: i[3], expressOrNot: i[4]),
+                        _ArrivalInfoCard(
+                          boundFor: i[2],
+                          arvlMessage: i[3],
+                          expressOrNot: i[4],
+                        ),
                       ] else
-                        _ArrivalInfoCard(boundFor: i[2], arvlMessage: i[3], expressOrNot: i[4]),
+                        _ArrivalInfoCard(
+                          boundFor: i[2],
+                          arvlMessage: i[3],
+                          expressOrNot: i[4],
+                        ),
                     ] else if (i.length > 4) ...[
                       if (forStationTowardWidget.add(i[1])) ...[
                         Container(
-                          padding: EdgeInsets.only(top: 10),
+                          padding: EdgeInsets.only(top: 10, left: 14),
                           height: 30,
-                          child: Center(
-                            child: Text(
-                              'Train ${i[1]}',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                          child: Text(
+                            'Train ${i[1]}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
-                        _ArrivalInfoCard(boundFor: i[2], arvlMessage: i[3], expressOrNot: i[4]),
+                        _ArrivalInfoCard(
+                          boundFor: i[2],
+                          arvlMessage: i[3],
+                          expressOrNot: i[4],
+                        ),
                       ] else
-                        _ArrivalInfoCard(boundFor: i[2], arvlMessage: i[3], expressOrNot: i[4]),
+                        _ArrivalInfoCard(
+                          boundFor: i[2],
+                          arvlMessage: i[3],
+                          expressOrNot: i[4],
+                        ),
                     ] else
                       ListTile(title: Center(child: Text(i[0]))),
                   SizedBox(height: bottomPadding + 10 + 52),
@@ -502,8 +514,21 @@ class _ArrivalInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(boundFor, style: TextStyle(fontSize: 15)),
-      subtitle: Text(arvlMessage, style: TextStyle(fontSize: 16)),
+      contentPadding: const EdgeInsets.only(
+        top: 0.0,
+        left: 16.0,
+        right: 16.0,
+        bottom: 0.0,
+      ),
+      visualDensity: VisualDensity.compact,
+      title: Text(
+        boundFor,
+        style: TextStyle(fontSize: 15, color: Colors.grey[800]),
+      ),
+      subtitle: Text(
+        arvlMessage,
+        style: TextStyle(fontSize: 16, color: Colors.black),
+      ),
       trailing: Text(
         expressOrNot == '(Express)' ? 'Express' : expressOrNot,
         style: TextStyle(fontSize: 15, color: Colors.red),

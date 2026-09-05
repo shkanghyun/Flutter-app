@@ -11,14 +11,12 @@ class SubwayApiService {
     String stationName,
   ) async {
     final String serviceKey = '6b4f495a6773686b3639514c624a65';
+
+    if (stationName == '4.19민주묘지') stationName = '4.19 민주묘지';
+    if (stationName == '서울역') stationName = '서울';
     String url =
         'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/$stationName';
     //  XML 전용 API 주소를 입력하세요.
-    if (stationName == '서울역') {
-      url =
-          'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/서울';
-    }
-
     try {
       final response = await http.get(Uri.parse(url));
 
@@ -137,6 +135,9 @@ class SeoulApiService {
     DepartureStation = DepartureStation!.split('(').first;
     ArrivalStation = ArrivalStation!.split('(').first;
     TransferStation = TransferStation!.split('(').first;
+    if (DepartureStation == '4.19민주묘지') DepartureStation = '4·19민주묘지';  
+    if (ArrivalStation == '4.19민주묘지') ArrivalStation = '4·19민주묘지';
+    if (TransferStation == '4.19민주묘지') TransferStation = '4·19민주묘지';
     //  XML 전용 API 주소
     String url =
         'http://openapi.seoul.go.kr:8088/$serviceKey/xml/getShtrmPath/1/5/$DepartureStation/$ArrivalStation/$formattedDate///$TransferStation';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// 역명에서 '()' 뺌
 const Map<String, String> stationTranslationMap = {
   '4.19민주묘지': 'April 19th National Cemetery',
   '가능': 'Ganeung',
@@ -313,8 +314,8 @@ const Map<String, String> stationTranslationMap = {
   '서동탄': 'Seodongtan',
   '서부여성회관': 'West Woman\'s Community Center',
   '서빙고': 'Seobinggo',
-  '서울대벤처타운': 'Seouldaebencheotaun',
-  '서울대입구': 'Seoul National University',
+  '서울대벤처타운': 'Seoul National Univ. Venture Town',
+  '서울대입구': 'Seoul National Univ.',
   '서울숲': 'Seoul Forest',
   '서울역': 'Seoul Station',
   '서울지방병무청': 'Seoul RegioShal Of Linefice of Military Manpower',
