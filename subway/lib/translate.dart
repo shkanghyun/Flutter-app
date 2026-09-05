@@ -88,7 +88,7 @@ const Map<String, String> stationTranslationMap = {
   '국수': 'Guksu',
   '국제업무지구': 'International Business District',
   '국회의사당': 'National Assembly',
-  '군자': 'Gunja',
+  '군자(능동)': 'Gunja',
   '군포': 'Gunpo',
   '굴봉산': 'Gulbongsan',
   '굴포천': 'Gulpocheon',
@@ -402,7 +402,7 @@ const Map<String, String> stationTranslationMap = {
   '신용산': 'Sinyongsan',
   '신원': 'Sinwon',
   '신이문': 'Sinimun',
-  '신정': 'Sinjeong',
+  '신정(은행정)': 'Sinjeong',
   '신정네거리': 'Sinjeongnegeori',
   '신중동': 'Sinjung-dong',
   '신창': 'Sinchang',
@@ -468,7 +468,7 @@ const Map<String, String> stationTranslationMap = {
   '오남': 'Onam',
   '오류동': 'Oryu-dong',
   '오리': 'Ori',
-  '오목교': 'Omokcheon',
+  '오목교(목동운동장앞)': 'Omokcheon',
   '오목천': 'Yadang',
   '오빈': 'Obin',
   '오산': 'Osan',
@@ -662,10 +662,13 @@ const Map<String, String> stationTranslationMap = {
   '서울': 'Seoul Station',
   '신촌(경의중앙선)': 'Sinchon',
   '응암순환(상선)': 'Eungam Loop',
+  '신도림지선' : 'Sinjeong Branch Line',
+  "성수지선" : 'Seongsu Branch Line',
 
   '전역출발': 'previous station (Departed)',
   ' 전역': ' stations away',
   '전역': 'previous station',
+  '전전역': 'two stations before',
 };
 
 final Map<String, String> sortedStationTranslationMap = Map.fromEntries(
@@ -679,10 +682,6 @@ String translateStationName(String stationName) {
 
 String translateArrivalInfo(String arrivalInfo) {
   String enArrivalInfo = arrivalInfo.split(' (').first;
-  enArrivalInfo = enArrivalInfo.replaceFirstMapped(
-    RegExp(r'(.+)전전역출발'),
-    (match) => 'departed two stations before ${match[1]}',   
-  );
     enArrivalInfo = enArrivalInfo.replaceFirstMapped(
     RegExp(r'(.+)전역출발'),
     (match) => 'departed previous station',   

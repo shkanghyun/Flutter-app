@@ -54,6 +54,24 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
           if (!hasTargetA && hasTargetB) return 1; // b를 맨 앞으로
           return a[0].compareTo(b[0]);
         });
+
+        // 같은 방면, 행 기차는 하나의 listtile에 함께 표시되게
+        // 1. 그룹화를 위한 Map 생성 (Key: "값0_값1")
+        Map<String, List<String>> groupedMap = {};
+
+        for (var item in _dataList) {
+          String key = '${item[1]}_${item[2]}_${item[4]}';
+
+          if (groupedMap.containsKey(key)) {
+            // 이미 존재하는 Key라면 [2]번 문자열 뒤에 현재 [2]번 문자열을 이어붙임
+            groupedMap[key]![3] = '${groupedMap[key]![3]}\n${item[3]}';
+          } else {
+            // 새로운 Key라면 리스트 복사본 저장
+            groupedMap[key] = List.from(item);
+          }
+        }
+        // 2. Map의 Value들을 다시 List로 변환
+        _dataList = groupedMap.values.toList();
         _isLoading = false; // 로딩 완료
       });
     } catch (e) {
@@ -82,6 +100,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
         physicalTopPadding / devicePixelRatio;
 
     Set<String> forStationLineWidget = {};
+    Set<String> forStationTowardWidget = {};
 
     return SizedBox(
       height:
@@ -255,47 +274,60 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                   for (List<String> i in _dataList)
                     if (forStationLineWidget.add(i[0]) && i.length > 4) ...[
                       // 같은 라인이 들어가면 false가 반환
-                      SizedBox(height: 50, child: Center(child: Text(i[0]))),
-                      ListTile(
-                        title: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(text: 'Train ${i[1]}\n'),
-                              TextSpan(
-                                text:
-                                    i[2],
-                                style: TextStyle(fontSize: 15),
+                      (() {
+                        // 💡 함수 내부이므로 자유롭게 변수 선언 가능!
+                        forStationTowardWidget.clear();
+
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: lineById[i[0]]!.color.withValues(
+                              alpha: 0.12,
+                            ),
+                            borderRadius: BorderRadius.circular(16.0),
+                          ),
+                          height: 40,
+                          child: Center(
+                            child: Text(i[0], style: TextStyle(fontSize: 16)),
+                          ),
+                        );
+                      })(),
+
+                      if (forStationTowardWidget.add(i[1])) ...[
+                        Container(
+                          padding: EdgeInsets.only(top: 10),
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              'Train ${i[1]}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                        subtitle: Text(i[3], style: TextStyle(fontSize: 16)),
-                        trailing: Text(
-                          i[4] == '(Express)' ? 'Express' : i[4],
-                          style: TextStyle(fontSize: 15, color: Colors.red),
-                        ),
-                      ),
-                    ] else if (i.length > 4)
-                      ListTile(
-                        title: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(text: 'Train ${i[1]}\n'),
-                              TextSpan(
-                                text:
-                                    i[2],
-                                style: TextStyle(fontSize: 15),
+                        _ArrivalInfoCard(boundFor: i[2], arvlMessage: i[3], expressOrNot: i[4]),
+                      ] else
+                        _ArrivalInfoCard(boundFor: i[2], arvlMessage: i[3], expressOrNot: i[4]),
+                    ] else if (i.length > 4) ...[
+                      if (forStationTowardWidget.add(i[1])) ...[
+                        Container(
+                          padding: EdgeInsets.only(top: 10),
+                          height: 30,
+                          child: Center(
+                            child: Text(
+                              'Train ${i[1]}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                        subtitle: Text(i[3], style: TextStyle(fontSize: 16)),
-                        trailing: Text(
-                          i[4] == '(Express)' ? 'Express' : i[4],
-                          style: TextStyle(fontSize: 15, color: Colors.red),
-                        ),
-                      )
-                    else
+                        _ArrivalInfoCard(boundFor: i[2], arvlMessage: i[3], expressOrNot: i[4]),
+                      ] else
+                        _ArrivalInfoCard(boundFor: i[2], arvlMessage: i[3], expressOrNot: i[4]),
+                    ] else
                       ListTile(title: Center(child: Text(i[0]))),
                   SizedBox(height: bottomPadding + 10 + 52),
                 ],
@@ -455,3 +487,27 @@ const _sectionTitle = TextStyle(
   fontWeight: FontWeight.w800,
   color: Color(0xFF101B36),
 );
+
+class _ArrivalInfoCard extends StatelessWidget {
+  const _ArrivalInfoCard({
+    required this.boundFor,
+    required this.arvlMessage,
+    required this.expressOrNot,
+  });
+
+  final String boundFor;
+  final String arvlMessage;
+  final String expressOrNot;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(boundFor, style: TextStyle(fontSize: 15)),
+      subtitle: Text(arvlMessage, style: TextStyle(fontSize: 16)),
+      trailing: Text(
+        expressOrNot == '(Express)' ? 'Express' : expressOrNot,
+        style: TextStyle(fontSize: 15, color: Colors.red),
+      ),
+    );
+  }
+}
