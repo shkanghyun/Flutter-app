@@ -257,13 +257,43 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                       // 같은 라인이 들어가면 false가 반환
                       SizedBox(height: 50, child: Center(child: Text(i[0]))),
                       ListTile(
-                        title: Text('Train ${i.sublist(1, 3).join(', ')}\n${i[3]} ${i[4] == '(Express)' ? '(Express)' : ''}'),
-                        subtitle: Text('${i[3]} ${i[4] == '(Express)' ? '(Express)' : ''}'),
+                        title: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(text: 'Train ${i[1]}\n'),
+                              TextSpan(
+                                text:
+                                    i[2],
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                        subtitle: Text(i[3], style: TextStyle(fontSize: 16)),
+                        trailing: Text(
+                          i[4] == '(Express)' ? 'Express' : i[4],
+                          style: TextStyle(fontSize: 15, color: Colors.red),
+                        ),
                       ),
                     ] else if (i.length > 4)
                       ListTile(
-                        title: Text('Train ${i.sublist(1, 3).join(', ')}\n${i[3]} ${i[4] == '(Express)' ? '(Express)' : ''}'),
-                        subtitle: Text('${i[3]} ${i[4] == '(Express)' ? '(Express)' : ''}'),
+                        title: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(text: 'Train ${i[1]}\n'),
+                              TextSpan(
+                                text:
+                                    i[2],
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
+                        subtitle: Text(i[3], style: TextStyle(fontSize: 16)),
+                        trailing: Text(
+                          i[4] == '(Express)' ? 'Express' : i[4],
+                          style: TextStyle(fontSize: 15, color: Colors.red),
+                        ),
                       )
                     else
                       ListTile(title: Center(child: Text(i[0]))),

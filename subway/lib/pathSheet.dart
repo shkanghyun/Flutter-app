@@ -115,17 +115,17 @@ class PathSheetState extends State<PathSheet> {
                           padding: const EdgeInsets.fromLTRB(9, 0, 14, 0),
                           margin: const EdgeInsets.fromLTRB(10, 0, 14, 0),
                           child: Text(
-                            'Transfer to ${i[1]}.   (${int.parse(i[2]) % 60 == 0 ? int.parse(i[2]) ~/ 60 : '${int.parse(i[2]) ~/ 60}~${int.parse(i[2]) ~/ 60 + 1}'} minutes)',
+                            'Transfer to ${i[1]}. (takes ${int.parse(i[2]) % 60 == 0 ? int.parse(i[2]) ~/ 60 : '${int.parse(i[2]) ~/ 60}~${int.parse(i[2]) ~/ 60 + 1}'} minutes)',
                             style: const TextStyle(
                               fontSize: 14,
-                              color: Color.fromARGB(255, 72, 75, 119),
+                              color: Color.fromARGB(255, 75, 75, 75),
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
                       ),
                       _InfoCard(stationName: i[0], lineName: i[1]),
-                    ] else
+                    ] else if (forStationLineWidget.remove(i[1]))
                       _InfoCard(stationName: i[0], lineName: i[1]),
 
                   SliverToBoxAdapter(
@@ -163,43 +163,45 @@ class _InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        margin: const EdgeInsets.fromLTRB(10, 5, 14, 5),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFAFAFA),
-          borderRadius: BorderRadius.circular(16),
+      child: Card(
+        color: const Color(0xFFFDFDFD),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    stationName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF68748E),
-                      fontWeight: FontWeight.w700,
+        margin: const EdgeInsets.fromLTRB(10, 5, 14, 5),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      stationName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF68748E),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    lineName,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: lineById[lineName]!.color,
-                      fontWeight: FontWeight.w500,
-                      height: 1.35,
+                    const SizedBox(height: 4),
+                    Text(
+                      lineName,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: lineById[lineName]!.color,
+                        fontWeight: FontWeight.w500,
+                        height: 1.35,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

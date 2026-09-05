@@ -299,7 +299,7 @@ const Map<String, String> stationTranslationMap = {
   '상봉': 'Sangbong',
   '상수': 'Sangsu',
   '상왕십리': 'Sangwangsimni',
-  '상월곡': 'Sangwolgok',
+  '상월곡(한국과학기술연구원)': 'Sangwolgok',
   '상일동': 'Sangil-dong',
   '상천': 'Sangcheon',
   '상현': 'Sanghyeon',
@@ -422,7 +422,7 @@ const Map<String, String> stationTranslationMap = {
   '아현': 'Ahyeon',
   '안국': 'Anguk',
   '안산': 'Ansan',
-  '안암': 'Anam',
+  '안암(고대병원앞)': 'Anam',
   '안양': 'Anyang',
   '암사': 'Amsa',
   '암사역사공원': 'Amsa History Park',
@@ -504,7 +504,7 @@ const Map<String, String> stationTranslationMap = {
   '원종': 'Wonjong',
   '원흥': 'Wonheung',
   '월계': 'Wolgye',
-  '월곡': 'Wolgok',
+  '월곡(동덕여대)': 'Wolgok',
   '월곶': 'Wolgot',
   '월드컵경기장(성산)': 'World Cup Stadium',
   '월롱': 'Wollong',
@@ -646,7 +646,7 @@ const Map<String, String> stationTranslationMap = {
   '홍제': 'Hongje',
   '화계': 'hwagye',
   '화곡': 'Hwagok',
-  '화랑대': 'Hwarangdae',
+  '화랑대(서울여대입구)': 'Hwarangdae',
   '화서': 'Hwaseo',
   '화전': 'Hwajeon',
   '화정': 'Hwajeong',
@@ -658,8 +658,10 @@ const Map<String, String> stationTranslationMap = {
   '흑석': 'Heukseok',
   '흥선': 'Heungseon',
 
-  '서울' : 'Seoul Station',
-  '신촌(경의중앙선)' : 'Sinchon',
+  '화랑대': 'Hwarangdae',
+  '서울': 'Seoul Station',
+  '신촌(경의중앙선)': 'Sinchon',
+  '응암순환(상선)': 'Eungam Loop',
 
   '전역출발': 'previous station (Departed)',
   ' 전역': ' stations away',
@@ -677,6 +679,14 @@ String translateStationName(String stationName) {
 
 String translateArrivalInfo(String arrivalInfo) {
   String enArrivalInfo = arrivalInfo.split(' (').first;
+  enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+    RegExp(r'(.+)전전역출발'),
+    (match) => 'departed two stations before ${match[1]}',   
+  );
+    enArrivalInfo = enArrivalInfo.replaceFirstMapped(
+    RegExp(r'(.+)전역출발'),
+    (match) => 'departed previous station',   
+  );
 
   sortedStationTranslationMap.forEach((ko, en) {
     enArrivalInfo = enArrivalInfo.replaceAll(ko, en);

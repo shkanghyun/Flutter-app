@@ -93,6 +93,14 @@ class SubwayApiService {
               enArvlMsg,
               enTrainType,
             ]);
+          } else if (trainType == '일반') {
+            results.add([
+              line,
+              'toward $enNextStation',
+              'bound for $enFinalStation',
+              enArvlMsg,
+              '',
+            ]);
           } else {
             results.add([
               line,
@@ -126,6 +134,9 @@ class SeoulApiService {
       'yyyy-MM-dd HH:mm:ss',
     ).format(DateTime.now());
 
+    DepartureStation = DepartureStation!.split('(').first;
+    ArrivalStation = ArrivalStation!.split('(').first;
+    TransferStation = TransferStation!.split('(').first;
     //  XML 전용 API 주소
     String url =
         'http://openapi.seoul.go.kr:8088/$serviceKey/xml/getShtrmPath/1/5/$DepartureStation/$ArrivalStation/$formattedDate///$TransferStation';

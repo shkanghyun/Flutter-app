@@ -207,7 +207,7 @@ class StationOptionOverlay {
                 child: Material(
                   color: Colors.transparent,
                   child: Container(
-                    height: 130,
+                    height: 160,
                     padding: EdgeInsets.only(
                       top: MediaQuery.of(context).padding.top,
                       left: 16,
@@ -249,28 +249,25 @@ class StationOptionOverlay {
                           //width: 100,
                           //height: 80,
                           constraints: const BoxConstraints(
-                            minHeight: 80,
+                            //minHeight: 40,
                             minWidth: 80,
                           ),
                           child: SingleChildScrollView(
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(minHeight: 80),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  for (var line in station.lines)
-                                    Text(
-                                      line.name,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w800,
-                                        color: line.color,
-                                      ),
-                                      maxLines: 1,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (var line in station.lines)
+                                  Text(
+                                    line.name,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w800,
+                                      color: line.color,
                                     ),
-                                ],
-                              ),
+                                    maxLines: 1,
+                                  ),
+                              ],
                             ),
                           ),
                         ),
