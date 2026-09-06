@@ -14,6 +14,7 @@ class SubwayApiService {
 
     if (stationName == '4.19민주묘지') stationName = '4.19 민주묘지';
     if (stationName == '서울역') stationName = '서울';
+    if (stationName == '응암') stationName = '응암순환(상선)';
     String url =
         'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/$stationName';
     //  XML 전용 API 주소를 입력하세요.
@@ -135,7 +136,7 @@ class SeoulApiService {
     DepartureStation = DepartureStation!.split('(').first;
     ArrivalStation = ArrivalStation!.split('(').first;
     TransferStation = TransferStation!.split('(').first;
-    if (DepartureStation == '4.19민주묘지') DepartureStation = '4·19민주묘지';  
+    if (DepartureStation == '4.19민주묘지') DepartureStation = '4·19민주묘지';
     if (ArrivalStation == '4.19민주묘지') ArrivalStation = '4·19민주묘지';
     if (TransferStation == '4.19민주묘지') TransferStation = '4·19민주묘지';
     //  XML 전용 API 주소
@@ -453,20 +454,22 @@ class StationScheduleApiService {
         if (itemList.isNotEmpty) {
           for (var item in itemList) {
             String endStationName = '';
+            String enEndStationName = '';
 
             String departureTime = item['depTime'];
             if (departureTime == '0') {
               departureTime = item['arrTime'];
             }
             if (item['endSubwayStationNm'] != null) {
-              endStationName = item['endSubwayStationNm'];
+              endStationName = item['endSubwayStationNm'].split('(').first;
+              enEndStationName = translateStationName(endStationName);
             }
             String departureTimeFormatted = departureTime.substring(0, 4);
             if (departureTimeFormatted.startsWith("00")) {
               departureTimeFormatted =
                   "24${departureTimeFormatted.substring(2)}";
             }
-            results.add([departureTimeFormatted, endStationName]);
+            results.add([departureTimeFormatted, enEndStationName]);
           }
 
           print('schedule API result: $results');
@@ -519,13 +522,15 @@ class StationScheduleApiService {
               if (itemList.isNotEmpty) {
                 for (var item in itemList) {
                   String endStationName = '';
+                  String enEndStationName = '';
 
                   String departureTime = item['LEFTTIME'];
                   if (departureTime == '0') {
                     departureTime = item['ARRIVETIME'];
                   }
                   if (item['SUBWAYENAME'] != null) {
-                    endStationName = item['SUBWAYENAME'];
+                    endStationName = item['SUBWAYENAME'].split('(').first;
+                    enEndStationName = translateStationName(endStationName);
                   }
                   String departureTimeFormatted = departureTime
                       .replaceAll(':', '')
@@ -535,7 +540,7 @@ class StationScheduleApiService {
                         "24${departureTimeFormatted.substring(2)}";
                   }
 
-                  results.add([departureTimeFormatted, endStationName]);
+                  results.add([departureTimeFormatted, enEndStationName]);
                 }
               }
 
