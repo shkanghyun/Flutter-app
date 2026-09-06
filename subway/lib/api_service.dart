@@ -59,7 +59,7 @@ class SubwayApiService {
             '1061' => 'Jungang Line',
             '1063' => 'Gyeongui·Jungang Line',
             '1065' => 'Airport Railroad',
-            '1067' => 'Gyuongchun Line',
+            '1067' => 'Gyeongchun Line',
             '1075' => 'Suin·Bundang Line',
             '1077' => 'Shinbundang Line',
             '1092' => 'Ui Sinseol Line',
@@ -333,6 +333,8 @@ class StationNameApiService {
     final String serviceKey =
         'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
 
+    if (stationName == '교대') stationName = '교대(법원.검찰청)';
+
     //  XML 전용 API 주소
     final String url =
         'https://apis.data.go.kr/1613000/SubwayInfo/GetKwrdFndSubwaySttnList?serviceKey=$serviceKey&pageNo=1&numOfRows=20&_type=xml&subwayStationName=$stationName';
@@ -397,6 +399,7 @@ class StationNameApiService {
             '인천2호선' => 'Incheon Line 2',
             '의정부' => 'Uijeongbu Lrt',
             '자기부상' => 'Maglev Line',
+            '동해' => 'Dongahae Line',
             _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
           };
           if (stationName == stationNm ||
@@ -429,7 +432,7 @@ class StationScheduleApiService {
 
     //  XML 전용 API 주소
     final String url =
-        'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=10&_type=json&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
+        'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=300&_type=json&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -502,7 +505,7 @@ class StationScheduleApiService {
 
           final String serviceKey = '4f6d59565373686b39335a4e696348';
           final String url =
-              'http://openapi.seoul.go.kr:8088/$serviceKey/json/SearchSTNTimeTableByIDService/1/5/$stationCode/$weekTag/$inoutTag/';
+              'http://openapi.seoul.go.kr:8088/$serviceKey/json/SearchSTNTimeTableByIDService/1/300/$stationCode/$weekTag/$inoutTag/';
 
           try {
             final response = await http.get(Uri.parse(url));

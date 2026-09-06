@@ -307,13 +307,13 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                         _ArrivalInfoCard(
                           boundFor: i[2],
                           arvlMessage: i[3],
-                          expressOrNot: i[4],
+                          expressOrElse: i[4],
                         ),
                       ] else
                         _ArrivalInfoCard(
                           boundFor: i[2],
                           arvlMessage: i[3],
-                          expressOrNot: i[4],
+                          expressOrElse: i[4],
                         ),
                     ] else if (i.length > 4) ...[
                       if (forStationTowardWidget.add(i[1])) ...[
@@ -331,13 +331,13 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                         _ArrivalInfoCard(
                           boundFor: i[2],
                           arvlMessage: i[3],
-                          expressOrNot: i[4],
+                          expressOrElse: i[4],
                         ),
                       ] else
                         _ArrivalInfoCard(
                           boundFor: i[2],
                           arvlMessage: i[3],
-                          expressOrNot: i[4],
+                          expressOrElse: i[4],
                         ),
                     ] else
                       ListTile(title: Center(child: Text(i[0]))),
@@ -504,12 +504,12 @@ class _ArrivalInfoCard extends StatelessWidget {
   const _ArrivalInfoCard({
     required this.boundFor,
     required this.arvlMessage,
-    required this.expressOrNot,
+    required this.expressOrElse,
   });
 
   final String boundFor;
   final String arvlMessage;
-  final String expressOrNot;
+  final String expressOrElse;
 
   @override
   Widget build(BuildContext context) {
@@ -530,8 +530,11 @@ class _ArrivalInfoCard extends StatelessWidget {
         style: TextStyle(fontSize: 16, color: Colors.black),
       ),
       trailing: Text(
-        expressOrNot == '(Express)' ? 'Express' : expressOrNot,
-        style: TextStyle(fontSize: 15, color: Colors.red),
+        expressOrElse == '(Express)' ? 'Express' : expressOrElse,
+        style: TextStyle(
+          fontSize: 15,
+          color: expressOrElse == 'ITX' ? Color(0xFF37B366) : Colors.red,
+        ),
       ),
     );
   }

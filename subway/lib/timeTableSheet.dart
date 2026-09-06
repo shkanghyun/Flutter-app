@@ -85,50 +85,48 @@ class TimeTableSheetState extends State<TimeTableSheet> {
         ),
         body: Column(
           children: [
-            Flexible(
-              child: Row(
-                children: [
-                  SizedBox(width: 15),
-                  Flexible(child: Text('weekday')),
-                  Flexible(
-                    child: Checkbox(
-                      value: selectedIndex == '01',
-                      onChanged: (bool? value) {
-                        if (selectedIndex == '01') return;
-                        setState(() {
-                          selectedIndex = '01';
-                        });
-                      },
-                    ),
+            Row(
+              children: [
+                SizedBox(width: 15),
+                Flexible(child: Text('weekday')),
+                Flexible(
+                  child: Checkbox(
+                    value: selectedIndex == '01',
+                    onChanged: (bool? value) {
+                      if (selectedIndex == '01') return;
+                      setState(() {
+                        selectedIndex = '01';
+                      });
+                    },
                   ),
-                  SizedBox(width: 10),
-                  Flexible(child: Text('saturday')),
-                  Flexible(
-                    child: Checkbox(
-                      value: selectedIndex == '02',
-                      onChanged: (bool? value) {
-                        if (selectedIndex == '02') return;
-                        setState(() {
-                          selectedIndex = '02';
-                        });
-                      },
-                    ),
+                ),
+                SizedBox(width: 10),
+                Flexible(child: Text('saturday')),
+                Flexible(
+                  child: Checkbox(
+                    value: selectedIndex == '02',
+                    onChanged: (bool? value) {
+                      if (selectedIndex == '02') return;
+                      setState(() {
+                        selectedIndex = '02';
+                      });
+                    },
                   ),
-                  SizedBox(width: 10),
-                  Flexible(child: Text('holiday')),
-                  Flexible(
-                    child: Checkbox(
-                      value: selectedIndex == '03',
-                      onChanged: (bool? value) {
-                        if (selectedIndex == '03') return;
-                        setState(() {
-                          selectedIndex = '03';
-                        });
-                      },
-                    ),
+                ),
+                SizedBox(width: 10),
+                Flexible(child: Text('holiday')),
+                Flexible(
+                  child: Checkbox(
+                    value: selectedIndex == '03',
+                    onChanged: (bool? value) {
+                      if (selectedIndex == '03') return;
+                      setState(() {
+                        selectedIndex = '03';
+                      });
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
 
             Expanded(
@@ -300,6 +298,39 @@ class StationScheduleTabState extends State<StationScheduleTab> {
 
   @override
   Widget build(BuildContext context) {
+    /*List<String> lineUpdown = ['', ''];
+    if (widget.enLine == 'Line 1' ||
+        widget.enLine == 'Line 4' ||
+        widget.enLine == 'Line 8' ||
+        widget.enLine == 'Incheon Line 1' ||
+        widget.enLine == 'GTX-A' ||
+        widget.enLine == 'Incheon Line 2' ||
+        widget.enLine == 'Shillim Line' ||
+        widget.enLine == 'Seohae Line') {
+      lineUpdown = ['Upward', 'Downward'];
+    }
+    if (widget.enLine == 'Line 2') lineUpdown = ['Clockwise', 'CounterCW'];
+    if (widget.enLine == 'Line 3' ||
+        widget.enLine == 'Line 5' ||
+        widget.enLine == 'Line 6') {
+      lineUpdown = ['Leftward', 'Rightward'];
+    }
+    if (widget.enLine == 'Line 7') lineUpdown = ['RightUpward', 'LeftDownward'];
+    if (widget.enLine == 'Line 9' || widget.enLine == 'Gyeongui·Jungang Line') {
+      lineUpdown = ['Rightward', 'Leftward'];
+    }
+    if (widget.enLine == 'Suin·Bundang Line' ||
+        widget.enLine == 'ShinBundang Line' ||
+        widget.enLine == 'Airport Railroad' ||
+        widget.enLine == 'Uijeongbu Lrt' ||
+        widget.enLine == 'Ui Sinseol Line' ||
+        widget.enLine == 'Gimpo Goldline' ||
+        widget.enLine == 'Yongin EverLine' ||
+        widget.enLine == 'Gyeongchun Line' ||
+        widget.enLine == 'Gyeonggang Line') {
+      lineUpdown = ['Inbound', 'Outbound'];
+    }
+*/
     return FutureBuilder<(List<List<String>>, List<List<String>>)>(
       future: _scheduleFuture, // 보존된 Future 사용
       builder: (context, snapshot) {
@@ -320,7 +351,7 @@ class StationScheduleTabState extends State<StationScheduleTab> {
                   Expanded(
                     child: Container(
                       //color: Colors.blue.withAlpha(50),
-                      child: Center(child: Text('Hr')),
+                      child: Center(child: Text('lineUpdown[0]')),
                     ),
                   ),
                   Container(
@@ -331,16 +362,16 @@ class StationScheduleTabState extends State<StationScheduleTab> {
                   Expanded(
                     child: Container(
                       //color: Colors.blue.withAlpha(50),
-                      child: Center(child: Text('Hr')),
+                      child: Center(child: Text('lineUpdown'[1])),
                     ),
                   ),
                 ],
               ),
               Divider(
-                  thickness: 1.5, // 선의 두께
-                  height: 1.0, // 선이 차지하는 전체 위아래 영역 (0이나 1로 주면 여백이 최소화됩니다)
-                  color: Colors.grey[600], // 선의 색상
-                ),
+                thickness: 1.5, // 선의 두께
+                height: 1.0, // 선이 차지하는 전체 위아래 영역 (0이나 1로 주면 여백이 최소화됩니다)
+                color: Colors.grey[600], // 선의 색상
+              ),
               for (int i = 2; i <= 24; i++)
                 if (buildTimetablePage(serverUpData, serverDownData, i)
                     case Widget widget) ...[
