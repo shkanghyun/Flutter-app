@@ -5,6 +5,8 @@ import 'package:xml/xml.dart' as xml; // XML 패키지 임포트
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:subway/translate.dart';
+import 'package:dio/dio.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 
 class SubwayApiService {
   static Future<List<List<String>>> fetchPublicXmlData(
@@ -128,6 +130,11 @@ class SeoulApiService {
     required String? ArrivalStation,
     String? TransferStation,
   }) async {
+    final dio = Dio();
+
+    dio.options.connectTimeout = const Duration(seconds: 5);
+    dio.options.receiveTimeout = const Duration(seconds: 5);
+
     final String serviceKey = '4f6d59565373686b39335a4e696348';
     String formattedDate = DateFormat(
       'yyyy-MM-dd HH:mm:ss',
@@ -330,92 +337,153 @@ class StationNameApiService {
   static Future<List<List<String>>> fetchPublicXmlData({
     required String stationName,
   }) async {
-    final String serviceKey =
-        'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
-
     if (stationName == '교대') stationName = '교대(법원.검찰청)';
 
-    //  XML 전용 API 주소
+    List<dynamic> rawData = [];
+    List<List<String>> results = [];
+
+    final String response = await rootBundle.loadString(
+      'assets/data/gukto_stationname_code.json',
+    );
+    rawData = jsonDecode(response)['item'];
+
+    var filteredData = rawData.where(
+      (item) => item['subwayStationName'].split('(').first == stationName.split('(').first,
+    );
+
+    for (var item in filteredData) {
+      final stationLine = item['subwayRouteName'].toString();
+      final stationId = item['subwayStationId'].toString();
+      final stationNm = item['subwayStationName'].toString();
+
+      String enStationLine = switch (stationLine) {
+        '1호선' => 'Line 1',
+        '2호선' => 'Line 2',
+        '3호선' => 'Line 3',
+        '4호선' => 'Line 4',
+        '5호선' => 'Line 5',
+        '6호선' => 'Line 6',
+        '7호선' => 'Line 7',
+        '8호선' => 'Line 8',
+        '9호선' => 'Line 9',
+        '경의중앙' => 'Gyeongui·Jungang Line',
+        '공항' => 'Airport Railroad',
+        '경춘' => 'Gyuongchun Line',
+        '수인분당' => 'Suin·Bundang Line',
+        '신분당' => 'Shinbundang Line',
+        '우이신설' => 'Ui Sinseol Line',
+        '서해선' => 'Seohae Line',
+        '신림선' => 'Sillim Line',
+        '경강' => 'Gyeonggang Line',
+        'GTX-A' => 'GTX-A',
+        '에버라인' => 'Yongin Everline',
+        '김포골드라인' => 'Gimpo Goldline',
+        '인천1호선' => 'Incheon Line 1',
+        '인천2호선' => 'Incheon Line 2',
+        '의정부' => 'Uijeongbu Lrt',
+        '자기부상' => 'Maglev Line',
+        '동해' => 'Dongahae Line',
+        _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
+      };
+      results.add([enStationLine, stationId, stationNm]);
+    }
+    print('station line list API result: $results');
+    return results; // 추출한 데이터 리스트 반환
+    /*  
+    final String serviceKey =
+        'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
     final String url =
         'https://apis.data.go.kr/1613000/SubwayInfo/GetKwrdFndSubwaySttnList?serviceKey=$serviceKey&pageNo=1&numOfRows=20&_type=xml&subwayStationName=$stationName';
+    print('됨?');
+    int retryCount = 0;
+    while (retryCount < 3) {
+      try {
+        final response = await http
+            .get(Uri.parse(url))
+            .timeout(const Duration(seconds: 5));
 
-    try {
-      final response = await http.get(Uri.parse(url));
+        if (response.statusCode == 200) {
+          print('response.statusCode : 200');
+          print(url);
+          // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
+          final String decodedBody = utf8.decode(response.bodyBytes);
 
-      if (response.statusCode == 200) {
-        print('response.statusCode : 200');
-        print(url);
-        // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
-        final String decodedBody = utf8.decode(response.bodyBytes);
+          // 2. 문자열을 XML 문서 객체로 파싱(해석)
+          final document = xml.XmlDocument.parse(decodedBody);
 
-        // 2. 문자열을 XML 문서 객체로 파싱(해석)
-        final document = xml.XmlDocument.parse(decodedBody);
+          // 3. 원하는 태그 찾기 (예: <item> 태그 내의 <stationName> 태그 데이터를 가져오고 싶을 때)
+          // 💡 활용하시는 API 명세서상의 태그 이름으로 바꾸셔야 합니다!
+          final items = document.findAllElements(
+            'item',
+          ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
 
-        // 3. 원하는 태그 찾기 (예: <item> 태그 내의 <stationName> 태그 데이터를 가져오고 싶을 때)
-        // 💡 활용하시는 API 명세서상의 태그 이름으로 바꾸셔야 합니다!
-        final items = document.findAllElements(
-          'item',
-        ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
+          List<List<String>> results = [];
+          for (var item in items) {
+            // item 태그 내부에서 'subwayRouteName'이라는 태그의 텍스트 추출
+            final stationLine = item
+                .findElements('subwayRouteName')
+                .first
+                .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
+            final stationId = item
+                .findElements('subwayStationId')
+                .first
+                .innerText;
+            final stationNm = item
+                .findElements('subwayStationName')
+                .first
+                .innerText;
 
-        List<List<String>> results = [];
-        for (var item in items) {
-          // item 태그 내부에서 'subwayRouteName'이라는 태그의 텍스트 추출
-          final stationLine = item
-              .findElements('subwayRouteName')
-              .first
-              .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
-          final stationId = item
-              .findElements('subwayStationId')
-              .first
-              .innerText;
-          final stationNm = item
-              .findElements('subwayStationName')
-              .first
-              .innerText;
-
-          String enStationLine = switch (stationLine) {
-            '1호선' => 'Line 1',
-            '2호선' => 'Line 2',
-            '3호선' => 'Line 3',
-            '4호선' => 'Line 4',
-            '5호선' => 'Line 5',
-            '6호선' => 'Line 6',
-            '7호선' => 'Line 7',
-            '8호선' => 'Line 8',
-            '9호선' => 'Line 9',
-            '경의중앙' => 'Gyeongui·Jungang Line',
-            '공항' => 'Airport Railroad',
-            '경춘' => 'Gyuongchun Line',
-            '수인분당' => 'Suin·Bundang Line',
-            '신분당' => 'Shinbundang Line',
-            '우이신설' => 'Ui Sinseol Line',
-            '서해선' => 'Seohae Line',
-            '신림선' => 'Sillim Line',
-            '경강' => 'Gyeonggang Line',
-            'GTX-A' => 'GTX-A',
-            '에버라인' => 'Yongin Everline',
-            '김포골드라인' => 'Gimpo Goldline',
-            '인천1호선' => 'Incheon Line 1',
-            '인천2호선' => 'Incheon Line 2',
-            '의정부' => 'Uijeongbu Lrt',
-            '자기부상' => 'Maglev Line',
-            '동해' => 'Dongahae Line',
-            _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
-          };
-          if (stationName == stationNm ||
-              stationName == stationNm.split('(').first) {
-            results.add([enStationLine, stationId, stationName]);
+            String enStationLine = switch (stationLine) {
+              '1호선' => 'Line 1',
+              '2호선' => 'Line 2',
+              '3호선' => 'Line 3',
+              '4호선' => 'Line 4',
+              '5호선' => 'Line 5',
+              '6호선' => 'Line 6',
+              '7호선' => 'Line 7',
+              '8호선' => 'Line 8',
+              '9호선' => 'Line 9',
+              '경의중앙' => 'Gyeongui·Jungang Line',
+              '공항' => 'Airport Railroad',
+              '경춘' => 'Gyuongchun Line',
+              '수인분당' => 'Suin·Bundang Line',
+              '신분당' => 'Shinbundang Line',
+              '우이신설' => 'Ui Sinseol Line',
+              '서해선' => 'Seohae Line',
+              '신림선' => 'Sillim Line',
+              '경강' => 'Gyeonggang Line',
+              'GTX-A' => 'GTX-A',
+              '에버라인' => 'Yongin Everline',
+              '김포골드라인' => 'Gimpo Goldline',
+              '인천1호선' => 'Incheon Line 1',
+              '인천2호선' => 'Incheon Line 2',
+              '의정부' => 'Uijeongbu Lrt',
+              '자기부상' => 'Maglev Line',
+              '동해' => 'Dongahae Line',
+              _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
+            };
+            if (stationName == stationNm ||
+                stationName == stationNm.split('(').first) {
+              results.add([enStationLine, stationId, stationName]);
+            }
           }
-        }
 
-        print('station line list API result: $results');
-        return results; // 추출한 데이터 리스트 반환
-      } else {
-        throw Exception('데이터 로드 실패: ${response.statusCode}');
+          print('station line list API result: $results');
+          return results; // 추출한 데이터 리스트 반환
+        } else {
+          print('데이터 로드 실패: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('네트워크 또는 XML 파싱 오류: $e');
       }
-    } catch (e) {
-      throw Exception('네트워크 또는 XML 파싱 오류: $e');
+
+      retryCount++;
+      if (retryCount < 3) {
+        // 다음 재시도 전 1~2초간 약간의 대기 시간을 주는 것이 좋습니다 (서버 부하 방지)
+        await Future.delayed(const Duration(seconds: 2));
+      }
     }
+    return [];*/
   }
 }
 
@@ -435,7 +503,9 @@ class StationScheduleApiService {
         'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=300&_type=json&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
 
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http
+          .get(Uri.parse(url))
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         print('response.statusCode : 200');
@@ -505,10 +575,12 @@ class StationScheduleApiService {
 
           final String serviceKey = '4f6d59565373686b39335a4e696348';
           final String url =
-              'http://openapi.seoul.go.kr:8088/$serviceKey/json/SearchSTNTimeTableByIDService/1/300/$stationCode/$weekTag/$inoutTag/';
+              'http://openapi.seoul.go.kr:8088/$serviceKey/json/SearchSTNTimeTableByIDService/1/30/$stationCode/$weekTag/$inoutTag/';
 
           try {
-            final response = await http.get(Uri.parse(url));
+            final response = await http
+                .get(Uri.parse(url))
+                .timeout(const Duration(seconds: 10));
             print(url);
 
             if (response.statusCode == 200) {

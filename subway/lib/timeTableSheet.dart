@@ -29,11 +29,12 @@ class TimeTableSheetState extends State<TimeTableSheet> {
 
     try {
       // FutureBuilder 없이 await로 결과를 일반 변수에 바로 대입!
+      print('API 요청');
       List<List<String>> result =
           await StationNameApiService.fetchPublicXmlData(
             stationName: widget.station.name,
           );
-
+      print('API 요청완료');
       setState(() {
         lineStationIdList = result; // 받아온 진짜 데이터를 변수에 저장
         lineStationIdList.sort((a, b) {
@@ -193,17 +194,17 @@ class StationScheduleTabState extends State<StationScheduleTab> {
   }
 
   void _fetchCombinedData() {
-    // 💡 1. 고유한 캐시 키를 생성합니다 (예: "STATION123_WEEKDAY")
+    // 💡 1. 고유한 캐시 키를 생성 (예: "STATION123_WEEKDAY")
     final cacheKey = '${widget.stationId}_${widget.dailyTypeCode}';
 
-    // 💡 2. 이미 캐시에 데이터가 존재하는지 확인합니다.
+    // 💡 2. 이미 캐시에 데이터가 존재하는지 확인
     if (widget.pageCache.containsKey(cacheKey)) {
-      // 이미 불러온 적이 있다면, 서버 요청 없이 기존 데이터를 Future.value로 즉시 반환합니다.
+      // 이미 불러온 적이 있다면, 서버 요청 없이 기존 데이터를 Future.value로 즉시 반환
       _scheduleFuture = Future.value(widget.pageCache[cacheKey]);
       return;
     }
     // Future.wait를 사용해 두 서버에 동시에 병렬(Parallel) 요청을 보냄
-    // Dart 3.0 이상부터는 아래처럼 Record 패턴을 사용하면 타입이 정확히 매칭되어 편리합니다.
+    // Dart 3.0 이상부터는 아래처럼 Record 패턴을 사용하면 타입이 정확히 매칭되어 편리함
     _scheduleFuture =
         Future.wait([
           StationScheduleApiService.fetchPublicXmlData(
@@ -223,7 +224,7 @@ class StationScheduleTabState extends State<StationScheduleTab> {
         ]).then((results) {
           widget.pageCache[cacheKey] = (results[0], results[1]);
 
-          // 첫 번째 결과와 두 번째 결과를 각각 알맞은 타입으로 묶어서 반환합니다.
+          // 첫 번째 결과와 두 번째 결과를 각각 알맞은 타입으로 묶어서 반환
           return (results[0], results[1]);
         });
   }
@@ -298,12 +299,11 @@ class StationScheduleTabState extends State<StationScheduleTab> {
 
   @override
   Widget build(BuildContext context) {
-    /*List<String> lineUpdown = ['', ''];
+    List<String> lineUpdown = ['', ''];
     if (widget.enLine == 'Line 1' ||
         widget.enLine == 'Line 4' ||
         widget.enLine == 'Line 8' ||
         widget.enLine == 'Incheon Line 1' ||
-        widget.enLine == 'GTX-A' ||
         widget.enLine == 'Incheon Line 2' ||
         widget.enLine == 'Shillim Line' ||
         widget.enLine == 'Seohae Line') {
@@ -327,10 +327,11 @@ class StationScheduleTabState extends State<StationScheduleTab> {
         widget.enLine == 'Gimpo Goldline' ||
         widget.enLine == 'Yongin EverLine' ||
         widget.enLine == 'Gyeongchun Line' ||
-        widget.enLine == 'Gyeonggang Line') {
+        widget.enLine == 'Gyeonggang Line' ||
+        widget.enLine == 'GTX-A') {
       lineUpdown = ['Inbound', 'Outbound'];
     }
-*/
+
     return FutureBuilder<(List<List<String>>, List<List<String>>)>(
       future: _scheduleFuture, // 보존된 Future 사용
       builder: (context, snapshot) {
@@ -351,7 +352,7 @@ class StationScheduleTabState extends State<StationScheduleTab> {
                   Expanded(
                     child: Container(
                       //color: Colors.blue.withAlpha(50),
-                      child: Center(child: Text('lineUpdown[0]')),
+                      child: Center(child: Text(lineUpdown[0])),
                     ),
                   ),
                   Container(
@@ -362,7 +363,7 @@ class StationScheduleTabState extends State<StationScheduleTab> {
                   Expanded(
                     child: Container(
                       //color: Colors.blue.withAlpha(50),
-                      child: Center(child: Text('lineUpdown'[1])),
+                      child: Center(child: Text(lineUpdown[1])),
                     ),
                   ),
                 ],

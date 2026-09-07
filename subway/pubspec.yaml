@@ -7,6 +7,8 @@ environment:
   sdk: ^3.12.2
 
 dependencies:
+  dio: ^5.11.1
+  dio_smart_retry: ^7.0.1
   flutter:
     sdk: flutter
   flutter_svg: ^2.3.0
@@ -27,7 +29,7 @@ flutter:
     - assets/images/seoul_subway_map_foreigners.png
     - assets/data/timetable_data.json
     - assets/data/seoul_stationname_code.json
-    - assets/data/seoul_stationname_code.json
+    - assets/data/gukto_stationname_code.json
     - assets/icons/start_flag.svg
     - assets/icons/destination_flag.svg
     - assets/icons/money_icon.png
