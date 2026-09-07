@@ -348,7 +348,9 @@ class StationNameApiService {
     rawData = jsonDecode(response)['item'];
 
     var filteredData = rawData.where(
-      (item) => item['subwayStationName'].split('(').first == stationName.split('(').first,
+      (item) =>
+          item['subwayStationName'].split('(').first ==
+          stationName.split('(').first,
     );
 
     for (var item in filteredData) {
@@ -495,184 +497,300 @@ class StationScheduleApiService {
     required String? stationName,
     required String enLine,
   }) async {
-    final String serviceKey =
-        'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
+    if (enLine.contains(RegExp(r'^Line\s\d$'))) {
+      // 1~9호선은 서울교통공사 API에서 시간표 받아오기
+      List<dynamic> rawData = [];
+      String stationCode = '';
 
-    //  XML 전용 API 주소
-    final String url =
-        'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=300&_type=json&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
+      final String response = await rootBundle.loadString(
+        'assets/data/seoul_stationname_code.json',
+      );
+      rawData = jsonDecode(response)['DATA'];
 
-    try {
-      final response = await http
-          .get(Uri.parse(url))
-          .timeout(const Duration(seconds: 10));
+      var targetStation = rawData.firstWhere(
+        (item) =>
+            item['station_nm'] == stationName!.split('(').first &&
+            item['line_num'].toString()[1] == enLine.split(' ').last,
+        orElse: () => null,
+      );
+      if (targetStation != null) {
+        stationCode = targetStation['station_cd'];
+      }
 
-      if (response.statusCode == 200) {
-        print('response.statusCode : 200');
+      String weekTag = dailyTypeCode!.split('').last;
+      String inoutTag = switch (upDownTypeCode) {
+        'U' => '1',
+        'D' => '2',
+        _ => '?',
+      };
+
+      final String serviceKey = '4f6d59565373686b39335a4e696348';
+      final String url =
+          'http://openapi.seoul.go.kr:8088/$serviceKey/json/SearchSTNTimeTableByIDService/1/350/$stationCode/$weekTag/$inoutTag/';
+
+      try {
+        final response = await http
+            .get(Uri.parse(url))
+            .timeout(const Duration(seconds: 10));
         print(url);
-        // 응답받은 문자열(Body)을 UTF-8 디코딩 후 JSON 객체로 파싱
-        final Map<String, dynamic> jsonMap = jsonDecode(
-          utf8.decode(response.bodyBytes),
-        );
 
-        // 3. 중첩된 계층 구조를 따라가며 'item' 리스트까지 접근
-        final Map<String, dynamic> responseData = jsonMap['response'];
-        final Map<String, dynamic> bodyData = responseData['body'];
-        final Map<String, dynamic> itemsData = bodyData['items'];
-
-        // 'item' 키 안에 든 리스트를 가져옴
-        final List<dynamic> itemList = itemsData['item'];
-
-        List<List<String>> results = [];
-        if (itemList.isNotEmpty) {
-          for (var item in itemList) {
-            String endStationName = '';
-            String enEndStationName = '';
-
-            String departureTime = item['depTime'];
-            if (departureTime == '0') {
-              departureTime = item['arrTime'];
-            }
-            if (item['endSubwayStationNm'] != null) {
-              endStationName = item['endSubwayStationNm'].split('(').first;
-              enEndStationName = translateStationName(endStationName);
-            }
-            String departureTimeFormatted = departureTime.substring(0, 4);
-            if (departureTimeFormatted.startsWith("00")) {
-              departureTimeFormatted =
-                  "24${departureTimeFormatted.substring(2)}";
-            }
-            results.add([departureTimeFormatted, enEndStationName]);
-          }
-
-          print('schedule API result: $results');
-
-          return results; // 추출한 데이터 리스트 반환
-        } else if (enLine.contains(RegExp(r'^Line\s\d$'))) {
-          //국토교통부 API에 시간표 데이터 없을 경우 서울교통공사 API에서 시간표 받아오기
-          List<dynamic> rawData = [];
-          String stationCode = '';
-
-          final String response = await rootBundle.loadString(
-            'assets/data/seoul_stationname_code.json',
+        if (response.statusCode == 200) {
+          // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
+          final Map<String, dynamic> jsonMap = jsonDecode(
+            utf8.decode(response.bodyBytes),
           );
-          rawData = jsonDecode(response)['DATA'];
 
-          var targetStation = rawData.firstWhere(
-            (item) => item['station_nm'] == stationName,
-            orElse: () => null,
-          );
-          if (targetStation != null) {
-            stationCode = targetStation['station_cd'];
-          }
+          if (jsonMap.containsKey('SearchSTNTimeTableByIDService')) {
+            final Map<String, dynamic> responseData =
+                jsonMap['SearchSTNTimeTableByIDService'];
+            final List<dynamic> itemList = responseData['row'];
 
-          String weekTag = dailyTypeCode!.split('').last;
-          String inoutTag = switch (upDownTypeCode) {
-            'U' => '1',
-            'D' => '2',
-            _ => '?',
-          };
+            List<List<String>> results = [];
+            if (itemList.isNotEmpty) {
+              for (var item in itemList) {
+                String endStationName = '';
+                String enEndStationName = '';
 
-          final String serviceKey = '4f6d59565373686b39335a4e696348';
-          final String url =
-              'http://openapi.seoul.go.kr:8088/$serviceKey/json/SearchSTNTimeTableByIDService/1/30/$stationCode/$weekTag/$inoutTag/';
-
-          try {
-            final response = await http
-                .get(Uri.parse(url))
-                .timeout(const Duration(seconds: 10));
-            print(url);
-
-            if (response.statusCode == 200) {
-              // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
-              final Map<String, dynamic> jsonMap = jsonDecode(
-                utf8.decode(response.bodyBytes),
-              );
-
-              final Map<String, dynamic> responseData =
-                  jsonMap['SearchSTNTimeTableByIDService'];
-              final List<dynamic> itemList = responseData['row'];
-
-              List<List<String>> results = [];
-              if (itemList.isNotEmpty) {
-                for (var item in itemList) {
-                  String endStationName = '';
-                  String enEndStationName = '';
-
-                  String departureTime = item['LEFTTIME'];
-                  if (departureTime == '0') {
-                    departureTime = item['ARRIVETIME'];
-                  }
-                  if (item['SUBWAYENAME'] != null) {
-                    endStationName = item['SUBWAYENAME'].split('(').first;
-                    enEndStationName = translateStationName(endStationName);
-                  }
-                  String departureTimeFormatted = departureTime
-                      .replaceAll(':', '')
-                      .substring(0, 4);
-                  if (departureTimeFormatted.startsWith("00")) {
-                    departureTimeFormatted =
-                        "24${departureTimeFormatted.substring(2)}";
-                  }
-
-                  results.add([departureTimeFormatted, enEndStationName]);
+                String departureTime = item['LEFTTIME'];
+                if (departureTime == '0') {
+                  departureTime = item['ARRIVETIME'];
                 }
-              }
+                if (item['SUBWAYENAME'] != null) {
+                  endStationName = item['SUBWAYENAME'].split('(').first;
+                  enEndStationName = translateStationName(endStationName);
+                }
+                String departureTimeFormatted = departureTime
+                    .replaceAll(':', '')
+                    .substring(0, 4);
+                if (departureTimeFormatted.startsWith("00")) {
+                  departureTimeFormatted =
+                      "24${departureTimeFormatted.substring(2)}";
+                }
 
-              print('station line list API result: $results');
-              return results; // 추출한 데이터 리스트 반환
-            } else {
-              throw Exception('데이터 로드 실패: ${response.statusCode}');
+                results.add([departureTimeFormatted, enEndStationName]);
+              }
             }
-          } catch (e) {
-            throw Exception('네트워크 또는 XML 파싱 오류: $e');
+
+            print('station line list API result: $results');
+            return results; // 추출한 데이터 리스트 반환
+          } else {
+            final String serviceKey =
+                'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
+
+            //  XML 전용 API 주소
+            final String url =
+                'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=350&_type=json&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
+
+            try {
+              final response = await http
+                  .get(Uri.parse(url))
+                  .timeout(const Duration(seconds: 10));
+
+              if (response.statusCode == 200) {
+                print('response.statusCode : 200');
+                print(url);
+                // 응답받은 문자열(Body)을 UTF-8 디코딩 후 JSON 객체로 파싱
+                final Map<String, dynamic> jsonMap = jsonDecode(
+                  utf8.decode(response.bodyBytes),
+                );
+
+                // 3. 중첩된 계층 구조를 따라가며 'item' 리스트까지 접근
+                final Map<String, dynamic> responseData = jsonMap['response'];
+                final Map<String, dynamic> bodyData = responseData['body'];
+                final Map<String, dynamic> itemsData = bodyData['items'];
+
+                // 'item' 키 안에 든 리스트를 가져옴
+                final List<dynamic> itemList = itemsData['item'];
+
+                List<List<String>> results = [];
+
+                if (itemList.isNotEmpty) {
+                  for (var item in itemList) {
+                    String endStationName = '';
+                    String enEndStationName = '';
+
+                    String departureTime = item['depTime'];
+                    if (departureTime == '0') {
+                      departureTime = item['arrTime'];
+                    }
+                    if (item['endSubwayStationNm'] != null) {
+                      endStationName = item['endSubwayStationNm']
+                          .split('(')
+                          .first;
+                      enEndStationName = translateStationName(endStationName);
+                    }
+                    String departureTimeFormatted = departureTime.substring(
+                      0,
+                      4,
+                    );
+                    if (departureTimeFormatted.startsWith("00")) {
+                      departureTimeFormatted =
+                          "24${departureTimeFormatted.substring(2)}";
+                    }
+                    results.add([departureTimeFormatted, enEndStationName]);
+                  }
+
+                  print('schedule API result: $results');
+
+                  return results; // 추출한 데이터 리스트 반환
+                } else {
+                  Map<String, dynamic> rawData = {};
+
+                  final String response = await rootBundle.loadString(
+                    'assets/data/timetable_data.json',
+                  );
+                  rawData = jsonDecode(response)['stations'];
+
+                  final Map<String, dynamic> stationDataByName =
+                      rawData[stationName];
+                  final Map<String, dynamic> stationDataByLine =
+                      stationDataByName[enLine];
+                  final Map<String, dynamic> stationDataByWeekCode =
+                      stationDataByLine[dailyTypeCode];
+                  final Map<String, dynamic> stationDataByUpDown =
+                      stationDataByWeekCode[upDownTypeCode];
+
+                  final List<dynamic> stationTimeTableData =
+                      stationDataByUpDown['timetable'];
+
+                  for (var item in stationTimeTableData) {
+                    String endStationName = '';
+
+                    String departureTime = item['depTime'];
+                    if (departureTime == '0') {
+                      departureTime = item['arrTime'];
+                    }
+                    if (item['endSubwayStationNm'] != null) {
+                      endStationName = item['endSubwayStationNm'];
+                    }
+                    String departureTimeFormatted = departureTime
+                        .replaceAll(':', '')
+                        .substring(0, 4);
+                    if (departureTimeFormatted.startsWith("00")) {
+                      departureTimeFormatted =
+                          "24${departureTimeFormatted.substring(2)}";
+                    }
+                    results.add([departureTimeFormatted, endStationName]);
+                  }
+
+                  //if (stationData != null) {}
+                  return results;
+                }
+              } else {
+                throw Exception('데이터 로드 실패: ${response.statusCode}');
+              }
+            } catch (e) {
+              throw Exception('네트워크 또는 JSON 파싱 오류 at jsonfile or data api: $e');
+            }
           }
         } else {
-          Map<String, dynamic> rawData = {};
-
-          final String response = await rootBundle.loadString(
-            'assets/data/timetable_data.json',
-          );
-          rawData = jsonDecode(response)['stations'];
-
-          final Map<String, dynamic> stationDataByName = rawData[stationName];
-          final Map<String, dynamic> stationDataByLine =
-              stationDataByName[enLine];
-          final Map<String, dynamic> stationDataByUpDown =
-              stationDataByLine[upDownTypeCode];
-          final Map<String, dynamic> stationDataByWeekCode =
-              stationDataByUpDown[dailyTypeCode];
-          final List<dynamic> stationTimeTableData =
-              stationDataByWeekCode['timetable'];
-
-          for (var item in stationTimeTableData) {
-            String endStationName = '';
-
-            String departureTime = item['depTime'];
-            if (departureTime == '0') {
-              departureTime = item['arrTime'];
-            }
-            if (item['endSubwayStationNm'] != null) {
-              endStationName = item['endSubwayStationNm'];
-            }
-            String departureTimeFormatted = departureTime
-                .replaceAll(':', '')
-                .substring(0, 4);
-            if (departureTimeFormatted.startsWith("00")) {
-              departureTimeFormatted =
-                  "24${departureTimeFormatted.substring(2)}";
-            }
-            results.add([departureTimeFormatted, endStationName]);
-          }
-
-          //if (stationData != null) {}
-          return results;
+          throw Exception('데이터 로드 실패: ${response.statusCode}');
         }
-      } else {
-        throw Exception('데이터 로드 실패: ${response.statusCode}');
+      } catch (e) {
+        throw Exception('네트워크 또는 XML 파싱 오류 at seoul API: $e');
       }
-    } catch (e) {
-      throw Exception('네트워크 또는 XML 파싱 오류: $e');
+    } else {
+      final String serviceKey =
+          'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
+
+      //  XML 전용 API 주소
+      final String url =
+          'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=300&_type=json&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
+
+      try {
+        final response = await http
+            .get(Uri.parse(url))
+            .timeout(const Duration(seconds: 10));
+
+        if (response.statusCode == 200) {
+          print('response.statusCode : 200');
+          print(url);
+          // 응답받은 문자열(Body)을 UTF-8 디코딩 후 JSON 객체로 파싱
+          final Map<String, dynamic> jsonMap = jsonDecode(
+            utf8.decode(response.bodyBytes),
+          );
+
+          // 3. 중첩된 계층 구조를 따라가며 'item' 리스트까지 접근
+          final Map<String, dynamic> responseData = jsonMap['response'];
+          final Map<String, dynamic> bodyData = responseData['body'];
+          final Map<String, dynamic> itemsData = bodyData['items'];
+
+          // 'item' 키 안에 든 리스트를 가져옴
+          final List<dynamic> itemList = itemsData['item'];
+
+          List<List<String>> results = [];
+
+          if (itemList.isNotEmpty) {
+            for (var item in itemList) {
+              String endStationName = '';
+              String enEndStationName = '';
+
+              String departureTime = item['depTime'];
+              if (departureTime == '0') {
+                departureTime = item['arrTime'];
+              }
+              if (item['endSubwayStationNm'] != null) {
+                endStationName = item['endSubwayStationNm'].split('(').first;
+                enEndStationName = translateStationName(endStationName);
+              }
+              String departureTimeFormatted = departureTime.substring(0, 4);
+              if (departureTimeFormatted.startsWith("00")) {
+                departureTimeFormatted =
+                    "24${departureTimeFormatted.substring(2)}";
+              }
+              results.add([departureTimeFormatted, enEndStationName]);
+            }
+
+            print('schedule API result: $results');
+
+            return results; // 추출한 데이터 리스트 반환
+          } else {
+            Map<String, dynamic> rawData = {};
+
+            final String response = await rootBundle.loadString(
+              'assets/data/timetable_data.json',
+            );
+            rawData = jsonDecode(response)['stations'];
+
+            final Map<String, dynamic> stationDataByName = rawData[stationName];
+            final Map<String, dynamic> stationDataByLine =
+                stationDataByName[enLine];
+            final Map<String, dynamic> stationDataByWeekCode =
+                stationDataByLine[dailyTypeCode];
+            final Map<String, dynamic> stationDataByUpDown =
+                stationDataByWeekCode[upDownTypeCode];
+            final List<dynamic> stationTimeTableData =
+                stationDataByUpDown['timetable'];
+
+            for (var item in stationTimeTableData) {
+              String endStationName = '';
+
+              String departureTime = item['depTime'];
+              if (departureTime == '0') {
+                departureTime = item['arrTime'];
+              }
+              if (item['endSubwayStationNm'] != null) {
+                endStationName = item['endSubwayStationNm'];
+              }
+              String departureTimeFormatted = departureTime
+                  .replaceAll(':', '')
+                  .substring(0, 4);
+              if (departureTimeFormatted.startsWith("00")) {
+                departureTimeFormatted =
+                    "24${departureTimeFormatted.substring(2)}";
+              }
+              results.add([departureTimeFormatted, endStationName]);
+            }
+
+            //if (stationData != null) {}
+            return results;
+          }
+        } else {
+          throw Exception('데이터 로드 실패: ${response.statusCode}');
+        }
+      } catch (e) {
+        throw Exception('네트워크 또는 JSON 파싱 오류 at jsonfile or data api: $e');
+      }
     }
   }
 }
