@@ -636,10 +636,16 @@ class StationScheduleApiService {
                   return results; // 추출한 데이터 리스트 반환
                 } else {
                   Map<String, dynamic> rawData = {};
-
-                  final String response = await rootBundle.loadString(
-                    'assets/data/timetable_data.json',
-                  );
+                  final String response;
+                  if (enLine == 'Line 2') {
+                    response = await rootBundle.loadString(
+                      'assets/data/timetable/Line2_timetable_data.json',
+                    );
+                  } else {
+                    response = await rootBundle.loadString(
+                      'assets/data/timetable/MaglevLine_timetable_data.json',
+                    );
+                  }
                   rawData = jsonDecode(response)['stations'];
 
                   final Map<String, dynamic> stationDataByName =
@@ -748,11 +754,11 @@ class StationScheduleApiService {
             final String response;
             if (enLine == 'Line 2') {
               response = await rootBundle.loadString(
-                'assets/data/Line2_timetable_data.json',
+                'assets/data/timetable/Line2_timetable_data.json',
               );
-            } else{
+            } else {
               response = await rootBundle.loadString(
-                'assets/data/MaglevLine_timetable_data.json',
+                'assets/data/timetable/MaglevLine_timetable_data.json',
               );
             }
             rawData = jsonDecode(response)['stations'];

@@ -1,0 +1,818 @@
+{
+    "stations": {
+        "Maglev Line": {
+            "인천공항1터미널": {
+                "01": {
+                    "U": [
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "101400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "104900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "112400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "115900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "123400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "130900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "134400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "141900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "145400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "152900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "160400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "163900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        }
+                    ],
+                    "D": [
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "101500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "105000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "112500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "120000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "123500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "131000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "134500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "142000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "145500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "153000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "160500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "164000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        }
+                    ]
+                },
+                "02": {
+                    "U": [
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "101400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "104900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "112400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "115900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "123400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "130900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "134400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "141900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "145400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "152900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "160400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "163900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        }
+                    ],
+                    "D": [
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "101500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "105000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "112500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "120000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "123500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "131000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "134500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "142000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "145500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "153000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "160500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "164000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        }
+                    ]
+                },
+                "03": {
+                    "U": [
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "101400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "104900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "112400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "115900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "123400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "130900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "134400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "141900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "145400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "152900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "160400",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10101",
+                            "endSubwayStationNm": "인천공항1터미널",
+                            "depTime": "0",
+                            "arrTime": "163900",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "U"
+                        }
+                    ],
+                    "D": [
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "101500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "105000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "112500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "120000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "123500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "131000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "134500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "142000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "145500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "153000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "160500",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        },
+                        {
+                            "subwayStationId": "MTRIAM10101",
+                            "subwayStationNm": "인천공항1터미널",
+                            "subwayRouteId": "MTRIAM1",
+                            "endSubwayStationId": "MTRIAM10106",
+                            "endSubwayStationNm": "용유",
+                            "depTime": "164000",
+                            "arrTime": "0",
+                            "dailyTypeCode": "02",
+                            "upDownTypeCode": "D"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

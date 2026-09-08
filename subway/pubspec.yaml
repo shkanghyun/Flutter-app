@@ -27,8 +27,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/seoul_subway_map_foreigners.png
-    - assets/data/Line2_timetable_data.json
-    - assets/data/MaglevLine_timetable_data.json
+    - assets/data/timetable/Line2_timetable_data.json
+    - assets/data/timetable/MaglevLine_timetable_data.json
     - assets/data/seoul_stationname_code.json
     - assets/data/gukto_stationname_code.json
     - assets/icons/start_flag.svg
