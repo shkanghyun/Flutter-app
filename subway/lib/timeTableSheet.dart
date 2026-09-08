@@ -351,17 +351,20 @@ class StationScheduleTabState extends State<StationScheduleTab> {
                   // 텍스트가 아무리 길어져도 화면 밖으로 터지지 않고 줄바꿈이 되도록 보호!
                   Expanded(
                     child: Container(
+                      height: 30,
                       //color: Colors.blue.withAlpha(50),
                       child: Center(child: Text(lineUpdown[0])),
                     ),
                   ),
                   Container(
+                    height: 30,
                     width: 40,
                     color: Colors.blue.withAlpha(50),
                     child: Center(child: Text('Hr')),
                   ),
                   Expanded(
                     child: Container(
+                      height: 30,
                       //color: Colors.blue.withAlpha(50),
                       child: Center(child: Text(lineUpdown[1])),
                     ),

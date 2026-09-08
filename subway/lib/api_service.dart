@@ -577,7 +577,8 @@ class StationScheduleApiService {
             final String serviceKey =
                 'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
 
-            //  XML 전용 API 주소
+            if (dailyTypeCode == '02') dailyTypeCode = '03';
+
             final String url =
                 'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=350&_type=json&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
 
@@ -642,18 +643,15 @@ class StationScheduleApiService {
                   rawData = jsonDecode(response)['stations'];
 
                   final Map<String, dynamic> stationDataByName =
-                      rawData[stationName];
+                      rawData[enLine];
                   final Map<String, dynamic> stationDataByLine =
-                      stationDataByName[enLine];
+                      stationDataByName[stationName];
                   final Map<String, dynamic> stationDataByWeekCode =
                       stationDataByLine[dailyTypeCode];
-                  final Map<String, dynamic> stationDataByUpDown =
+                  final List<dynamic> stationDataByUpDown =
                       stationDataByWeekCode[upDownTypeCode];
 
-                  final List<dynamic> stationTimeTableData =
-                      stationDataByUpDown['timetable'];
-
-                  for (var item in stationTimeTableData) {
+                  for (var item in stationDataByUpDown) {
                     String endStationName = '';
 
                     String departureTime = item['depTime'];
@@ -693,7 +691,8 @@ class StationScheduleApiService {
       final String serviceKey =
           'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
 
-      //  XML 전용 API 주소
+      if (dailyTypeCode == '02') dailyTypeCode = '03';
+
       final String url =
           'https://apis.data.go.kr/1613000/SubwayInfo/GetSubwaySttnAcctoSchdulList?serviceKey=$serviceKey&pageNo=1&numOfRows=300&_type=json&subwayStationId=$stationId&dailyTypeCode=$dailyTypeCode&upDownTypeCode=$upDownTypeCode';
 
@@ -746,23 +745,27 @@ class StationScheduleApiService {
             return results; // 추출한 데이터 리스트 반환
           } else {
             Map<String, dynamic> rawData = {};
-
-            final String response = await rootBundle.loadString(
-              'assets/data/timetable_data.json',
-            );
+            final String response;
+            if (enLine == 'Line 2') {
+              response = await rootBundle.loadString(
+                'assets/data/Line2_timetable_data.json',
+              );
+            } else{
+              response = await rootBundle.loadString(
+                'assets/data/MaglevLine_timetable_data.json',
+              );
+            }
             rawData = jsonDecode(response)['stations'];
 
-            final Map<String, dynamic> stationDataByName = rawData[stationName];
+            final Map<String, dynamic> stationDataByName = rawData[enLine];
             final Map<String, dynamic> stationDataByLine =
-                stationDataByName[enLine];
+                stationDataByName[stationName];
             final Map<String, dynamic> stationDataByWeekCode =
                 stationDataByLine[dailyTypeCode];
-            final Map<String, dynamic> stationDataByUpDown =
+            final List<dynamic> stationDataByUpDown =
                 stationDataByWeekCode[upDownTypeCode];
-            final List<dynamic> stationTimeTableData =
-                stationDataByUpDown['timetable'];
 
-            for (var item in stationTimeTableData) {
+            for (var item in stationDataByUpDown) {
               String endStationName = '';
 
               String departureTime = item['depTime'];

@@ -662,7 +662,7 @@ const Map<String, String> stationTranslationMap = {
   '호구포': 'Hogupo',
   '홍대입구': 'Hongik University',
   '홍제': 'Hongje',
-  '화계': 'hwagye',
+  '화계': 'Hwagye',
   '화곡': 'Hwagok',
   '화랑대': 'Hwarangdae',
   '화랑대(서울여대입구)': 'Hwarangdae',
@@ -684,6 +684,7 @@ const Map<String, String> stationTranslationMap = {
   '신도림지선': 'Sinjeong Branch Line',
   '성수지선': 'Seongsu Branch Line',
   '하남검단산역': 'hanamgeomdansan',
+  '4.19 민주묘지': 'April 19th National Cemetery',
 
   '전역출발': 'previous station (Departed)',
   ' 전역': ' stations away',
