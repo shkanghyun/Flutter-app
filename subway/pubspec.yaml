@@ -27,8 +27,32 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/seoul_subway_map_foreigners.png
-    - assets/data/timetable/Line2_timetable_data.json
-    - assets/data/timetable/MaglevLine_timetable_data.json
+    - assets/data/timetable/Line1_timetable.json
+    - assets/data/timetable/Line2_timetable.json
+    - assets/data/timetable/Line3_timetable.json
+    - assets/data/timetable/Line4_timetable.json
+    - assets/data/timetable/Line5_timetable.json
+    - assets/data/timetable/Line6_timetable.json
+    - assets/data/timetable/Line7_timetable.json
+    - assets/data/timetable/Line8_timetable.json
+    - assets/data/timetable/Line9_timetable.json
+    - assets/data/timetable/GyeonguiJungangLine_timetable.json
+    - assets/data/timetable/AirportRailroad_timetable.json
+    - assets/data/timetable/GyuongchunLine_timetable.json
+    - assets/data/timetable/SuinBundangLine_timetable.json
+    - assets/data/timetable/ShinBundangLine_timetable.json
+    - assets/data/timetable/UiSinseolLine_timetable.json
+    - assets/data/timetable/SeohaeLine_timetable.json
+    - assets/data/timetable/SillimLine_timetable.json
+    - assets/data/timetable/GyeonggangLine_timetable.json
+    - assets/data/timetable/GTX-A_timetable.json
+    - assets/data/timetable/YonginEverline_timetable.json
+    - assets/data/timetable/GimpoGoldline_timetable.json
+    - assets/data/timetable/IncheonLine1_timetable.json
+    - assets/data/timetable/IncheonLine2_timetable.json
+    - assets/data/timetable/UijeongbuLrt_timetable.json
+    - assets/data/timetable/MaglevLine_timetable.json
+    
     - assets/data/seoul_stationname_code.json
     - assets/data/gukto_stationname_code.json
     - assets/icons/start_flag.svg

@@ -53,6 +53,7 @@ const Map<String, String> stationTranslationMap = {
   '고덕(강동구민회관앞)': 'Godeok',
   '고려대': 'Korea University',
   '고속터미널': 'Express Bus Terminal',
+  '고색': 'Gosaek',
   '고잔': 'Gojan',
   '고진': 'Gojin',
   '고촌': 'Gochon',

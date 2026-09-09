@@ -1,0 +1,485 @@
+{
+    "stations": {
+        "Gyuongchun Line": {
+            "광운대": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "청량리": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "회기": {
+                "01": {
+                    "U": [
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "062730",
+                            "arrTime": "062700"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "065530",
+                            "arrTime": "065500"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "072930",
+                            "arrTime": "072900"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "092300",
+                            "arrTime": "092230"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "094800",
+                            "arrTime": "094730"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "100500",
+                            "arrTime": "100430"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "134930",
+                            "arrTime": "134900"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "164230",
+                            "arrTime": "164200"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "184000",
+                            "arrTime": "183930"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "212130",
+                            "arrTime": "212100"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "220330",
+                            "arrTime": "220300"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "233100",
+                            "arrTime": "233030"
+                        }
+                    ],
+                    "D": [
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "064830",
+                            "arrTime": "064800"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "071830",
+                            "arrTime": "071800"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "082630",
+                            "arrTime": "082600"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "094630",
+                            "arrTime": "094600"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "100630",
+                            "arrTime": "100600"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "102130",
+                            "arrTime": "102100"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "140530",
+                            "arrTime": "140500"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "170430",
+                            "arrTime": "170400"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "181130",
+                            "arrTime": "181100"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "190630",
+                            "arrTime": "190600"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "214530",
+                            "arrTime": "214500"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "221830",
+                            "arrTime": "221800"
+                        },
+                        {
+                            "endSubwayStationNm": "마석",
+                            "depTime": "234830",
+                            "arrTime": "234800"
+                        }
+                    ]
+                },
+                "03": {
+                    "U": [
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "065630",
+                            "arrTime": "065600"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "072930",
+                            "arrTime": "072900"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "093200",
+                            "arrTime": "093130"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "104600",
+                            "arrTime": "104530"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "111300",
+                            "arrTime": "111230"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "131530",
+                            "arrTime": "131500"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "163730",
+                            "arrTime": "163700"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "191100",
+                            "arrTime": "191030"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "214500",
+                            "arrTime": "214430"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "232830",
+                            "arrTime": "232800"
+                        }
+                    ],
+                    "D": [
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "071230",
+                            "arrTime": "071200"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "074830",
+                            "arrTime": "074800"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "094930",
+                            "arrTime": "094900"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "110330",
+                            "arrTime": "110300"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "112930",
+                            "arrTime": "112900"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "133330",
+                            "arrTime": "133300"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "165430",
+                            "arrTime": "165400"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "192830",
+                            "arrTime": "192800"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천(한림대)",
+                            "depTime": "221030",
+                            "arrTime": "221000"
+                        },
+                        {
+                            "endSubwayStationNm": "평내호평",
+                            "depTime": "234330",
+                            "arrTime": "234300"
+                        }
+                    ]
+                }
+            },
+            "중랑": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "상봉": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "망우": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "신내": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "갈매": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "별내(삼육대학교)": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "퇴계원": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "사릉": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "금곡": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "평내호평": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "천마산": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "마석": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "대성리": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "청평": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "상천(호명호수)": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "가평(자라섬.남이섬)": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "굴봉산(제이드가든)": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "백양리(엘리시안강촌)": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "강촌": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "김유정": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "남춘천(강원대)": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            },
+            "춘천(한림대)": {
+                "01": {
+                    "U": [],
+                    "D": []
+                },
+                "03": {
+                    "U": [],
+                    "D": []
+                }
+            }
+        }
+    }
+}

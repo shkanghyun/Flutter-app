@@ -63,7 +63,7 @@ class SubwayApiService {
             '1065' => 'Airport Railroad',
             '1067' => 'Gyeongchun Line',
             '1075' => 'Suin·Bundang Line',
-            '1077' => 'Shinbundang Line',
+            '1077' => 'ShinBundang Line',
             '1092' => 'Ui Sinseol Line',
             '1093' => 'Seohae Line',
             '1094' => 'Sillim Line',
@@ -205,7 +205,7 @@ class SeoulApiService {
             '공항철도' => 'Airport Railroad',
             '경춘선' => 'Gyuongchun Line',
             '수인분당선' => 'Suin·Bundang Line',
-            '신분당선' => 'Shinbundang Line',
+            '신분당선' => 'ShinBundang Line',
             '우이신설경전철' => 'Ui Sinseol Line',
             '서해선' => 'Seohae Line',
             '신림선' => 'Sillim Line',
@@ -284,7 +284,7 @@ class SeoulApiService {
                   '공항철도' => 'Airport Railroad',
                   '경춘선' => 'Gyuongchun Line',
                   '수인분당선' => 'Suin·Bundang Line',
-                  '신분당선' => 'Shinbundang Line',
+                  '신분당선' => 'ShinBundang Line',
                   '우이신설경전철' => 'Ui Sinseol Line',
                   '서해선' => 'Seohae Line',
                   '신림선' => 'Sillim Line',
@@ -372,7 +372,7 @@ class StationNameApiService {
         '공항' => 'Airport Railroad',
         '경춘' => 'Gyuongchun Line',
         '수인분당' => 'Suin·Bundang Line',
-        '신분당' => 'Shinbundang Line',
+        '신분당' => 'ShinBundang Line',
         '우이신설' => 'Ui Sinseol Line',
         '서해선' => 'Seohae Line',
         '신림선' => 'Sillim Line',
@@ -449,7 +449,7 @@ class StationNameApiService {
               '공항' => 'Airport Railroad',
               '경춘' => 'Gyuongchun Line',
               '수인분당' => 'Suin·Bundang Line',
-              '신분당' => 'Shinbundang Line',
+              '신분당' => 'ShinBundang Line',
               '우이신설' => 'Ui Sinseol Line',
               '서해선' => 'Seohae Line',
               '신림선' => 'Sillim Line',
@@ -636,16 +636,55 @@ class StationScheduleApiService {
                   return results; // 추출한 데이터 리스트 반환
                 } else {
                   Map<String, dynamic> rawData = {};
-                  final String response;
-                  if (enLine == 'Line 2') {
-                    response = await rootBundle.loadString(
-                      'assets/data/timetable/Line2_timetable_data.json',
-                    );
-                  } else {
-                    response = await rootBundle.loadString(
-                      'assets/data/timetable/MaglevLine_timetable_data.json',
-                    );
-                  }
+
+                  String jsonFileName = switch (enLine) {
+                    'Line 1' => 'assets/data/timetable/Line1_timetable.json',
+                    'Line 2' => 'assets/data/timetable/Line2_timetable.json',
+                    'Line 3' => 'assets/data/timetable/Line3_timetable.json',
+                    'Line 4' => 'assets/data/timetable/Line4_timetable.json',
+                    'Line 5' => 'assets/data/timetable/Line5_timetable.json',
+                    'Line 6' => 'assets/data/timetable/Line6_timetable.json',
+                    'Line 7' => 'assets/data/timetable/Line7_timetable.json',
+                    'Line 8' => 'assets/data/timetable/Line8_timetable.json',
+                    'Line 9' => 'assets/data/timetable/Line9_timetable.json',
+                    'Gyeongui·Jungang Line' =>
+                      'assets/data/timetable/GyeonguiJungangLine_timetable.json',
+                    'Airport Railroad' =>
+                      'assets/data/timetable/AirportRailroad_timetable.json',
+                    'Gyuongchun Line' =>
+                      'assets/data/timetable/GyuongchunLine_timetable.json',
+                    'Suin·Bundang Line' =>
+                      'assets/data/timetable/SuinBundangLine_timetable.json',
+                    'ShinBundang Line' =>
+                      'assets/data/timetable/ShinBundangLine_timetable.json',
+                    'Ui Sinseol Line' =>
+                      'assets/data/timetable/UiSinseolLine_timetable.json',
+                    'Seohae Line' =>
+                      'assets/data/timetable/SeohaeLine_timetable.json',
+                    'Sillim Line' =>
+                      'assets/data/timetable/SillimLine_timetable.json',
+                    'Gyeonggang Line' =>
+                      'assets/data/timetable/GyeonggangLine_timetable.json',
+                    'GTX-A' => 'assets/data/timetable/GTX-A_timetable.json',
+                    'Yongin Everline' =>
+                      'assets/data/timetable/YonginEverline_timetable.json',
+                    'Gimpo Goldline' =>
+                      'assets/data/timetable/GimpoGoldline_timetable.json',
+                    'Incheon Line 1' =>
+                      'assets/data/timetable/IncheonLine1_timetable.json',
+                    'Incheon Line 2' =>
+                      'assets/data/timetable/IncheonLine2_timetable.json',
+                    'Uijeongbu Lrt' =>
+                      'assets/data/timetable/UijeongbuLrt_timetable.json',
+                    'Maglev Line' =>
+                      'assets/data/timetable/MaglevLine_timetable.json',
+                    _ => '?',
+                  };
+
+                  final String response = await rootBundle.loadString(
+                    jsonFileName,
+                  );
+
                   rawData = jsonDecode(response)['stations'];
 
                   final Map<String, dynamic> stationDataByName =
@@ -751,16 +790,52 @@ class StationScheduleApiService {
             return results; // 추출한 데이터 리스트 반환
           } else {
             Map<String, dynamic> rawData = {};
-            final String response;
-            if (enLine == 'Line 2') {
-              response = await rootBundle.loadString(
-                'assets/data/timetable/Line2_timetable_data.json',
-              );
-            } else {
-              response = await rootBundle.loadString(
-                'assets/data/timetable/MaglevLine_timetable_data.json',
-              );
-            }
+
+            String jsonFileName = switch (enLine) {
+              'Line 1' => 'assets/data/timetable/Line1_timetable.json',
+              'Line 2' => 'assets/data/timetable/Line2_timetable.json',
+              'Line 3' => 'assets/data/timetable/Line3_timetable.json',
+              'Line 4' => 'assets/data/timetable/Line4_timetable.json',
+              'Line 5' => 'assets/data/timetable/Line5_timetable.json',
+              'Line 6' => 'assets/data/timetable/Line6_timetable.json',
+              'Line 7' => 'assets/data/timetable/Line7_timetable.json',
+              'Line 8' => 'assets/data/timetable/Line8_timetable.json',
+              'Line 9' => 'assets/data/timetable/Line9_timetable.json',
+              'Gyeongui·Jungang Line' =>
+                'assets/data/timetable/GyeonguiJungangLine_timetable.json',
+              'Airport Railroad' =>
+                'assets/data/timetable/AirportRailroad_timetable.json',
+              'Gyuongchun Line' =>
+                'assets/data/timetable/GyuongchunLine_timetable.json',
+              'Suin·Bundang Line' =>
+                'assets/data/timetable/SuinBundangLine_timetable.json',
+              'ShinBundang Line' =>
+                'assets/data/timetable/ShinBundangLine_timetable.json',
+              'Ui Sinseol Line' =>
+                'assets/data/timetable/UiSinseolLine_timetable.json',
+              'Seohae Line' =>
+                'assets/data/timetable/SeohaeLine_timetable.json',
+              'Sillim Line' =>
+                'assets/data/timetable/SillimLine_timetable.json',
+              'Gyeonggang Line' =>
+                'assets/data/timetable/GyeonggangLine_timetable.json',
+              'GTX-A' => 'assets/data/timetable/GTX-A_timetable.json',
+              'Yongin Everline' =>
+                'assets/data/timetable/YonginEverline_timetable.json',
+              'Gimpo Goldline' =>
+                'assets/data/timetable/GimpoGoldline_timetable.json',
+              'Incheon Line 1' =>
+                'assets/data/timetable/IncheonLine1_timetable.json',
+              'Incheon Line 2' =>
+                'assets/data/timetable/IncheonLine2_timetable.json',
+              'Uijeongbu Lrt' =>
+                'assets/data/timetable/UijeongbuLrt_timetable.json',
+              'Maglev Line' =>
+                'assets/data/timetable/MaglevLine_timetable.json',
+              _ => '?',
+            };
+
+            final String response = await rootBundle.loadString(jsonFileName);
             rawData = jsonDecode(response)['stations'];
 
             final Map<String, dynamic> stationDataByName = rawData[enLine];

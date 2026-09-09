@@ -59,7 +59,7 @@ const gimpoGold = MetroLine('Gimpo Goldline', Color(0xFFC6A600));
 const incheon1 = MetroLine('Incheon Line 1', Color(0xFF6BAED6));
 const incheon2 = MetroLine('Incheon Line 2', Color(0xFFFFA64D));
 const everline = MetroLine('Yongin Everline', Color(0xFF55B657));
-const shinBundang = MetroLine('Shinbundang Line', Color(0xFFD31145));
+const shinBundang = MetroLine('ShinBundang Line', Color(0xFFD31145));
 const gyeonggang = MetroLine('Gyeonggang Line', Color(0xFF0055A5));
 const seohae = MetroLine('Seohae Line', Color(0xFF6FBF4B));
 
@@ -167,6 +167,7 @@ const _stationRows = <String>[
   '계양|Gyeyang|0.058|0.360|Airport Railroad,Incheon Line 1',
   '고덕(강동구민회관앞)|Godeok|0.851|0.522|Line 5',
   '고려대|Korea University|0.664|0.262|Line 6',
+  '고색|Gosaek|0.664|0.262|Suin·Bundang Line',
   '고속터미널|Express Bus Terminal|0.593|0.647|Line 3,Line 7,Line 9',
   '고잔|Gojan|0.133|0.883|Line 4,Suin·Bundang Line',
   '고진|Gojin|0.913|0.900|Yongin EverLine',

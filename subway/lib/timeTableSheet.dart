@@ -240,13 +240,14 @@ class StationScheduleTabState extends State<StationScheduleTab> {
               innerList[0].substring(0, 2) == i.toString().padLeft(2, '0'),
         )
         .toList();
+    result1.sort((a, b) => a[0].compareTo(b[0]));
     List<List<String>> result2 = serverDownData
         .where(
           (innerList) =>
               innerList[0].substring(0, 2) == i.toString().padLeft(2, '0'),
         )
         .toList();
-
+    result2.sort((a, b) => a[0].compareTo(b[0]));
     if (result1.isNotEmpty || result2.isNotEmpty) {
       return IntrinsicHeight(
         child: Row(
@@ -316,9 +317,10 @@ class StationScheduleTabState extends State<StationScheduleTab> {
       lineUpdown = ['Leftward', 'Rightward'];
     }
     if (widget.enLine == 'Line 7') lineUpdown = ['RightUpward', 'LeftDownward'];
-    if (widget.enLine == 'Line 9' || widget.enLine == 'Gyeongui·Jungang Line') {
+    if (widget.enLine == 'Line 9') {
       lineUpdown = ['Rightward', 'Leftward'];
     }
+    if (widget.enLine == 'Gyeongui·Jungang Line') lineUpdown = ['Leftward', 'Rightward'];
     if (widget.enLine == 'Suin·Bundang Line' ||
         widget.enLine == 'ShinBundang Line' ||
         widget.enLine == 'Airport Railroad' ||
