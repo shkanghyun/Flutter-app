@@ -26,7 +26,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/seoul_subway_map_foreigners.png
+    - assets/images/map_english.jpg
     - assets/data/timetable/Line1_timetable.json
     - assets/data/timetable/Line2_timetable.json
     - assets/data/timetable/Line3_timetable.json

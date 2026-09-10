@@ -286,7 +286,7 @@ class _MetroMapPageState extends State<MetroMapPage>
                   children: [
                     Positioned.fill(
                       child: Image.asset(
-                        'assets/images/seoul_subway_map_foreigners.png',
+                        'assets/images/map_english.jpg',
                         fit: BoxFit.contain,
                         filterQuality: FilterQuality.high,
                       ),
