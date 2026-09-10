@@ -14,11 +14,128 @@
             "청량리": {
                 "01": {
                     "U": [],
-                    "D": []
+                    "D": [
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "064500",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "071500",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "082300",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "094300",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "100300",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "101800",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "140200",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "170100",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "180800",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "190300",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "214200",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "221500",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "마석",
+                            "depTime": "234500",
+                            "arrTime": "000000"
+                        }
+                    ]
                 },
                 "03": {
                     "U": [],
-                    "D": []
+                    "D": [
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "070900",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "074500",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "094600",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "110000",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "112600",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "133000",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "165100",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "192500",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "춘천",
+                            "depTime": "220700",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "평내호평",
+                            "depTime": "234000",
+                            "arrTime": "000000"
+                        }
+                    ]
                 }
             },
             "회기": {
@@ -262,7 +379,58 @@
             },
             "중랑": {
                 "01": {
-                    "U": [],
+                    "U": [
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "062400",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "065200",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "092000",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "094500",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "100200",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "134600",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "163900",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "183700",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "220000",
+                            "arrTime": "000000"
+                        },
+                        {
+                            "endSubwayStationNm": "청량리",
+                            "depTime": "232800",
+                            "arrTime": "000000"
+                        }
+                    ],
                     "D": []
                 },
                 "03": {

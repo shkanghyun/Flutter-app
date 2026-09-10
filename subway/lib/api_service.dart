@@ -391,101 +391,6 @@ class StationNameApiService {
     }
     print('station line list API result: $results');
     return results; // 추출한 데이터 리스트 반환
-    /*  
-    final String serviceKey =
-        'kA3Tj4EZj6vNZpawfuh1yc1CTp%2B9Rnkfx%2BeHgtj2SmKJnf1SYW00SL%2FIhZPtwuBMuoK%2FOXkCcfCmIQoUWTaCPA%3D%3D';
-    final String url =
-        'https://apis.data.go.kr/1613000/SubwayInfo/GetKwrdFndSubwaySttnList?serviceKey=$serviceKey&pageNo=1&numOfRows=20&_type=xml&subwayStationName=$stationName';
-    print('됨?');
-    int retryCount = 0;
-    while (retryCount < 3) {
-      try {
-        final response = await http
-            .get(Uri.parse(url))
-            .timeout(const Duration(seconds: 5));
-
-        if (response.statusCode == 200) {
-          print('response.statusCode : 200');
-          print(url);
-          // 1. 깨짐 방지를 위해 UTF-8로 변환한 XML 문자열 확보
-          final String decodedBody = utf8.decode(response.bodyBytes);
-
-          // 2. 문자열을 XML 문서 객체로 파싱(해석)
-          final document = xml.XmlDocument.parse(decodedBody);
-
-          // 3. 원하는 태그 찾기 (예: <item> 태그 내의 <stationName> 태그 데이터를 가져오고 싶을 때)
-          // 💡 활용하시는 API 명세서상의 태그 이름으로 바꾸셔야 합니다!
-          final items = document.findAllElements(
-            'item',
-          ); // document.findAllElements('태그명')을 쓰면 깊이에 상관없이 해당 이름을 가진 모든 태그를 찾습니다.
-
-          List<List<String>> results = [];
-          for (var item in items) {
-            // item 태그 내부에서 'subwayRouteName'이라는 태그의 텍스트 추출
-            final stationLine = item
-                .findElements('subwayRouteName')
-                .first
-                .innerText; // element.findElements('태그명')은 현재 요소의 바로 다음 단계 자식 노드에서만 검색합니다.
-            final stationId = item
-                .findElements('subwayStationId')
-                .first
-                .innerText;
-            final stationNm = item
-                .findElements('subwayStationName')
-                .first
-                .innerText;
-
-            String enStationLine = switch (stationLine) {
-              '1호선' => 'Line 1',
-              '2호선' => 'Line 2',
-              '3호선' => 'Line 3',
-              '4호선' => 'Line 4',
-              '5호선' => 'Line 5',
-              '6호선' => 'Line 6',
-              '7호선' => 'Line 7',
-              '8호선' => 'Line 8',
-              '9호선' => 'Line 9',
-              '경의중앙' => 'Gyeongui·Jungang Line',
-              '공항' => 'Airport Railroad',
-              '경춘' => 'Gyuongchun Line',
-              '수인분당' => 'Suin·Bundang Line',
-              '신분당' => 'ShinBundang Line',
-              '우이신설' => 'Ui Sinseol Line',
-              '서해선' => 'Seohae Line',
-              '신림선' => 'Sillim Line',
-              '경강' => 'Gyeonggang Line',
-              'GTX-A' => 'GTX-A',
-              '에버라인' => 'Yongin Everline',
-              '김포골드라인' => 'Gimpo Goldline',
-              '인천1호선' => 'Incheon Line 1',
-              '인천2호선' => 'Incheon Line 2',
-              '의정부' => 'Uijeongbu Lrt',
-              '자기부상' => 'Maglev Line',
-              '동해' => 'Dongahae Line',
-              _ => '?', // 지정된 값이 이외의 값이 들어오면 반환하는 값
-            };
-            if (stationName == stationNm ||
-                stationName == stationNm.split('(').first) {
-              results.add([enStationLine, stationId, stationName]);
-            }
-          }
-
-          print('station line list API result: $results');
-          return results; // 추출한 데이터 리스트 반환
-        } else {
-          print('데이터 로드 실패: ${response.statusCode}');
-        }
-      } catch (e) {
-        print('네트워크 또는 XML 파싱 오류: $e');
-      }
-
-      retryCount++;
-      if (retryCount < 3) {
-        // 다음 재시도 전 1~2초간 약간의 대기 시간을 주는 것이 좋습니다 (서버 부하 방지)
-        await Future.delayed(const Duration(seconds: 2));
-      }
-    }
-    return [];*/
   }
 }
 
@@ -497,6 +402,88 @@ class StationScheduleApiService {
     required String? stationName,
     required String enLine,
   }) async {
+    if (dailyTypeCode == '02') dailyTypeCode = '03';
+
+    Map<String, dynamic> rawData = {};
+    List<List<String>> results = [];
+    String jsonFileName = switch (enLine) {
+      'Line 1' => 'assets/data/timetable/Line1_timetable.json',
+      'Line 2' => 'assets/data/timetable/Line2_timetable.json',
+      'Line 3' => 'assets/data/timetable/Line3_timetable.json',
+      'Line 4' => 'assets/data/timetable/Line4_timetable.json',
+      'Line 5' => 'assets/data/timetable/Line5_timetable.json',
+      'Line 6' => 'assets/data/timetable/Line6_timetable.json',
+      'Line 7' => 'assets/data/timetable/Line7_timetable.json',
+      'Line 8' => 'assets/data/timetable/Line8_timetable.json',
+      'Line 9' => 'assets/data/timetable/Line9_timetable.json',
+      'Gyeongui·Jungang Line' =>
+        'assets/data/timetable/GyeonguiJungangLine_timetable.json',
+      'Airport Railroad' =>
+        'assets/data/timetable/AirportRailroad_timetable.json',
+      'Gyuongchun Line' =>
+        'assets/data/timetable/GyuongchunLine_timetable.json',
+      'Suin·Bundang Line' =>
+        'assets/data/timetable/SuinBundangLine_timetable.json',
+      'ShinBundang Line' =>
+        'assets/data/timetable/ShinBundangLine_timetable.json',
+      'Ui Sinseol Line' => 'assets/data/timetable/UiSinseolLine_timetable.json',
+      'Seohae Line' => 'assets/data/timetable/SeohaeLine_timetable.json',
+      'Sillim Line' => 'assets/data/timetable/SillimLine_timetable.json',
+      'Gyeonggang Line' =>
+        'assets/data/timetable/GyeonggangLine_timetable.json',
+      'GTX-A' => 'assets/data/timetable/GTX-A_timetable.json',
+      'Yongin Everline' =>
+        'assets/data/timetable/YonginEverline_timetable.json',
+      'Gimpo Goldline' => 'assets/data/timetable/GimpoGoldline_timetable.json',
+      'Incheon Line 1' => 'assets/data/timetable/IncheonLine1_timetable.json',
+      'Incheon Line 2' => 'assets/data/timetable/IncheonLine2_timetable.json',
+      'Uijeongbu Lrt' => 'assets/data/timetable/UijeongbuLrt_timetable.json',
+      'Maglev Line' => 'assets/data/timetable/MaglevLine_timetable.json',
+      _ => '?',
+    };
+
+    final String response = await rootBundle.loadString(jsonFileName);
+
+    rawData = jsonDecode(response)['stations'];
+
+    final Map<String, dynamic> stationDataByName = rawData[enLine];
+    final Map<String, dynamic> stationDataByLine =
+        stationDataByName[stationName];
+    final Map<String, dynamic> stationDataByWeekCode =
+        stationDataByLine[dailyTypeCode];
+    final List<dynamic> stationDataByUpDown =
+        stationDataByWeekCode[upDownTypeCode];
+
+    for (var item in stationDataByUpDown) {
+      String endStationName = '';
+      String departureTime = '';
+      if (item['depTime'] != null) {
+        departureTime = item['depTime'];
+        if (departureTime == '0') {
+          departureTime = item['arrTime'];
+        }
+        if (item['endSubwayStationNm'] != null) {
+          endStationName = item['endSubwayStationNm'];
+        }
+      } else {
+        departureTime = item['LEFTTIME'];
+        if (item['SUBWAYENAME'] != null) {
+          endStationName = item['SUBWAYENAME'];
+        }
+      }
+
+      String departureTimeFormatted = departureTime
+          .replaceAll(':', '')
+          .substring(0, 4);
+      if (departureTimeFormatted.startsWith("00")) {
+        departureTimeFormatted = "24${departureTimeFormatted.substring(2)}";
+      }
+      results.add([departureTimeFormatted, endStationName]);
+    }
+
+    //if (stationData != null) {}
+    return results;
+
     if (enLine.contains(RegExp(r'^Line\s\d$'))) {
       // 1~9호선은 서울교통공사 API에서 시간표 받아오기
       List<dynamic> rawData = [];
