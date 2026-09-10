@@ -455,20 +455,21 @@ class StationScheduleApiService {
         stationDataByWeekCode[upDownTypeCode];
 
     for (var item in stationDataByUpDown) {
-      String endStationName = '';
+      String enEndStationName = '';
       String departureTime = '';
+
       if (item['depTime'] != null) {
         departureTime = item['depTime'];
         if (departureTime == '0') {
           departureTime = item['arrTime'];
         }
         if (item['endSubwayStationNm'] != null) {
-          endStationName = item['endSubwayStationNm'];
+          enEndStationName = translateStationName(item['endSubwayStationNm']);
         }
       } else {
         departureTime = item['LEFTTIME'];
         if (item['SUBWAYENAME'] != null) {
-          endStationName = item['SUBWAYENAME'];
+          enEndStationName = translateStationName(item['SUBWAYENAME']);
         }
       }
 
@@ -478,7 +479,7 @@ class StationScheduleApiService {
       if (departureTimeFormatted.startsWith("00")) {
         departureTimeFormatted = "24${departureTimeFormatted.substring(2)}";
       }
-      results.add([departureTimeFormatted, endStationName]);
+      results.add([departureTimeFormatted, enEndStationName]);
     }
 
     //if (stationData != null) {}
