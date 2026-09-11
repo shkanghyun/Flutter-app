@@ -99,10 +99,76 @@ class PathSheetState extends State<PathSheet> {
                     ),
                   ),
                   const SliverPadding(padding: EdgeInsets.only(bottom: 10.0)),
-                  _InfoCard(
-                    stationName: pathStationsSummary[0][0],
-                    lineName: pathStationsSummary[0][1],
+                  SliverToBoxAdapter(
+                    child: IntrinsicHeight(child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            //mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _InfoCard(
+                                stationName: pathStationsSummary[0][0],
+                                lineName: pathStationsSummary[0][1],
+                              ),
+
+                              for (List<String> i in pathStationsSummary.skip(
+                                1,
+                              )) // 첫번째 역은 바로 표시 및 build에서 forStationLineWidget에 추가
+                                if (forStationLineWidget.add(i[1])) ...[
+                                  // 같은 라인이 들어가면 false가 반환
+                                  Container(
+                                    height: 40,
+                                    alignment: Alignment.centerLeft,
+                                    padding: const EdgeInsets.fromLTRB(
+                                      9,
+                                      0,
+                                      14,
+                                      0,
+                                    ),
+                                    margin: const EdgeInsets.fromLTRB(
+                                      10,
+                                      0,
+                                      14,
+                                      0,
+                                    ),
+                                    child: Text(
+                                      'Transfer to ${i[1]}. (takes ${int.parse(i[2]) % 60 == 0 ? int.parse(i[2]) ~/ 60 : '${int.parse(i[2]) ~/ 60}~${int.parse(i[2]) ~/ 60 + 1}'} minutes)',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Color.fromARGB(255, 75, 75, 75),
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                  ),
+
+                                  _InfoCard(stationName: i[0], lineName: i[1]),
+                                ] else if (forStationLineWidget.remove(i[1]))
+                                  _InfoCard(stationName: i[0], lineName: i[1]),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 50,
+                          child: CustomPaint(
+                            painter: StraightArrowPainter(
+                              color: Color.fromARGB(255, 81, 90, 110), // 원하는 색상 지정
+                              thickness: 4.0, // 원하는 두께 지정
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),) 
                   ),
+
+                  const SliverPadding(padding: EdgeInsets.only(bottom: 10.0)),
+                  SliverToBoxAdapter(
+                    child: _InfoCard(
+                      stationName: pathStationsSummary[0][0],
+                      lineName: pathStationsSummary[0][1],
+                    ),
+                  ),
+
                   for (List<String> i in pathStationsSummary.skip(
                     1,
                   )) // 첫번째 역은 바로 표시 및 build에서 forStationLineWidget에 추가
@@ -124,9 +190,13 @@ class PathSheetState extends State<PathSheet> {
                           ),
                         ),
                       ),
-                      _InfoCard(stationName: i[0], lineName: i[1]),
+                      SliverToBoxAdapter(
+                        child: _InfoCard(stationName: i[0], lineName: i[1]),
+                      ),
                     ] else if (forStationLineWidget.remove(i[1]))
-                      _InfoCard(stationName: i[0], lineName: i[1]),
+                      SliverToBoxAdapter(
+                        child: _InfoCard(stationName: i[0], lineName: i[1]),
+                      ),
 
                   SliverToBoxAdapter(
                     child: Text(widget.pathStations.toString()),
@@ -162,48 +232,91 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Card(
-        color: const Color(0xFFFDFDFD),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
-        ),
-        margin: const EdgeInsets.fromLTRB(10, 5, 14, 5),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      stationName,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF68748E),
-                        fontWeight: FontWeight.w700,
-                      ),
+    return Card(
+      color: const Color(0xFFFDFDFD),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      margin: const EdgeInsets.fromLTRB(10, 5, 0, 5),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    stationName,
+                    maxLines: 1,
+                    overflow: TextOverflow.fade,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color.fromARGB(255, 81, 90, 110),
+                      fontWeight: FontWeight.w700,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      lineName,
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: lineById[lineName]!.color,
-                        fontWeight: FontWeight.w500,
-                        height: 1.35,
-                      ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    lineName,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: lineById[lineName]!.color,
+                      fontWeight: FontWeight.w500,
+                      height: 1.35,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
+}
+
+class StraightArrowPainter extends CustomPainter {
+  final Color color;
+  final double thickness;
+
+  StraightArrowPainter({
+    this.color = Colors.blue, // 화살표 기본 색상
+    this.thickness = 3.0, // 화살표 기본 두께
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final linePaint = Paint()
+      ..color = color
+      ..strokeWidth = thickness
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final arrowPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+final padding = 10.0;
+    // 💡 SizedBox의 크기(size)를 기반으로 좌표를 잡습니다.
+    // 시작점: 가로 중앙의 맨 위
+    final start = Offset(size.width / 2, padding);
+    // 도착점: 가로 중앙의 맨 아래 (화살표 촉 크기만큼 약간 위에서 멈춤)
+    final arrowSize = 12.0;
+    final end = Offset(size.width / 2, size.height - arrowSize - padding);
+    
+    // 1. 세로 직선 그리기
+    canvas.drawLine(start, end, linePaint);
+
+    // 2. 아래를 향하는 삼각형 화살표 촉 그리기
+    final path = Path();
+    path.moveTo(end.dx, size.height - padding); // 진짜 맨 아래 꼭지점
+    path.lineTo(end.dx - arrowSize / 1.5, size.height - padding- arrowSize); // 왼쪽 날개
+    path.lineTo(end.dx + arrowSize / 1.5, size.height - padding- arrowSize); // 오른쪽 날개
+    path.close();
+
+    canvas.drawPath(path, arrowPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

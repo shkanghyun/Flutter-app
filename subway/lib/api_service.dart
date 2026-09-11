@@ -22,7 +22,7 @@ class SubwayApiService {
         'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/$stationName';
     //  XML 전용 API 주소를 입력하세요.
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         print('response.statusCode : 200');
@@ -152,7 +152,7 @@ class SeoulApiService {
         'http://openapi.seoul.go.kr:8088/$serviceKey/xml/getShtrmPath/1/5/$DepartureStation/$ArrivalStation/$formattedDate///$TransferStation';
 
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         print('response.statusCode : 200');

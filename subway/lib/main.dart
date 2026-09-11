@@ -457,7 +457,7 @@ class _StationMarkerState extends State<StationMarker> {
 
   @override
   Widget build(BuildContext context) {
-    const markerSize = 38.0;
+    const markerSize = 20.0;
     return Positioned(
       left: widget.station.x * _mapSize - markerSize / 2,
       top: widget.station.y * _mapSize - markerSize / 2,
