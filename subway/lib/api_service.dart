@@ -17,6 +17,7 @@ class SubwayApiService {
     if (stationName == '4.19민주묘지') stationName = '4.19 민주묘지';
     if (stationName == '서울역') stationName = '서울';
     if (stationName == '응암') stationName = '응암순환(상선)';
+    if (stationName == '자양(뚝섬한강공원)') stationName = '뚝섬유원지';
     String url =
         'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/$stationName';
     //  XML 전용 API 주소를 입력하세요.
@@ -448,7 +449,7 @@ class StationScheduleApiService {
 
     final Map<String, dynamic> stationDataByName = rawData[enLine];
     final Map<String, dynamic> stationDataByLine =
-        stationDataByName[stationName];
+        stationDataByName[stationName!.split('(').first];
     final Map<String, dynamic> stationDataByWeekCode =
         stationDataByLine[dailyTypeCode];
     final List<dynamic> stationDataByUpDown =
