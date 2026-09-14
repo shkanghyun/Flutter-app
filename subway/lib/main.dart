@@ -6,6 +6,7 @@ import 'package:subway/stationDetailsSheet.dart';
 import 'package:subway/stationSearchSheet.dart';
 import 'package:subway/stationOptionOverlay.dart';
 import 'package:subway/pathSheet.dart';
+import 'package:subway/timeTableSheet.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
@@ -161,6 +162,19 @@ class _MetroMapPageState extends State<MetroMapPage>
     );
   }
 
+  void _openTimetableSheet(Station station) {
+    final topPadding = MediaQuery.of(context).padding.top;
+    print('toppadding=$topPadding');
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => SizedBox(height:
+          MediaQuery.sizeOf(context).height -
+          topPadding,
+child: TimeTableSheet(station: station),) 
+    );
+  }
   @override
   void dispose() {
     _mapController.dispose();
@@ -303,8 +317,9 @@ class _MetroMapPageState extends State<MetroMapPage>
                         onArrivalStationSelected: (station) {
                           setArrivalStationFlag(station);
                         },
-                        onTransferStationSelected: (station) {
-                          setTransferStationFlag(station);
+                        onTimetableSelected: (station) {
+                           _openTimetableSheet(station);
+                      
                         },
                         transformationController: _mapController,
                       ),
@@ -387,7 +402,7 @@ class StationMarker extends StatefulWidget {
     required this.onStationInformationSelected,
     required this.onDepartureStationSelected,
     required this.onArrivalStationSelected,
-    required this.onTransferStationSelected,
+    required this.onTimetableSelected,
     required this._transformationController,
   });
 
@@ -395,7 +410,7 @@ class StationMarker extends StatefulWidget {
   final Function(Station) onStationInformationSelected;
   final Function(Station) onDepartureStationSelected;
   final Function(Station) onArrivalStationSelected;
-  final Function(Station) onTransferStationSelected;
+  final Function(Station) onTimetableSelected;
   final TransformationController _transformationController;
 
   @override
@@ -436,7 +451,7 @@ class _StationMarkerState extends State<StationMarker> {
       onStationInformationSelected: widget.onStationInformationSelected,
       onDepartureSelected: widget.onDepartureStationSelected,
       onArrivalSelected: widget.onArrivalStationSelected,
-      onTransferSelected: widget.onTransferStationSelected,
+      onTimetableSelected: widget.onTimetableSelected,
     ).show(context, widget._transformationController, _layerLink);
 
     // 화면 오버레이에 추가
@@ -481,21 +496,10 @@ class _StationMarkerState extends State<StationMarker> {
                     //width: 25,
                     //height: 25,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.transparent,
                       shape: BoxShape.circle,
-                      border: Border.all(color: widget.station.color, width: 4),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x59000000),
-                          blurRadius: 6,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Icon(
-                      Icons.add,
-                      size: 12,
-                      color: widget.station.color,
+                      border: Border.all(color: widget.station.color, width: 2),
+
                     ),
                   ),
                 ),

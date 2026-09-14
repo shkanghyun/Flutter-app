@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- 서울시 공공데이터 (http://와 포트번호 제외) -->
+        <domain includeSubdomains="true">openapi.seoul.go.kr</domain>
+        <!-- 내가 사용하는 두 번째 주소 (예시: naver.com 형태로 변경) -->
+        <domain includeSubdomains="true">swopenAPI.seoul.go.kr</domain>
+    </domain-config>
+</network-security-config>

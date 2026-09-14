@@ -180,61 +180,60 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            children: [
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  fixedSize: const Size(50, 20),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 0.0,
-                                    vertical: 0.0,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  widget.onDepartureSelected(widget.station);
-                                  Navigator.pop(context);
-                                },
-                                child: Text('From'),
-                                //icon: const Icon(Icons.close_rounded),
-                              ),
-                              OutlinedButton(
-                                style: OutlinedButton.styleFrom(
-                                  fixedSize: const Size(50, 20),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 0.0,
-                                    vertical: 0.0,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  widget.onArrivalSelected(widget.station);
-                                  Navigator.pop(context);
-                                },
-                                child: Text('To'),
-                                //icon: const Icon(Icons.close_rounded),
-                              ),
-                            ],
-                          ),
-                          ElevatedButton(
-                            //tooltip: '닫기',
-                            style: ElevatedButton.styleFrom(
-                              //fixedSize: const Size(50, 20),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                                vertical: 0.0,
-                              ),
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              fixedSize: const Size(60, 40),
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              backgroundColor: const Color(0xFFFDFDFD),
+                              foregroundColor: const Color(0xBA000000),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
+                              side: BorderSide(
+                                color: Colors.grey[400]!, // 테두리 색상
+                                width: 1.3, // 테두리 두께
+                              ),
+                              textStyle: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF101B36),
+                              ),
                             ),
-                            onPressed: () => Navigator.pop(context),
-                            child: Text('Via'),
+                            onPressed: () {
+                              widget.onDepartureSelected(widget.station);
+                              Navigator.pop(context);
+                            },
+                            child: Text('From'),
+                            //icon: const Icon(Icons.close_rounded),
+                          ),
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              fixedSize: const Size(60, 40),
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              backgroundColor: const Color(0xFFFDFDFD),
+                              foregroundColor: Color(0xBA000000),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              side: BorderSide(
+                                color: Colors.grey[400]!,
+                                width: 1.3, // 테두리 두께
+                              ),
+                              textStyle: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF101B36),
+                              ),
+                            ),
+                            onPressed: () {
+                              widget.onArrivalSelected(widget.station);
+                              Navigator.pop(context);
+                            },
+                            child: Text('To'),
                             //icon: const Icon(Icons.close_rounded),
                           ),
                         ],
@@ -259,7 +258,7 @@ class StationDetailsSheetState extends State<StationDetailsSheet> {
                   const SizedBox(height: 24),
                   _InfoCard(
                     icon: Icons.location_on_outlined,
-                    label: '주변 주요 장소',
+                    label: 'Real-time arrival information',
                     value: widget.station.nearby,
                     iconColor: const Color(0xFF5F6D89),
                   ),
@@ -416,16 +415,16 @@ class _InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F7FC),
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: iconColor),
-          const SizedBox(width: 12),
+          Icon(icon, color: Color.fromARGB(255, 56, 62, 77)),
+          const SizedBox(width: 5),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -433,17 +432,9 @@ class _InfoCard extends StatelessWidget {
                 Text(
                   label,
                   style: const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xFF68748E),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    color: Color(0xFF1D2942),
-                    height: 1.35,
+                    fontSize: 16,
+                    color: Color.fromARGB(255, 56, 62, 77),
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],

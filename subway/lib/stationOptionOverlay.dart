@@ -7,13 +7,13 @@ class StationOptionOverlay {
   final Function(Station) onStationInformationSelected;
   final Function(Station) onDepartureSelected;
   final Function(Station) onArrivalSelected;
-  final Function(Station) onTransferSelected;
+  final Function(Station) onTimetableSelected;
   StationOptionOverlay({
     required this.station,
     required this.onStationInformationSelected,
     required this.onDepartureSelected,
     required this.onArrivalSelected,
-    required this.onTransferSelected,
+    required this.onTimetableSelected,
   });
 
   // 현재 화면에 표시 중인 OverlayEntry를 저장하는 변수
@@ -77,8 +77,12 @@ class StationOptionOverlay {
                                         15 / currentScale,
                                       ),
                                     ),
-                                    side: BorderSide(width: 1.0 / currentScale),
+                                    side: BorderSide(
+                                      color: Colors.white,
+                                      width: 1.0 / currentScale,
+                                    ),
                                     backgroundColor: Colors.white,
+                                    foregroundColor: Colors.blue[700],
                                     textStyle: TextStyle(
                                       fontSize: 20 / currentScale,
                                     ),
@@ -107,8 +111,12 @@ class StationOptionOverlay {
                                         15 / currentScale,
                                       ),
                                     ),
-                                    side: BorderSide(width: 1.0 / currentScale),
+                                    side: BorderSide(
+                                      color: Colors.white,
+                                      width: 1.0 / currentScale,
+                                    ),
                                     backgroundColor: Colors.white,
+                                    foregroundColor: Colors.blue[700],
                                     textStyle: TextStyle(
                                       fontSize: 20 / currentScale,
                                     ),
@@ -143,18 +151,22 @@ class StationOptionOverlay {
                                         15 / currentScale,
                                       ),
                                     ),
-                                    side: BorderSide(width: 1.0 / currentScale),
+                                    side: BorderSide(
+                                      color: Colors.white,
+                                      width: 1.0 / currentScale,
+                                    ),
                                     backgroundColor: Colors.white,
+                                    foregroundColor: Colors.blueGrey[700],
                                     textStyle: TextStyle(
-                                      fontSize: 20 / currentScale,
+                                      fontSize: 15 / currentScale,
                                     ),
                                   ),
                                   clipBehavior: Clip.antiAlias,
                                   onPressed: () {
-                                    onTransferSelected(station);
+                                    onTimetableSelected(station);
                                     dismiss();
                                   },
-                                  child: Text('Via'),
+                                  child: Text('Timetable'),
                                   //icon: const Icon(Icons.close_rounded),
                                 ),
                               ),
@@ -174,8 +186,12 @@ class StationOptionOverlay {
                                         15 / currentScale,
                                       ),
                                     ),
-                                    side: BorderSide(width: 1.0 / currentScale),
+                                    side: BorderSide(
+                                      color: Colors.white,
+                                      width: 1.0 / currentScale,
+                                    ),
                                     backgroundColor: Colors.white,
+                                    foregroundColor: Colors.blueGrey[700],
                                     textStyle: TextStyle(
                                       fontSize: 20 / currentScale,
                                     ),

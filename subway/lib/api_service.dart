@@ -468,7 +468,11 @@ class StationScheduleApiService {
           enEndStationName = translateStationName(item['endSubwayStationNm']);
         }
       } else {
-        departureTime = item['LEFTTIME'];
+        if ( item['LEFTTIME'] == '00:00:00') {
+          departureTime = item['ARRIVETIME'];
+        } else {
+          departureTime = item['LEFTTIME'];
+        }
         if (item['SUBWAYENAME'] != null) {
           enEndStationName = translateStationName(item['SUBWAYENAME']);
         }

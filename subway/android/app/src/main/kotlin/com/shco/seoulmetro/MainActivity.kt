@@ -1,4 +1,4 @@
-package com.example.subway
+package com.shco.seoulmetro
 
 import io.flutter.embedding.android.FlutterActivity
 
