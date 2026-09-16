@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +24,9 @@ class SubwayApiService {
         'http://swopenAPI.seoul.go.kr/api/subway/$serviceKey/xml/realtimeStationArrival/0/30/$stationName';
     //  XML 전용 API 주소를 입력하세요.
     try {
-      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(Uri.parse(url))
+          .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         print('response.statusCode : 200');
@@ -131,11 +135,6 @@ class SeoulApiService {
     required String? ArrivalStation,
     String? TransferStation,
   }) async {
-    final dio = Dio();
-
-    dio.options.connectTimeout = const Duration(seconds: 5);
-    dio.options.receiveTimeout = const Duration(seconds: 5);
-
     final String serviceKey = '4f6d59565373686b39335a4e696348';
     String formattedDate = DateFormat(
       'yyyy-MM-dd HH:mm:ss',
@@ -152,7 +151,9 @@ class SeoulApiService {
         'http://openapi.seoul.go.kr:8088/$serviceKey/xml/getShtrmPath/1/5/$DepartureStation/$ArrivalStation/$formattedDate///$TransferStation';
 
     try {
-      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 5));
+      final response = await http
+          .get(Uri.parse(url))
+          .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
         print('response.statusCode : 200');
@@ -328,8 +329,14 @@ class SeoulApiService {
       } else {
         throw Exception('데이터 로드 실패: ${response.statusCode}');
       }
+    } on TimeoutException catch (_) {
+      if (!context.mounted) return [];
+      _showTimeoutDialog(context, '서버 응답 시간이 초과되었습니다.');
+      return [];
     } catch (e) {
-      throw Exception('네트워크 또는 XML 파싱 오류: $e');
+      if (!context.mounted) return [];
+      _showTimeoutDialog(context, 'Please check your network connection and try again.');
+      return [];
     }
   }
 }
@@ -468,7 +475,7 @@ class StationScheduleApiService {
           enEndStationName = translateStationName(item['endSubwayStationNm']);
         }
       } else {
-        if ( item['LEFTTIME'] == '00:00:00') {
+        if (item['LEFTTIME'] == '00:00:00') {
           departureTime = item['ARRIVETIME'];
         } else {
           departureTime = item['LEFTTIME'];
@@ -870,4 +877,23 @@ class StationScheduleApiService {
       }
     }
   }
+}
+
+void _showTimeoutDialog(BuildContext context, String message) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Server connection failed.'),
+        titleTextStyle: TextStyle(fontSize: 18, color: Colors.black),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
 }

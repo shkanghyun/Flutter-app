@@ -169,12 +169,13 @@ class _MetroMapPageState extends State<MetroMapPage>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => SizedBox(height:
-          MediaQuery.sizeOf(context).height -
-          topPadding,
-child: TimeTableSheet(station: station),) 
+      builder: (_) => SizedBox(
+        height: MediaQuery.sizeOf(context).height - topPadding,
+        child: TimeTableSheet(station: station),
+      ),
     );
   }
+
   @override
   void dispose() {
     _mapController.dispose();
@@ -248,7 +249,7 @@ child: TimeTableSheet(station: station),)
     ).setTransferStation();
   }
 
-  // Path 표시  
+  // Path 표시
   List<List<String>> pathList = [];
   List<Station> pathStations = [];
 
@@ -256,8 +257,16 @@ child: TimeTableSheet(station: station),)
     setState(() {
       _isPathSet = true;
       pathList = stationList;
+      List<List<String>> pathShowList = stationList.sublist(
+        2,
+        stationList.length - 1,
+      );
       pathStations = stations
-          .where((station) => stationList.expand((list) => list).contains(station.englishName))
+          .where(
+            (station) => pathShowList
+                .expand((list) => list)
+                .contains(station.englishName),
+          )
           .toList();
     });
   }
@@ -271,7 +280,7 @@ child: TimeTableSheet(station: station),)
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => PathSheet(pathStations: pathList,),
+      builder: (_) => PathSheet(pathStations: pathList),
     );
   }
 
@@ -318,8 +327,7 @@ child: TimeTableSheet(station: station),)
                           setArrivalStationFlag(station);
                         },
                         onTimetableSelected: (station) {
-                           _openTimetableSheet(station);
-                      
+                          _openTimetableSheet(station);
                         },
                         transformationController: _mapController,
                       ),
@@ -472,12 +480,44 @@ class _StationMarkerState extends State<StationMarker> {
 
   @override
   Widget build(BuildContext context) {
-    const markerSize = 20.0;
+    double markerWidth = 20.0;
+    double markerHeight = 20.0;
+
+    if (widget.station.name == '서울역') {
+      markerWidth = 70.0;
+      markerHeight = 20.0;
+    }
+    if (widget.station.name == '왕십리'||widget.station.name == '대곡') {
+      markerWidth = 60.0;
+      markerHeight = 20.0;
+    }
+    if (widget.station.name == '연신내'||widget.station.name == '홍대입구') {
+      markerWidth = 40.0;
+      markerHeight = 20.0;
+    }
+    if (widget.station.name == '김포공항') {
+      markerWidth = 20.0;
+      markerHeight = 70.0;
+    }
+    if (widget.station.name == '청량리' ||widget.station.name == '공덕') {
+      markerWidth = 20.0;
+      markerHeight = 60.0;
+    }
+    if (widget.station.name == '종로3가' ||
+        widget.station.name == '회기' ||
+        widget.station.name == '상봉' ||
+        widget.station.name == '신설동'||
+        widget.station.name == '동대문역사문화공원'||
+        widget.station.name == '디지털미디어시티') {
+      markerWidth = 20.0;
+      markerHeight = 40.0;
+    }
+
     return Positioned(
-      left: widget.station.x * _mapSize - markerSize / 2,
-      top: widget.station.y * _mapSize - markerSize / 2,
-      width: markerSize,
-      height: markerSize,
+      left: widget.station.x * _mapSize - markerWidth / 2,
+      top: widget.station.y * _mapSize - markerHeight / 2,
+      width: markerWidth,
+      height: markerHeight,
       child: Tooltip(
         message: widget.station.name,
         child: Semantics(
@@ -499,7 +539,6 @@ class _StationMarkerState extends State<StationMarker> {
                       color: Colors.transparent,
                       shape: BoxShape.circle,
                       border: Border.all(color: widget.station.color, width: 2),
-
                     ),
                   ),
                 ),
@@ -726,6 +765,7 @@ class PathFinder {
       }
     }
   }
+
   void setArrivalStation() {
     if (arrivalStation == station.name) {
       arrivalStation = null;
@@ -739,6 +779,7 @@ class PathFinder {
       }
     }
   }
+
   void setTransferStation() {
     if (transferStation == station.name) {
       transferStation = '';
@@ -752,6 +793,7 @@ class PathFinder {
       }
     }
   }
+
   Future<void> loadPath() async {
     _isLoading = true; // 로딩 시작
     try {
